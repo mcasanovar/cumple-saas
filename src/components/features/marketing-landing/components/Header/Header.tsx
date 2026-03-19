@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
+import { Show, SignInButton, UserButton } from "@clerk/nextjs";
 
 import { Logo } from "../Logo";
 
@@ -18,19 +19,29 @@ export function Header() {
           <Logo />
         </Link>
 
-        <nav className="hidden items-center gap-8 md:flex">
-          <a
-            href="#plantillas"
-            className="text-sm font-medium text-[#1A1A1A] transition hover:text-[#E63946]"
-          >
-            Plantillas
-          </a>
-          <Link
-            href="/crear-cuenta"
-            className="rounded-full bg-[#E63946] px-6 py-2.5 text-sm font-semibold text-white shadow-lg transition hover:-translate-y-0.5 hover:bg-[#D62839]"
-          >
-            Crear cuenta gratis
-          </Link>
+        <nav className="hidden items-center gap-4 md:flex">
+          <Show when="signed-out">
+            <SignInButton mode="modal">
+              <button className="rounded-full bg-[#E63946] px-6 py-2.5 text-sm font-semibold text-white shadow-lg transition hover:-translate-y-0.5 hover:bg-[#D62839]">
+                Crear cuenta
+              </button>
+            </SignInButton>
+          </Show>
+          <Show when="signed-in">
+            <Link
+              href="/dashboard/invitaciones"
+              className="rounded-full bg-[#E63946] px-6 py-2.5 text-sm font-semibold text-white shadow-lg transition hover:-translate-y-0.5 hover:bg-[#D62839]"
+            >
+              Mis invitaciones
+            </Link>
+            <UserButton
+              appearance={{
+                elements: {
+                  avatarBox: "h-10 w-10",
+                },
+              }}
+            />
+          </Show>
         </nav>
 
         <button

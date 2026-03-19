@@ -1,6 +1,8 @@
 "use client";
 
+import Link from "next/link";
 import { motion } from "framer-motion";
+import { Show, SignInButton } from "@clerk/nextjs";
 
 const features = [
   {
@@ -100,18 +102,36 @@ export function FeaturesSection() {
           </div>
 
           <div className="px-8 pb-12 md:px-12">
-            <motion.a
-              href="/crear-cuenta"
-              className="block w-full rounded-full bg-[#E63946] py-5 text-center text-lg font-bold text-white shadow-lg transition hover:bg-[#D62839]"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.7 }}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              Crear mi invitación
-            </motion.a>
+            <Show when="signed-out">
+              <SignInButton mode="modal" forceRedirectUrl="/dashboard/invitaciones">
+                <motion.button
+                  className="block w-full rounded-full bg-[#E63946] py-5 text-center text-lg font-bold text-white shadow-lg transition hover:bg-[#D62839]"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: 0.7 }}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  Crear mi invitación
+                </motion.button>
+              </SignInButton>
+            </Show>
+            <Show when="signed-in">
+              <Link href="/dashboard/invitaciones">
+                <motion.div
+                  className="block w-full rounded-full bg-[#E63946] py-5 text-center text-lg font-bold text-white shadow-lg transition hover:bg-[#D62839]"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: 0.7 }}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  Ir al dashboard
+                </motion.div>
+              </Link>
+            </Show>
           </div>
         </motion.div>
       </div>

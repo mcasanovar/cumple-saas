@@ -1,6 +1,8 @@
 "use client";
 
+import Link from "next/link";
 import { motion } from "framer-motion";
+import { Show, SignInButton } from "@clerk/nextjs";
 
 const steps = [
   {
@@ -100,15 +102,27 @@ export function StepsSection() {
           <p className="mb-6 text-lg text-[#6B7280]">
             ¿Listo para hacer magia? ✨
           </p>
-          <a
-            href="/crear-cuenta"
-            className="inline-flex items-center gap-3 rounded-full bg-[#E63946] px-10 py-5 text-lg font-bold text-white shadow-lg transition hover:bg-[#D62839] hover:shadow-xl"
-          >
-            <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-            </svg>
-            <span>Crear mi primera invitación</span>
-          </a>
+          <Show when="signed-out">
+            <SignInButton mode="modal" forceRedirectUrl="/dashboard/invitaciones">
+              <button className="inline-flex items-center gap-3 rounded-full bg-[#E63946] px-10 py-5 text-lg font-bold text-white shadow-lg transition hover:bg-[#D62839] hover:shadow-xl">
+                <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                </svg>
+                <span>Crear mi primera invitación</span>
+              </button>
+            </SignInButton>
+          </Show>
+          <Show when="signed-in">
+            <Link
+              href="/dashboard/invitaciones"
+              className="inline-flex items-center gap-3 rounded-full bg-[#E63946] px-10 py-5 text-lg font-bold text-white shadow-lg transition hover:bg-[#D62839] hover:shadow-xl"
+            >
+              <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+              </svg>
+              <span>Ir al dashboard</span>
+            </Link>
+          </Show>
         </motion.div>
       </div>
     </section>

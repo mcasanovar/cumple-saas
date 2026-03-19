@@ -1,151 +1,274 @@
 "use client";
 
-import { useActionState, useEffect, useRef } from "react";
-import { useFormStatus } from "react-dom";
-import { motion } from "framer-motion";
-
-import { submitRSVP } from "@/app/(public)/invitacion/[slug]/actions";
-import type { RSVPActionState } from "@/lib/types/invitation";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 type RSVPFormProps = {
-  slug: string;
-  accentGradient: string;
-  accentColor: string;
+  typography: {
+    heading: string;
+    body: string;
+  };
 };
 
-const initialState: RSVPActionState = { status: "idle" };
+function Confetti() {
+  const confettiPieces = Array.from({ length: 50 }, (_, i) => ({
+    id: i,
+    x: Math.random() * 100,
+    delay: Math.random() * 0.5,
+    duration: 2 + Math.random() * 2,
+    rotation: Math.random() * 360,
+    color: ["#ff6b3d", "#ffb347", "#4ECDC4", "#ff7a3d", "#6f6bb3"][Math.floor(Math.random() * 5)],
+  }));
 
-function SubmitButton({ accentColor }: { accentColor: string }) {
-  const { pending } = useFormStatus();
   return (
-    <motion.button
-      type="submit"
-      whileHover={{ scale: pending ? 1 : 1.02 }}
-      whileTap={{ scale: 0.98 }}
-      className="group relative flex w-full items-center justify-center gap-2 overflow-hidden rounded-full px-6 py-3 text-sm font-semibold text-white shadow-lg"
-      style={{
-        backgroundColor: accentColor,
-        boxShadow: `0 18px 40px ${accentColor}40`,
-      }}
-      disabled={pending}
-    >
-      <span className="relative z-10 flex items-center gap-2">
-        {pending ? "Enviando..." : "Confirmar asistencia"}
-        <motion.span
-          animate={pending ? { rotate: 180 } : { x: [0, 6, 0] }}
-          transition={{ repeat: pending ? 0 : Infinity, duration: pending ? 0.8 : 1.6 }}
-          className="text-lg"
-        >
-          ✨
-        </motion.span>
-      </span>
-      <span className="absolute inset-0 bg-white/20 opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
-    </motion.button>
+    <div className="pointer-events-none fixed inset-0 z-50 overflow-hidden">
+      {confettiPieces.map((piece) => (
+        <motion.div
+          key={piece.id}
+          className="absolute h-3 w-3 rounded-full"
+          style={{
+            left: `${piece.x}%`,
+            top: "-10%",
+            backgroundColor: piece.color,
+          }}
+          initial={{ y: 0, opacity: 1, rotate: 0 }}
+          animate={{
+            y: [0, window.innerHeight + 100],
+            opacity: [1, 1, 0],
+            rotate: [0, piece.rotation],
+          }}
+          transition={{
+            duration: piece.duration,
+            delay: piece.delay,
+            ease: "easeIn",
+          }}
+        />
+      ))}
+    </div>
   );
 }
 
-export function RSVPForm({ slug, accentGradient, accentColor }: RSVPFormProps) {
-  const formRef = useRef<HTMLFormElement>(null);
-  const [state, formAction] = useActionState(submitRSVP, initialState);
+export function RSVPForm({ typography }: RSVPFormProps) {
+  const [willAttend, setWillAttend] = useState<boolean | null>(null);
+  const [guestCount, setGuestCount] = useState<number>(1);
+  const [guestNames, setGuestNames] = useState<string[]>([""]);
+  const [email, setEmail] = useState("");
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [showConfetti, setShowConfetti] = useState(false);
 
-  useEffect(() => {
-    if (state.status === "success") {
-      formRef.current?.reset();
-      const timer = setTimeout(() => {
-        formRef.current?.querySelector<HTMLInputElement>("input[name=\"name\"]")?.focus();
-      }, 200);
-      return () => clearTimeout(timer);
+  const handleAttendanceChange = (value: boolean) => {
+    setWillAttend(value);
+    if (!value) {
+      setGuestCount(1);
+      setGuestNames([""]);
+      setEmail("");
     }
-    return undefined;
-  }, [state.status]);
+  };
+
+  const handleGuestCountChange = (count: number) => {
+    setGuestCount(count);
+    setGuestNames(Array(count).fill(""));
+  };
+
+  const handleGuestNameChange = (index: number, name: string) => {
+    const newNames = [...guestNames];
+    newNames[index] = name;
+    setGuestNames(newNames);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    await new Promise(resolve => setTimeout(resolve, 800));
+
+    console.log("RSVP Data:", {
+      willAttend,
+      guestCount: willAttend ? guestCount : 0,
+      guestNames: willAttend ? guestNames : [],
+      email: willAttend ? email : "",
+    });
+
+    setIsSubmitted(true);
+
+    window.scrollTo({ top: 0, behavior: "smooth" });
+
+    if (willAttend) {
+      setShowConfetti(true);
+      setTimeout(() => setShowConfetti(false), 4000);
+    }
+  };
+
+  if (isSubmitted) {
+    return (
+      <>
+        {showConfetti && <Confetti />}
+        <motion.div
+          className="fixed inset-0 z-40 flex items-start justify-center bg-black/40 backdrop-blur-sm pt-20"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5 }}
+        >
+          <motion.div
+            className="mx-4 max-w-md rounded-[32px] bg-white p-12 text-center shadow-2xl"
+            initial={{ scale: 0.8, opacity: 0, y: -50 }}
+            animate={{ scale: 1, opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <motion.div
+              className="mb-6 text-6xl"
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ delay: 0.2, duration: 0.5, type: "spring" }}
+            >
+              {willAttend ? "🎉" : "😢"}
+            </motion.div>
+            <h3
+              className="mb-4 text-3xl font-bold text-[#262147]"
+              style={{ fontFamily: typography.heading }}
+            >
+              {willAttend
+                ? "¡Gracias por confirmar!"
+                : "Lamentamos no tenerte con nosotros"}
+            </h3>
+            <p
+              className="text-lg text-[#6f6bb3]"
+              style={{ fontFamily: typography.body }}
+            >
+              {willAttend
+                ? "Te esperamos con muchas ganas"
+                : "Pero te esperamos para una próxima ocasión."}
+            </p>
+          </motion.div>
+        </motion.div>
+      </>
+    );
+  }
 
   return (
     <motion.form
-      ref={formRef}
-      action={formAction}
-      className="relative overflow-hidden rounded-[32px] border border-white/60 bg-white/80 p-8 backdrop-blur-2xl shadow-[0_24px_80px_rgba(15,11,29,0.12)]"
-      style={{ boxShadow: "0 18px 60px rgba(31,25,47,0.18)" }}
+      onSubmit={handleSubmit}
+      className="relative overflow-hidden rounded-[32px] border border-white/60 bg-white/90 p-8 shadow-[0_24px_80px_rgba(15,11,29,0.12)] backdrop-blur-2xl"
       initial={{ opacity: 0, y: 32 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
     >
-      <div className="pointer-events-none absolute inset-0 opacity-60" style={{ backgroundImage: accentGradient }} />
-      <div className="pointer-events-none absolute inset-0 bg-white/60" />
-      <div className="pointer-events-none absolute -left-20 top-10 h-40 w-40 rounded-full bg-white/60 blur-3xl" />
-      <div className="pointer-events-none absolute -right-24 bottom-6 h-44 w-44 rounded-full bg-white/50 blur-3xl" />
+      <div className="pointer-events-none absolute -left-20 top-10 h-40 w-40 rounded-full bg-[#fddae4]/60 blur-3xl" />
+      <div className="pointer-events-none absolute -right-24 bottom-6 h-44 w-44 rounded-full bg-[#e7defa]/50 blur-3xl" />
 
-      <input type="hidden" name="slug" value={slug} />
-
-      <div className="relative grid gap-5 sm:grid-cols-2">
-        <label className="flex flex-col gap-2 text-sm font-medium text-slate-600">
-          Nombre completo
-          <input
-            type="text"
-            name="name"
-            required
-            placeholder="¿Quién confirma?"
-            className="rounded-2xl border border-white/70 bg-white/90 px-4 py-3 text-base text-slate-800 shadow-inner shadow-white/40 outline-none transition focus:border-slate-300 focus:shadow-lg"
-          />
-        </label>
-
-        <label className="flex flex-col gap-2 text-sm font-medium text-slate-600">
-          Correo electrónico
-          <input
-            type="email"
-            name="email"
-            required
-            placeholder="tu@email.com"
-            className="rounded-2xl border border-white/70 bg-white/90 px-4 py-3 text-base text-slate-800 shadow-inner shadow-white/40 outline-none transition focus:border-slate-300 focus:shadow-lg"
-          />
-        </label>
-
-        <label className="flex flex-col gap-2 text-sm font-medium text-slate-600">
-          Cantidad de invitados
-          <input
-            type="number"
-            name="guests"
-            required
-            min={1}
-            max={10}
-            defaultValue={1}
-            className="rounded-2xl border border-white/70 bg-white/90 px-4 py-3 text-base text-slate-800 shadow-inner shadow-white/40 outline-none transition focus:border-slate-300 focus:shadow-lg"
-          />
-        </label>
-
-        <label className="flex flex-col gap-2 text-sm font-medium text-slate-600 sm:col-span-2">
-          Mensaje especial (opcional)
-          <textarea
-            name="message"
-            rows={4}
-            placeholder="Comparte alergias, restricciones o un mensaje cariñoso"
-            className="resize-none rounded-2xl border border-white/70 bg-white/90 px-4 py-3 text-base text-slate-800 shadow-inner shadow-white/40 outline-none transition focus:border-slate-300 focus:shadow-lg"
-          />
-        </label>
-      </div>
-
-      <div className="relative mt-6 flex flex-col gap-4 sm:flex-row sm:items-center">
-        <SubmitButton accentColor={accentColor} />
-        {state.status === "success" && (
-          <motion.p
-            key="success"
-            className="rounded-full bg-white/70 px-4 py-2 text-sm font-medium text-slate-700 shadow-inner shadow-white/40"
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+      <div className="relative space-y-6">
+        <div className="text-center">
+          <h3
+            className="mb-2 text-3xl font-bold text-[#262147]"
+            style={{ fontFamily: typography.heading }}
           >
-            {state.message}
-          </motion.p>
-        )}
-        {state.status === "error" && (
-          <motion.p
-            key="error"
-            className="rounded-full bg-rose-100/80 px-4 py-2 text-sm font-medium text-rose-700 shadow-inner shadow-white/40"
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+            Confirma tu asistencia
+          </h3>
+          <p
+            className="text-base text-[#6f6bb3]"
+            style={{ fontFamily: typography.body }}
           >
-            {state.message}
-          </motion.p>
+            ¿Podrás acompañarnos?
+          </p>
+        </div>
+
+        <div className="flex justify-center gap-4">
+          <motion.button
+            type="button"
+            onClick={() => handleAttendanceChange(true)}
+            className={`rounded-full px-12 py-4 text-lg font-bold transition ${willAttend === true
+              ? "bg-[#4ECDC4] text-white shadow-lg"
+              : "bg-white/80 text-[#6f6bb3] hover:bg-white"
+              }`}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            Sí ✨
+          </motion.button>
+          <motion.button
+            type="button"
+            onClick={() => handleAttendanceChange(false)}
+            className={`rounded-full px-12 py-4 text-lg font-bold transition ${willAttend === false
+              ? "bg-[#ff6b3d] text-white shadow-lg"
+              : "bg-white/80 text-[#6f6bb3] hover:bg-white"
+              }`}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            No 😢
+          </motion.button>
+        </div>
+
+        <AnimatePresence mode="wait">
+          {willAttend === true && (
+            <motion.div
+              className="space-y-5"
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.4 }}
+            >
+              <label className="flex flex-col gap-2 text-sm font-medium text-slate-600">
+                ¿Cuántas personas asistirán?
+                <select
+                  value={guestCount}
+                  onChange={(e) => handleGuestCountChange(Number(e.target.value))}
+                  className="rounded-2xl border border-white/70 bg-white/90 px-4 py-3 text-base text-slate-800 shadow-inner shadow-white/40 outline-none transition focus:border-slate-300 focus:shadow-lg"
+                  required
+                >
+                  {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => (
+                    <option key={num} value={num}>
+                      {num} {num === 1 ? "persona" : "personas"}
+                    </option>
+                  ))}
+                </select>
+              </label>
+
+              <div className="space-y-3">
+                <p className="text-sm font-medium text-slate-600">
+                  Nombre{guestCount > 1 ? "s" : ""} de {guestCount > 1 ? "los" : "la"} asistente{guestCount > 1 ? "s" : ""}:
+                </p>
+                {guestNames.map((name, index) => (
+                  <motion.input
+                    key={index}
+                    type="text"
+                    value={name}
+                    onChange={(e) => handleGuestNameChange(index, e.target.value)}
+                    placeholder={`Nombre de la persona ${index + 1}`}
+                    className="w-full rounded-2xl border border-white/70 bg-white/90 px-4 py-3 text-base text-slate-800 shadow-inner shadow-white/40 outline-none transition focus:border-slate-300 focus:shadow-lg"
+                    required
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: index * 0.1 }}
+                  />
+                ))}
+              </div>
+
+              <label className="flex flex-col gap-2 text-sm font-medium text-slate-600">
+                Correo electrónico
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="tu@email.com"
+                  className="rounded-2xl border border-white/70 bg-white/90 px-4 py-3 text-base text-slate-800 shadow-inner shadow-white/40 outline-none transition focus:border-slate-300 focus:shadow-lg"
+                  required
+                />
+              </label>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {willAttend !== null && (
+          <motion.button
+            type="submit"
+            className="w-full rounded-full bg-gradient-to-r from-[#ff7a3d] to-[#ffb347] px-8 py-4 text-lg font-bold text-white shadow-[0_12px_30px_rgba(255,142,93,0.45)] transition hover:-translate-y-0.5"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+          >
+            Enviar confirmación
+          </motion.button>
         )}
       </div>
     </motion.form>

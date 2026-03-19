@@ -5,6 +5,7 @@ import { motion, type Variants } from "framer-motion";
 
 import { SceneBackground } from "@/components/shared/invitation/scene-background";
 import { EventLocationMap } from "../EventLocationMap";
+import { RSVPForm } from "../RSVPForm";
 
 import type { LandingViewProps } from "./LandingView.types";
 
@@ -261,6 +262,17 @@ export function LandingView({
           <p className="max-w-2xl text-base text-slate-600" style={{ fontFamily: typography.body }}>
             {heroSubheadline}
           </p>
+        </motion.section>
+
+        <motion.section
+          className="mx-auto w-full max-w-2xl"
+          variants={fadeInUp}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.2 }}
+          transition={{ ease: easeOutQuint, duration: 1 }}
+        >
+          <RSVPForm typography={typography} />
         </motion.section>
       </section>
     </div>

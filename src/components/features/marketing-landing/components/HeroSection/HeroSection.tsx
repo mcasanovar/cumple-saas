@@ -1,7 +1,8 @@
 "use client";
 
-import { motion } from "framer-motion";
 import Link from "next/link";
+import { motion } from "framer-motion";
+import { Show, SignInButton } from "@clerk/nextjs";
 
 export function HeroSection() {
   return (
@@ -85,13 +86,23 @@ export function HeroSection() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.7 }}
         >
-          <Link
-            href="/crear-cuenta"
-            className="group inline-flex items-center gap-2 rounded-full bg-[#E63946] px-8 py-4 text-base font-semibold text-white shadow-[0_20px_60px_rgba(230,57,70,0.3)] transition hover:-translate-y-1 hover:bg-[#D62839] hover:shadow-[0_25px_70px_rgba(230,57,70,0.4)]"
-          >
-            <span className="text-xl">🎊</span>
-            <span>Empezar ahora — Es gratis</span>
-          </Link>
+          <Show when="signed-out">
+            <SignInButton mode="modal" forceRedirectUrl="/dashboard/invitaciones">
+              <button className="group inline-flex items-center gap-2 rounded-full bg-[#E63946] px-8 py-4 text-base font-semibold text-white shadow-[0_20px_60px_rgba(230,57,70,0.3)] transition hover:-translate-y-1 hover:bg-[#D62839] hover:shadow-[0_25px_70px_rgba(230,57,70,0.4)]">
+                <span className="text-xl">🎊</span>
+                <span>Empezar ahora</span>
+              </button>
+            </SignInButton>
+          </Show>
+          <Show when="signed-in">
+            <Link
+              href="/dashboard/invitaciones"
+              className="group inline-flex items-center gap-2 rounded-full bg-[#E63946] px-8 py-4 text-base font-semibold text-white shadow-[0_20px_60px_rgba(230,57,70,0.3)] transition hover:-translate-y-1 hover:bg-[#D62839] hover:shadow-[0_25px_70px_rgba(230,57,70,0.4)]"
+            >
+              <span className="text-xl">🎊</span>
+              <span>Ir al dashboard</span>
+            </Link>
+          </Show>
           <a
             href="#plantillas"
             className="inline-flex items-center gap-2 rounded-full bg-[#F77F00] px-8 py-4 text-base font-semibold text-white shadow-lg transition hover:-translate-y-1 hover:bg-[#E67300]"

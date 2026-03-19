@@ -1,7 +1,8 @@
 "use client";
 
-import { motion } from "framer-motion";
 import Link from "next/link";
+import { motion } from "framer-motion";
+import { Show, SignInButton } from "@clerk/nextjs";
 
 import { Logo } from "../Logo";
 
@@ -38,9 +39,18 @@ export function Footer() {
                 </a>
               </li>
               <li>
-                <Link href="/crear-cuenta" className="transition hover:text-white">
-                  Crear cuenta
-                </Link>
+                <Show when="signed-out">
+                  <SignInButton mode="modal" forceRedirectUrl="/dashboard/invitaciones">
+                    <button className="transition hover:text-white">
+                      Crear cuenta
+                    </button>
+                  </SignInButton>
+                </Show>
+                <Show when="signed-in">
+                  <Link href="/dashboard/invitaciones" className="transition hover:text-white">
+                    Dashboard
+                  </Link>
+                </Show>
               </li>
               <li>
                 <a href="#" className="transition hover:text-white">
