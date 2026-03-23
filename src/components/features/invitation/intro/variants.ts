@@ -9,7 +9,7 @@ export const frameVariants: Variants = {
     scale: 1,
     y: 0,
     transition: {
-      duration: 0.8,
+      duration: 2,
       ease: easeOutQuart,
     },
   },
@@ -17,7 +17,7 @@ export const frameVariants: Variants = {
     opacity: 0,
     scale: 1.1,
     transition: {
-      duration: 0.5,
+      duration: 2,
       ease: easeOutQuart,
     },
   },
@@ -29,7 +29,7 @@ export const headingVariants: Variants = {
     opacity: 1,
     y: 0,
     transition: {
-      duration: 0.6,
+      duration: 2,
       delay: 0.3 + index * 0.15,
       ease: easeOutQuart,
     },
@@ -38,7 +38,7 @@ export const headingVariants: Variants = {
     opacity: 0,
     y: -12,
     transition: {
-      duration: 0.4,
+      duration: 0.6,
       ease: easeOutQuart,
     },
   },

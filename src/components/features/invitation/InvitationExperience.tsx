@@ -2,15 +2,16 @@
 
 import { useEffect, useState, useCallback } from "react";
 import { motion } from "framer-motion";
+
+import type { InvitationRenderConfig } from "@/lib/types/invitation";
 import { themes } from "@/config/themes";
-import type { InvitationConfig } from "@/lib/types/invitation";
 import { DecorativeBackground } from "@/components/shared/invitation/decorative-background";
 import { InvitationLanding } from "./landing/InvitationLanding";
 import { InvitationIntro } from "./intro/InvitationIntro";
 import { IntroTransition } from "./intro/components/IntroTransition";
 
 interface InvitationExperienceProps {
-  invitation: InvitationConfig;
+  invitation: InvitationRenderConfig;
 }
 
 type ExperiencePhase = "intro" | "transition" | "landing";

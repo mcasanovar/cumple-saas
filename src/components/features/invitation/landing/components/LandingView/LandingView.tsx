@@ -3,9 +3,11 @@
 import Image from "next/image";
 import { motion, type Variants } from "framer-motion";
 
+import { useThemeDetection } from "@/hooks/useThemeDetection";
 import { SceneBackground } from "@/components/shared/invitation/scene-background";
 import { EventLocationMap } from "../EventLocationMap";
 import { RSVPForm } from "../RSVPForm";
+import { LandingDinoBackground } from "../LandingDinoBackground/LandingDinoBackground";
 
 import type { LandingViewProps } from "./LandingView.types";
 
@@ -28,6 +30,7 @@ export function LandingView({
   badgeLabel,
   heroTopLine,
   heroNameLine,
+  heroNameLineClass,
   detailHighlights,
   celebrantDescription,
   celebrantName,
@@ -37,11 +40,15 @@ export function LandingView({
   closingMessage,
   heroSubheadline,
   typography,
+  themeToken,
   venue,
 }: LandingViewProps) {
+  const { isDinoTheme } = useThemeDetection(themeToken);
+
   return (
     <div className="relative flex min-h-screen flex-col overflow-hidden">
-      <SceneBackground scene={scene} />
+      <SceneBackground scene={scene} showConfettiDots={!isDinoTheme} />
+      {isDinoTheme && <LandingDinoBackground />}
 
       <section className="relative z-10 flex flex-col items-center gap-16 px-6 pb-24 pt-24 text-center sm:pt-28">
         <motion.div
@@ -65,14 +72,38 @@ export function LandingView({
             transition={{ delay: 0.12, ease: easeOutQuint, duration: 0.85 }}
           >
             <span className="drop-shadow-[0_6px_16px_rgba(38,33,71,0.15)]">{heroTopLine}</span>
-            <span className="text-[#ff6b3d] drop-shadow-[0_6px_16px_rgba(255,107,61,0.25)]">
+            <span
+              className={
+                heroNameLineClass ||
+                "text-transparent"
+              }
+              style={
+                !heroNameLineClass
+                  ? {
+                    backgroundImage: isDinoTheme
+                      ? "linear-gradient(135deg, #6B9B6E 0%, #5A8A5D 50%, #4A7350 100%)"
+                      : "linear-gradient(90deg, #ffd166 0%, #ff9f1c 30%, #f15bb5 60%, #4361ee 100%)",
+                    WebkitBackgroundClip: "text",
+                    filter: isDinoTheme ? "drop-shadow(2px 2px 4px rgba(0,0,0,0.15))" : "none",
+                  }
+                  : undefined
+              }
+            >
               {heroNameLine}
             </span>
           </motion.h1>
 
           <motion.button
             type="button"
-            className="rounded-[36px] bg-gradient-to-r from-[#ff7a3d] to-[#ffb347] px-14 py-4 text-lg font-extrabold uppercase tracking-[0.32em] text-white shadow-[0_12px_30px_rgba(255,142,93,0.45)] transition hover:-translate-y-0.5"
+            className="rounded-[36px] px-14 py-4 text-lg font-extrabold uppercase tracking-[0.32em] text-white transition hover:-translate-y-0.5"
+            style={{
+              background: isDinoTheme
+                ? "linear-gradient(135deg, rgba(90, 138, 93, 0.98) 0%, rgba(74, 115, 80, 0.95) 52%, rgba(107, 155, 110, 0.92) 100%)"
+                : "linear-gradient(135deg, rgba(255,112,161,0.95) 0%, rgba(255,149,89,0.92) 52%, rgba(255,213,102,0.88) 100%)",
+              boxShadow: isDinoTheme
+                ? "0 22px 48px rgba(74, 115, 80, 0.4)"
+                : "0 22px 45px rgba(244,63,94,0.25)",
+            }}
             variants={fadeInUp}
             transition={{ delay: 0.2, ease: easeOutQuint, duration: 0.75 }}
           >
@@ -89,21 +120,35 @@ export function LandingView({
                 <div key={item.label} className="flex items-center md:flex-1 md:justify-center">
                   <div className="flex flex-col items-center text-center">
                     <span className="text-xl">{item.icon}</span>
-                    <span className="mt-3 text-[0.72rem] font-semibold uppercase tracking-[0.4em] text-[#6f6bb3]">
+                    <span
+                      className="mt-3 text-[0.72rem] font-semibold uppercase tracking-[0.4em]"
+                      style={{ color: isDinoTheme ? "#5A8A5D" : "#6f6bb3" }}
+                    >
                       {item.label}
                     </span>
                     <span
-                      className="mt-3 text-[1.75rem] font-black text-[#262147]"
-                      style={{ fontFamily: typography.heading }}
+                      className="mt-3 text-[1.75rem] font-black"
+                      style={{
+                        fontFamily: typography.heading,
+                        color: isDinoTheme ? "#2D3D2D" : "#262147",
+                      }}
                     >
                       {item.value}
                     </span>
                     {item.helper ? (
-                      <span className="mt-1 text-sm font-semibold text-[#262147]">{item.helper}</span>
+                      <span
+                        className="mt-1 text-sm font-semibold"
+                        style={{ color: isDinoTheme ? "#2D3D2D" : "#262147" }}
+                      >
+                        {item.helper}
+                      </span>
                     ) : null}
                   </div>
                   {index < detailHighlights.length - 1 ? (
-                    <span className="mx-6 hidden h-14 w-px bg-[#e5dff8] md:block" />
+                    <span
+                      className="mx-6 hidden h-14 w-px md:block"
+                      style={{ backgroundColor: isDinoTheme ? "#C8C4BC" : "#e5dff8" }}
+                    />
                   ) : null}
                 </div>
               ))}
@@ -176,12 +221,15 @@ export function LandingView({
 
           <div className="relative flex flex-col items-center gap-3 sm:gap-4">
             <h2
-              className="text-[clamp(2.4rem,5vw,3.4rem)] font-black leading-[1.08] text-[#1d1a43]"
-              style={{ fontFamily: typography.heading }}
+              className="text-[clamp(2.4rem,5vw,3.4rem)] font-black leading-[1.08]"
+              style={{
+                fontFamily: typography.heading,
+                color: isDinoTheme ? "#2D3D2D" : "#1d1a43",
+              }}
             >
-              <span className="text-[#2f6bff]">{celebrantName}</span> cumple
-              <span className="text-[#ff6b3d]"> {celebrantAge}</span>
-              <span className="text-[#ff6b3d]"> {celebrantAge === 1 ? "año" : "años"}</span>
+              <span style={{ color: isDinoTheme ? "#5A8A5D" : "#2f6bff" }}>{celebrantName}</span> cumple
+              <span style={{ color: isDinoTheme ? "#8B7355" : "#ff6b3d" }}> {celebrantAge}</span>
+              <span style={{ color: isDinoTheme ? "#8B7355" : "#ff6b3d" }}> {celebrantAge === 1 ? "año" : "años"}</span>
             </h2>
             <p className="max-w-3xl text-base leading-relaxed text-[#6f6bb3] sm:text-lg" style={{ fontFamily: typography.body }}>
               {celebrantDescription}
@@ -192,8 +240,16 @@ export function LandingView({
             {galleryItems.map((item, index) => (
               <motion.figure
                 key={item.id}
-                className={`flex items-center justify-center rounded-full border-[6px] border-white/90 bg-gradient-to-br from-[#fff6ef] to-[#ffe0f3] shadow-[0_20px_45px_rgba(255,180,200,0.32)] ${index === 1 ? "scale-105" : ""
+                className={`flex items-center justify-center rounded-full border-[6px] border-white/90 ${index === 1 ? "scale-105" : ""
                   } h-32 w-32 sm:h-40 sm:w-40`}
+                style={{
+                  background: isDinoTheme
+                    ? "linear-gradient(135deg, #6B9B6E 0%, #5A8A5D 100%)"
+                    : "linear-gradient(135deg, #fff6ef 0%, #ffe0f3 100%)",
+                  boxShadow: isDinoTheme
+                    ? "0 20px 45px rgba(107, 155, 110, 0.35)"
+                    : "0 20px 45px rgba(255,180,200,0.32)",
+                }}
                 whileHover={{ scale: 1.05 }}
                 transition={{ duration: 0.35, ease: easeOutQuint }}
               >
@@ -210,7 +266,13 @@ export function LandingView({
         </motion.section>
 
         <motion.section
-          className="mx-auto flex w-full max-w-6xl flex-col items-center gap-8 rounded-[48px] bg-[#fdeee2] px-5 py-12 text-center shadow-[0_24px_90px_rgba(255,188,170,0.25)] sm:gap-10 sm:px-10 sm:py-16"
+          className="mx-auto flex w-full max-w-6xl flex-col items-center gap-8 rounded-[48px] px-5 py-12 text-center sm:gap-10 sm:px-10 sm:py-16"
+          style={{
+            background: isDinoTheme ? "#6B9B6E" : "#fdeee2",
+            boxShadow: isDinoTheme
+              ? "0 24px 90px rgba(90, 138, 93, 0.25)"
+              : "0 24px 90px rgba(255,188,170,0.25)",
+          }}
           variants={fadeInUp}
           initial="hidden"
           whileInView="visible"
@@ -221,7 +283,13 @@ export function LandingView({
             <h2 className="text-[clamp(2.6rem,5vw,3.4rem)] font-black leading-[1.08] text-[#1f1a48]" style={{ fontFamily: typography.heading }}>
               ¿Qué te espera?
             </h2>
-            <p className="text-base font-medium text-[#6f6bb3] sm:text-lg" style={{ fontFamily: typography.body }}>
+            <p
+              className="text-base font-medium sm:text-lg"
+              style={{
+                fontFamily: typography.body,
+                color: isDinoTheme ? "#2D3D2D" : "#6f6bb3",
+              }}
+            >
               Una fiesta llena de sorpresas para grandes y chiquitos
             </p>
           </div>
@@ -230,7 +298,13 @@ export function LandingView({
             {featureList.map((feature) => (
               <motion.div
                 key={feature.title}
-                className="flex flex-col items-center gap-3 rounded-[28px] bg-white px-6 py-6 text-center shadow-[0_18px_44px_rgba(255,170,160,0.18)] transition-transform sm:px-8 sm:py-8"
+                className="flex flex-col items-center gap-3 rounded-[28px] px-6 py-6 text-center transition-transform sm:px-8 sm:py-8"
+                style={{
+                  background: isDinoTheme ? "#E8F5E9" : "#ffffff",
+                  boxShadow: isDinoTheme
+                    ? "0 18px 44px rgba(107, 155, 110, 0.22)"
+                    : "0 18px 44px rgba(255,170,160,0.18)",
+                }}
                 whileHover={{ y: -6 }}
                 transition={{ duration: 0.35, ease: easeOutQuint }}
               >
@@ -272,7 +346,7 @@ export function LandingView({
           viewport={{ once: true, amount: 0.2 }}
           transition={{ ease: easeOutQuint, duration: 1 }}
         >
-          <RSVPForm typography={typography} />
+          <RSVPForm typography={typography} themeToken={themeToken} />
         </motion.section>
       </section>
     </div>

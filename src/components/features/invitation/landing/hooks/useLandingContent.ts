@@ -5,6 +5,7 @@ import type {
   InvitationConfig,
   InvitationGalleryItem,
   ThemeConfig,
+  ThemeToken,
 } from "@/lib/types/invitation";
 
 const FALLBACK_SCENE: IntroSceneConfig = {
@@ -57,6 +58,7 @@ export type LandingContent = {
   scene: IntroSceneConfig;
   heroTopLine: string;
   heroNameLine: string;
+  heroNameLineClass: string;
   badgeLabel: string;
   detailHighlights: LandingHighlight[];
   celebrantDescription: string;
@@ -67,6 +69,7 @@ export type LandingContent = {
   closingMessage: string;
   heroSubheadline: string;
   typography: ThemeConfig["typography"];
+  themeToken?: ThemeToken;
   venue: {
     name: string;
     address: string;
@@ -165,6 +168,7 @@ export function useLandingContent(invitation: InvitationConfig, theme: ThemeConf
       scene,
       heroTopLine,
       heroNameLine: `${event.celebrantName}!`,
+      heroNameLineClass: intro?.celebrateNameClass ?? "",
       badgeLabel: intro?.hintHeadline?.toUpperCase() ?? "¡ESTÁS INVITADO!",
       detailHighlights,
       celebrantDescription: event.celebrantDescription ?? event.invitationMessage,
@@ -175,6 +179,7 @@ export function useLandingContent(invitation: InvitationConfig, theme: ThemeConf
       closingMessage: event.closingMessage,
       heroSubheadline: hero.subheadline,
       typography: theme.typography,
+      themeToken: invitation.theme,
       venue: {
         name: event.venueName,
         address: event.venueAddress,

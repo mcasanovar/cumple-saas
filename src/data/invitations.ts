@@ -1,41 +1,31 @@
-import { InvitationConfig } from "@/lib/types/invitation";
+import type { UserInvitationData } from "@/lib/types/template";
 
-export const invitations: InvitationConfig[] = [
+export const userInvitations: UserInvitationData[] = [
   {
-    slug: "mia-safari-2",
-    theme: "safari",
-    metaTitle: "Emiliano cumple 2 años | Safari Dreams",
+    id: "550e8400-e29b-41d4-a716-446655440000",
+    userId: "user_demo_001",
+    templateId: "safari-adventure",
+    slug: "emiliano-safari-2",
+    metaTitle: "Emiliano cumple 3 años | Safari Dreams",
     metaDescription:
-      "Acompáñanos a celebrar los 2 años de Emilianop en una aventura llena de magia y alegría.",
-    hero: {
-      headline: "La gran aventura de",
-      subheadline: "¡Ven a celebrar con nosotros!",
-      featuredIllustration: "/illustrations/safari-cubs.svg",
+      "Acompáñanos a celebrar los 3 años de Emiliano en una aventura llena de magia y alegría.",
+    celebrantName: "Emiliano",
+    age: 3,
+    date: "Sábado 02 de Abril, 2026",
+    time: "15:00 hrs",
+    venueName: "Casa de Caro",
+    venueAddress: "Altovalsol",
+    googleMapsUrl: "https://maps.google.com",
+    coordinates: {
+      lat: -34.603684,
+      lng: -58.381559,
     },
-    event: {
-      celebrantName: "Emiliano",
-      age: 3,
-      date: "Sábado 02 de Abril, 2026",
-      time: "15:00 hrs",
-      venueName: "Casa de Caro",
-      venueAddress: "Altovalsol",
-      googleMapsUrl: "https://maps.google.com",
-      coordinates: {
-        lat: -34.603684,
-        lng: -58.381559,
-      },
-      venueImageUrl: undefined,
-      celebrantDescription:
-        "Le encantan los dinosaurios, correr por el parque y las risas con sus amigos. ¡Este año celebramos a lo grande!",
-      invitationMessage:
-        "Prepárate para una tarde llena de risas, aventuras y sorpresas. Tu presencia hará este día inolvidable.",
-      closingMessage:
-        "¡Nos encantará compartir esta aventura contigo! Confirma tu asistencia y reserva tu lugar en la expedición.",
-    },
+    celebrantDescription:
+      "Le encantan los dinosaurios, correr por el parque y las risas con sus amigos. ¡Este año celebramos a lo grande!",
     gallery: [
       {
         id: "img-1",
-        caption: "Mía lista para explorar",
+        caption: "Emiliano listo para explorar",
         imageUrl: "/emi1.jpeg",
       },
       {
@@ -49,15 +39,8 @@ export const invitations: InvitationConfig[] = [
         imageUrl: "/emi3.jpeg",
       },
     ],
-    countdown: {
-      targetDateISO: "2026-08-24T16:30:00-03:00",
-    },
-    intro: {
-      celebrantHeadline: "Emiliano",
-      celebrantSubtitle: "cumpleaños",
-      celebrantTagline: "Acompáñanos a celebrar con risas monstruosas y mucha diversión",
-      hintHeadline: "¡Estás invitado!",
-      buttonLabel: "presiona",
+    targetDateISO: "2026-04-02T15:00:00-03:00",
+    introOverrides: {
       detailLeft: {
         title: "Sábado",
         subtitle: "02 ABRIL",
@@ -69,13 +52,77 @@ export const invitations: InvitationConfig[] = [
         helper: "Casa de Caro",
       },
     },
+    createdAt: "2026-01-15T10:00:00Z",
+    updatedAt: "2026-01-15T10:00:00Z",
+  },
+  {
+    id: "7c9e6679-7425-40de-944b-e07fc1f90ae7",
+    userId: "user_demo_002",
+    templateId: "dino-party",
+    slug: "emilio-dino-6",
+    metaTitle: "Emiliano cumple 6 años | Aventura Jurásica",
+    metaDescription:
+      "Únete a la aventura prehistórica de Emiliano. ¡Dinosaurios, diversión y mucha acción!",
+    celebrantName: "Emiliano",
+    age: 6,
+    date: "Sábado 17 de Agosto, 2026",
+    time: "14:00 hrs",
+    venueName: "Calle Cualquiera 123",
+    venueAddress: "Cualquier lugar",
+    googleMapsUrl: "https://maps.google.com",
+    coordinates: {
+      lat: -33.4489,
+      lng: -70.6693,
+    },
+    celebrantDescription:
+      "Fanático de los dinosaurios, explorador nato y amante de las aventuras. ¡Este año viajamos al Jurásico!",
+    gallery: [
+      {
+        id: "img-1",
+        caption: "Emilio el explorador",
+        imageUrl: "/emi1.jpeg",
+      },
+      {
+        id: "img-2",
+        caption: "Mundo prehistórico",
+        imageUrl: "/emi2.jpeg",
+      },
+      {
+        id: "img-3",
+        caption: "Decoración jurásica",
+        imageUrl: "/emi3.jpeg",
+      },
+    ],
+    targetDateISO: "2026-08-17T14:00:00-03:00",
+    introOverrides: {
+      detailLeft: {
+        title: "Sábado",
+        subtitle: "17 AGOSTO",
+        helper: "¡No faltes!",
+      },
+      detailRight: {
+        title: "2 PM",
+        subtitle: "Cualquier lugar",
+        helper: "Calle Cualquiera 123",
+      },
+    },
+    createdAt: "2026-02-10T12:00:00Z",
+    updatedAt: "2026-02-10T12:00:00Z",
   },
 ];
 
-export function getInvitationBySlug(slug: string): InvitationConfig | undefined {
-  return invitations.find((invitation) => invitation.slug === slug);
+export function getInvitationById(
+  invitationId: string
+): UserInvitationData | undefined {
+  return userInvitations.find((inv) => inv.id === invitationId);
 }
 
-export function getAllInvitationSlugs(): string[] {
-  return invitations.map((invitation) => invitation.slug);
+export function getInvitationBySlug(slug: string): UserInvitationData | undefined {
+  return userInvitations.find((inv) => inv.slug === slug);
+}
+
+export function getAllInvitationIds(): Array<{ invitationId: string }> {
+  return userInvitations.map((inv) => ({
+    invitationId: inv.id,
+  }));
 }

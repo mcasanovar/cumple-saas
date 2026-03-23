@@ -189,9 +189,9 @@ function IntroOverlayDecorations({ scene, isTransitioning }: IntroSceneBackgroun
               ? { y: isTransitioning ? 20 : [0, -12, 4, -8, 0] }
               : decoration.type === "spark"
                 ? {
-                    scale: isTransitioning ? 0.92 : [1, 1.05, 1],
-                    opacity: isTransitioning ? 0.2 : [0.3, 0.6, 0.3],
-                  }
+                  scale: isTransitioning ? 0.92 : [1, 1.05, 1],
+                  opacity: isTransitioning ? 0.2 : [0.3, 0.6, 0.3],
+                }
                 : { opacity: isTransitioning ? 0 : [0.25, 0.45, 0.25] }
           }
           transition={{ duration: 6, repeat: isTransitioning ? 0 : Infinity, ease: [0.42, 0, 0.58, 1] }}
@@ -209,8 +209,9 @@ export function IntroSceneBackground({ scene, isTransitioning }: IntroSceneBackg
         showDecorations={false}
         showBalloonClusters={false}
         showAmbientBalloons={false}
+        showConfettiDots={false}
       />
-      <IntroConfettiBackdrop />
+      {/* <IntroConfettiBackdrop /> */}
       <IntroBalloonClusters scene={scene} />
       <IntroAmbientBalloons scene={scene} />
       <IntroOverlayDecorations scene={scene} isTransitioning={isTransitioning} />

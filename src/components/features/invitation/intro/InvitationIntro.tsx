@@ -28,6 +28,7 @@ export function InvitationIntro({
       onRevealLanding={onRevealLanding}
       isTransitioning={isTransitioning}
       isVisible={isVisible}
+      themeToken={invitation.theme}
     />
   );
 }

@@ -3,6 +3,9 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
+import type { ThemeToken } from "@/lib/types/invitation";
+import { useThemeDetection } from "@/hooks/useThemeDetection";
+
 import { easeOutQuart } from "../../constants";
 
 export type IntroCallToActionProps = {
@@ -10,9 +13,11 @@ export type IntroCallToActionProps = {
   onComplete: () => void;
   fontFamily: string;
   isTransitioning: boolean;
+  themeToken?: ThemeToken;
 };
 
-export function IntroCallToAction({ label, onComplete, fontFamily, isTransitioning }: IntroCallToActionProps) {
+export function IntroCallToAction({ label, onComplete, fontFamily, isTransitioning, themeToken }: IntroCallToActionProps) {
+  const { isDinoTheme } = useThemeDetection(themeToken);
   const [isAnimating, setIsAnimating] = useState(false);
   const [confettiActive, setConfettiActive] = useState(false);
   const [fadeActive, setFadeActive] = useState(false);
@@ -159,55 +164,114 @@ export function IntroCallToAction({ label, onComplete, fontFamily, isTransitioni
       >
         <div className="relative z-10 flex w-full items-center justify-center">
           <div
-            className="relative flex w-full flex-col items-center justify-center gap-1 overflow-hidden rounded-[32px] px-10 py-6 shadow-[0_22px_45px_rgba(244,63,94,0.25)]"
+            className="relative flex w-full flex-col items-center justify-center gap-1 overflow-hidden rounded-[32px] px-10 py-6"
             style={{
-              background:
-                "linear-gradient(135deg, rgba(255,112,161,0.95) 0%, rgba(255,149,89,0.92) 52%, rgba(255,213,102,0.88) 100%)",
+              background: isDinoTheme
+                ? "linear-gradient(135deg, rgba(90, 138, 93, 0.98) 0%, rgba(74, 115, 80, 0.95) 52%, rgba(107, 155, 110, 0.92) 100%)"
+                : "linear-gradient(135deg, rgba(255,112,161,0.95) 0%, rgba(255,149,89,0.92) 52%, rgba(255,213,102,0.88) 100%)",
+              boxShadow: isDinoTheme
+                ? "0 22px 48px rgba(74, 115, 80, 0.4)"
+                : "0 22px 45px rgba(244,63,94,0.25)",
             }}
           >
-            <div className="pointer-events-none absolute inset-0">
-              <span className="absolute -left-6 top-4 h-14 w-14 rounded-full bg-white/14 blur-xl" />
-              <span className="absolute -right-8 bottom-3 h-16 w-16 rounded-full bg-white/18 blur-[22px]" />
-              <span className="absolute left-[18%] top-3 h-2 w-8 rounded-full bg-white/60" />
-              <span className="absolute right-[22%] bottom-5 h-2 w-7 rounded-full bg-white/50" />
-              <span className="absolute left-[14%] bottom-6 h-1.5 w-5 rotate-12 rounded-full bg-[#ffd8ef]/90" />
-              <span className="absolute right-[12%] top-6 h-1.5 w-6 -rotate-8 rounded-full bg-[#ffe8a3]/90" />
-            </div>
+            {!isDinoTheme && (
+              <div className="pointer-events-none absolute inset-0">
+                <span className="absolute -left-6 top-4 h-14 w-14 rounded-full bg-white/14 blur-xl" />
+                <span className="absolute -right-8 bottom-3 h-16 w-16 rounded-full bg-white/18 blur-[22px]" />
+                <span className="absolute left-[18%] top-3 h-2 w-8 rounded-full bg-white/60" />
+                <span className="absolute right-[22%] bottom-5 h-2 w-7 rounded-full bg-white/50" />
+                <span className="absolute left-[14%] bottom-6 h-1.5 w-5 rotate-12 rounded-full bg-[#ffd8ef]/90" />
+                <span className="absolute right-[12%] top-6 h-1.5 w-6 -rotate-8 rounded-full bg-[#ffe8a3]/90" />
+              </div>
+            )}
 
-            <div className="pointer-events-none absolute inset-0">
-              {["#fff5f7", "#ffe7f1", "#fff0d6"].map((color, idx) => (
-                <span
-                  key={`confetti-dot-${idx}`}
-                  className="absolute rounded-full opacity-80"
-                  style={{
-                    background: color,
-                    width: [9, 6, 8][idx],
-                    height: [9, 6, 8][idx],
-                    top: `${18 + idx * 22}%`,
-                    left: `${28 + idx * 24}%`,
-                  }}
-                />
-              ))}
-              {[
-                "-22deg",
-                "12deg",
-                "-38deg",
-              ].map((rotation, idx) => (
-                <span
-                  key={`sprinkle-${idx}`}
-                  className="absolute h-8 w-1.5 rounded-full"
-                  style={{
-                    background: idx === 1 ? "#ffe599" : "#ffd1dc",
-                    top: idx === 0 ? "16%" : idx === 1 ? "62%" : "44%",
-                    left: idx === 0 ? "78%" : idx === 1 ? "16%" : "84%",
-                    transform: `rotate(${rotation})`,
-                    opacity: 0.7,
-                  }}
-                />
-              ))}
-            </div>
+            {isDinoTheme ? (
+              <div className="pointer-events-none absolute inset-0 overflow-hidden">
+                {/* Pasto prehistórico animado desde atrás */}
+                {[
+                  { left: "5%", height: 45, delay: 0, rotation: -8 },
+                  { left: "15%", height: 38, delay: 0.1, rotation: 5 },
+                  { left: "25%", height: 42, delay: 0.05, rotation: -3 },
+                  { left: "35%", height: 50, delay: 0.15, rotation: 8 },
+                  { left: "45%", height: 36, delay: 0.08, rotation: -6 },
+                  { left: "55%", height: 48, delay: 0.12, rotation: 4 },
+                  { left: "65%", height: 40, delay: 0.06, rotation: -5 },
+                  { left: "75%", height: 44, delay: 0.14, rotation: 7 },
+                  { left: "85%", height: 39, delay: 0.09, rotation: -4 },
+                  { left: "95%", height: 46, delay: 0.11, rotation: 6 },
+                ].map((grass, idx) => (
+                  <motion.div
+                    key={`grass-${idx}`}
+                    className="absolute bottom-0"
+                    style={{ left: grass.left }}
+                    initial={{ y: 20, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{
+                      duration: 0.8,
+                      delay: grass.delay,
+                      ease: [0.34, 1.56, 0.64, 1],
+                    }}
+                  >
+                    <svg
+                      width="12"
+                      height={grass.height}
+                      viewBox="0 0 12 50"
+                      fill="none"
+                      style={{ transform: `rotate(${grass.rotation}deg)` }}
+                    >
+                      <path
+                        d="M6 50 Q 3 35, 4 20 Q 5 10, 6 0 Q 7 10, 8 20 Q 9 35, 6 50"
+                        fill="rgba(74, 115, 80, 0.6)"
+                      />
+                      <path
+                        d="M6 50 Q 4 38, 5 25 Q 5.5 12, 6 2"
+                        stroke="rgba(90, 138, 93, 0.8)"
+                        strokeWidth="1.5"
+                        fill="none"
+                      />
+                    </svg>
+                  </motion.div>
+                ))}
+              </div>
+            ) : (
+              <div className="pointer-events-none absolute inset-0">
+                {["#fff5f7", "#ffe7f1", "#fff0d6"].map((color, idx) => (
+                  <span
+                    key={`confetti-dot-${idx}`}
+                    className="absolute rounded-full opacity-80"
+                    style={{
+                      background: color,
+                      width: [9, 6, 8][idx],
+                      height: [9, 6, 8][idx],
+                      top: `${18 + idx * 22}%`,
+                      left: `${28 + idx * 24}%`,
+                    }}
+                  />
+                ))}
+                {["-22deg", "12deg", "-38deg"].map((rotation, idx) => (
+                  <span
+                    key={`sprinkle-${idx}`}
+                    className="absolute h-8 w-1.5 rounded-full"
+                    style={{
+                      background: idx === 1 ? "#ffe599" : "#ffd1dc",
+                      top: idx === 0 ? "16%" : idx === 1 ? "62%" : "44%",
+                      left: idx === 0 ? "78%" : idx === 1 ? "16%" : "84%",
+                      transform: `rotate(${rotation})`,
+                      opacity: 0.7,
+                    }}
+                  />
+                ))}
+              </div>
+            )}
 
-            <span className="relative text-lg font-extrabold uppercase tracking-[0.4em] text-white drop-shadow-[0_3px_6px_rgba(236,72,153,0.45)]">
+            <span
+              className="relative text-lg font-extrabold uppercase tracking-[0.4em] text-white"
+              style={{
+                textShadow: isDinoTheme
+                  ? "0 3px 6px rgba(45, 61, 45, 0.5)"
+                  : "0 3px 6px rgba(236,72,153,0.45)",
+              }}
+            >
               {buttonText.toUpperCase()}
             </span>
           </div>

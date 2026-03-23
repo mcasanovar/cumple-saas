@@ -155,6 +155,7 @@ export interface InvitationIntroCopy {
   celebrantTagline: string;
   hintHeadline: string;
   buttonLabel: string;
+  celebrateNameClass: string;
   detailLeft?: {
     title: string;
     subtitle: string;
@@ -180,3 +181,23 @@ export type RSVPActionState =
   | { status: "idle" }
   | { status: "success"; message: string }
   | { status: "error"; message: string };
+
+export interface InvitationRenderConfig {
+  invitationId: string;
+  templateId: string;
+  slug: string;
+  theme: ThemeToken;
+  metaTitle: string;
+  metaDescription: string;
+  hero: {
+    headline: string;
+    subheadline: string;
+    featuredIllustration: string;
+  };
+  event: InvitationEventInfo;
+  gallery: InvitationGalleryItem[];
+  countdown: {
+    targetDateISO: string;
+  };
+  intro: InvitationIntroCopy;
+}

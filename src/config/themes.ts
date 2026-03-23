@@ -290,38 +290,46 @@ export const themes: Record<ThemeToken, ThemeConfig> = {
   dinosaurios: {
     name: "Valle Jurásico",
     primaryGradient:
-      "linear-gradient(135deg, #bef264 0%, #4ade80 45%, #22d3ee 100%)",
-    accentGradient: "linear-gradient(135deg, #60a5fa 0%, #22d3ee 100%)",
-    accentColor: "#22d3ee",
+      "linear-gradient(135deg, #6B9B6E 0%, #5A8A5D 45%, #4A7350 100%)",
+    accentGradient: "linear-gradient(135deg, #7CAA7F 0%, #6B9B6E 100%)",
+    accentColor: "#6B9B6E",
     backgroundPattern:
-      "radial-gradient(circle at 15% 25%, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0) 45%), linear-gradient(180deg, #ecfccb 0%, #cffafe 100%)",
-    floatingDecorations: [
-      {
-        id: "shape-1",
-        type: "shape",
-        color: "rgba(34,211,238,0.35)",
-        size: 180,
-        oscillation: 16,
-        position: { top: "18%", left: "58%" },
+      "radial-gradient(circle at 15% 25%, rgba(200,196,188,0.15) 0%, rgba(200,196,188,0) 45%), linear-gradient(180deg, #F5F1E8 0%, #E8DCC8 100%)",
+    floatingDecorations: [],
+    introScene: {
+      backgroundGradient:
+        "radial-gradient(circle at 30% 20%, rgba(124, 170, 127, 0.3) 0%, rgba(107, 155, 110, 0.15) 50%), radial-gradient(circle at 70% 80%, rgba(90, 138, 93, 0.25) 0%, rgba(74, 115, 80, 0.1) 50%), linear-gradient(180deg, #A8D5A8 0%, #8BC48B 50%, #7AB87A 100%)",
+      overlayGradient:
+        "linear-gradient(135deg, rgba(168, 213, 168, 0.4) 0%, rgba(139, 196, 139, 0.3) 50%, rgba(122, 184, 122, 0.2) 100%)",
+      textureOpacity: 0.15,
+      frame: {
+        borderGradient:
+          "linear-gradient(135deg, rgba(107, 155, 110, 1) 0%, rgba(90, 138, 93, 1) 50%, rgba(74, 115, 80, 1) 100%)",
+        fill: "linear-gradient(180deg, rgba(245,241,232,0.98) 0%, rgba(232,220,200,0.95) 100%)",
+        highlight: "rgba(255, 255, 255, 0.5)",
+        shadow: "rgba(107, 155, 110, 0.3)",
       },
-      {
-        id: "balloon-1",
-        type: "balloon",
-        color: "#bbf7d0",
-        size: 150,
-        oscillation: 20,
-        position: { top: "34%", left: "18%" },
+      bannerColors: ["#FFD700", "#2D3D2D", "#6B9B6E", "#5A8A5D", "#4A7350", "#7CAA7F"],
+      decorations: [],
+      ambientBalloons: [],
+      balloonClusters: [],
+      monogram: {
+        background:
+          "linear-gradient(135deg, rgba(245, 241, 232, 0.95) 0%, rgba(232, 220, 200, 0.92) 100%)",
+        textColor: "#2D3D2D",
+        shadow: "0 18px 60px rgba(45, 61, 45, 0.25)",
       },
-      {
-        id: "cloud-1",
-        type: "cloud",
-        color: "rgba(255,255,255,0.8)",
-        size: 260,
-        oscillation: 24,
-        blur: true,
-        position: { top: "68%", left: "46%" },
+      hint: {
+        headlineColor: "rgba(45, 61, 45, 0.95)",
+        secondaryColor: "rgba(74, 115, 80, 0.85)",
+        button: {
+          background: "linear-gradient(135deg, #5A8A5D 0%, #4A7350 100%)",
+          textColor: "#F5F1E8",
+          shadow: "0 22px 48px rgba(74, 115, 80, 0.4)",
+          border: "1px solid rgba(45, 61, 45, 0.3)",
+        },
       },
-    ],
+    },
     typography: {
       heading: kidsFont,
       body: kidsFont,

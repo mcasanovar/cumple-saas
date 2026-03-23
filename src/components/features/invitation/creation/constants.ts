@@ -1,38 +1,40 @@
+import type { TemplateId } from "@/lib/types/template";
+
 import type { TemplateOption } from "./types";
 
 export const AVAILABLE_TEMPLATES: TemplateOption[] = [
   {
-    id: "safari-adventure",
+    id: "safari-adventure" as TemplateId,
     name: "Safari Adventure",
     theme: "safari",
     emoji: "🦁",
     description: "Una aventura salvaje llena de animales y diversión",
   },
   {
-    id: "princess-dreams",
+    id: "princess-dreams" as TemplateId,
     name: "Princess Dreams",
-    theme: "princess",
+    theme: "princesa",
     emoji: "👑",
     description: "Un reino mágico de princesas y castillos",
   },
   {
-    id: "dino-party",
+    id: "dino-party" as TemplateId,
     name: "Dino Party",
-    theme: "dinosaur",
+    theme: "dinosaurios",
     emoji: "🦖",
     description: "Viaja al pasado con dinosaurios gigantes",
   },
   {
-    id: "space-explorer",
+    id: "space-explorer" as TemplateId,
     name: "Space Explorer",
-    theme: "space",
+    theme: "cielo",
     emoji: "🚀",
     description: "Explora el universo en una aventura espacial",
   },
   {
-    id: "unicorn-magic",
+    id: "unicorn-magic" as TemplateId,
     name: "Unicorn Magic",
-    theme: "unicorn",
+    theme: "bosque",
     emoji: "🦄",
     description: "Un mundo mágico de unicornios y arcoíris",
   },

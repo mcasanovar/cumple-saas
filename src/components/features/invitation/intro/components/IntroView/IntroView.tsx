@@ -2,11 +2,15 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 
+import type { ThemeToken } from "@/lib/types/invitation";
+import { useThemeDetection } from "@/hooks/useThemeDetection";
 import type { IntroContent } from "../../hooks/useIntroContent";
 import { easeOutQuart } from "../../constants";
 import { frameVariants, headingVariants } from "../../variants";
 import { IntroCallToAction } from "../IntroCallToAction/IntroCallToAction";
 import { IntroCelebrationBanner } from "../IntroCelebrationBanner/IntroCelebrationBanner";
+import { IntroCautionStripes } from "../IntroCautionStripes/IntroCautionStripes";
+import { IntroCrackedBackground } from "../IntroCrackedBackground/IntroCrackedBackground";
 import { IntroDetailColumn } from "../IntroDetailColumn";
 import { IntroMonsterMascot } from "../IntroMonsterMascot/IntroMonsterMascot";
 import { IntroSceneBackground } from "../IntroSceneBackground";
@@ -15,10 +19,12 @@ export type IntroViewProps = IntroContent & {
   onRevealLanding: () => void;
   isTransitioning: boolean;
   isVisible: boolean;
+  themeToken?: ThemeToken;
 };
 
 export function IntroView({
   introCopy,
+  celebrantName,
   scene,
   detailLeft,
   detailRight,
@@ -26,18 +32,32 @@ export function IntroView({
   onRevealLanding,
   isTransitioning,
   isVisible,
+  themeToken,
 }: IntroViewProps) {
+  const { isDinoTheme } = useThemeDetection(themeToken);
+
+  const subtitleParts = introCopy.celebrantSubtitle.split("{celebrantName}");
+  const subtitlePrefix = subtitleParts[0] || "";
+  const subtitleSuffix = subtitleParts[1] || "";
+
   return (
     <AnimatePresence>
       {isVisible ? (
         <motion.section
           key="invitation-intro"
-          className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-4 py-16 sm:px-10"
+          className="relative flex h-screen max-h-screen flex-col items-center justify-center overflow-hidden px-4 py-16 sm:px-10"
           initial="hidden"
           animate="visible"
           exit="exit"
         >
-          <IntroSceneBackground scene={scene} isTransitioning={isTransitioning} />
+          {isDinoTheme ? (
+            <>
+              <IntroCrackedBackground />
+              <IntroCautionStripes />
+            </>
+          ) : (
+            <IntroSceneBackground scene={scene} isTransitioning={isTransitioning} />
+          )}
 
           <motion.div
             className="relative z-10 flex w-full max-w-[min(560px,92vw)] flex-col items-center gap-6"
@@ -62,12 +82,14 @@ export function IntroView({
             </motion.p>
 
             <motion.h1
-              className="text-center text-5xl font-black uppercase tracking-[0.2em] text-transparent drop-shadow-sm sm:text-6xl"
+              className="text-center text-4xl font-black uppercase tracking-[0.2em] text-transparent drop-shadow-sm sm:text-6xl"
               style={{
                 fontFamily: typography.heading,
-                backgroundImage:
-                  "linear-gradient(90deg, #ffd166 0%, #ff9f1c 30%, #f15bb5 60%, #4361ee 100%)",
+                backgroundImage: isDinoTheme
+                  ? "linear-gradient(135deg, #6B9B6E 0%, #5A8A5D 50%, #4A7350 100%)"
+                  : "linear-gradient(90deg, #ffd166 0%, #ff9f1c 30%, #f15bb5 60%, #4361ee 100%)",
                 WebkitBackgroundClip: "text",
+                filter: isDinoTheme ? "drop-shadow(2px 2px 4px rgba(0,0,0,0.15))" : "none",
               }}
               custom={1}
               variants={headingVariants}
@@ -75,23 +97,39 @@ export function IntroView({
               {introCopy.celebrantHeadline.toUpperCase()}
             </motion.h1>
 
-            <motion.div
-              className="relative inline-flex items-center justify-center px-12 py-3"
+            <motion.h2
+              className="text-center text-4xl font-black uppercase tracking-tight sm:text-7xl"
+              style={{
+                fontFamily: typography.heading,
+                color: isDinoTheme ? "#8B7355" : "#2D3D2D",
+                textShadow: isDinoTheme ? "3px 3px 6px rgba(0,0,0,0.2)" : "none",
+                WebkitTextStroke: isDinoTheme ? "1px rgba(139, 115, 85, 0.3)" : "none",
+              }}
               custom={2}
               variants={headingVariants}
-              style={{
-                background: "linear-gradient(180deg, #ff616f 0%, #f94144 100%)",
-                clipPath: "polygon(4% 0%, 96% 0%, 100% 100%, 0% 100%)",
-                boxShadow: "0 16px 30px rgba(249, 65, 68, 0.25)",
-              }}
             >
+              {subtitlePrefix && <span>{subtitlePrefix.toUpperCase()} </span>}
               <span
-                className="text-lg font-semibold uppercase tracking-[0.32em] text-[#fff8f0]"
-                style={{ fontFamily: typography.body }}
+                className={
+                  introCopy.celebrateNameClass ||
+                  "text-transparent"
+                }
+                style={
+                  !introCopy.celebrateNameClass
+                    ? {
+                      backgroundImage: isDinoTheme
+                        ? "linear-gradient(135deg, #6B9B6E 0%, #5A8A5D 50%, #4A7350 100%)"
+                        : "linear-gradient(90deg, #ffd166 0%, #ff9f1c 30%, #f15bb5 60%, #4361ee 100%)",
+                      WebkitBackgroundClip: "text",
+                      filter: isDinoTheme ? "drop-shadow(2px 2px 4px rgba(0,0,0,0.15))" : "none",
+                    }
+                    : undefined
+                }
               >
-                {introCopy.celebrantSubtitle.toUpperCase()}
+                {celebrantName.toUpperCase()}
               </span>
-            </motion.div>
+              {subtitleSuffix && <span> {subtitleSuffix.toUpperCase()}</span>}
+            </motion.h2>
 
             <motion.div
               className="mt-4 grid w-full grid-cols-[auto_minmax(0,1fr)_auto] items-start gap-5 px-2"
@@ -118,20 +156,23 @@ export function IntroView({
               {introCopy.celebrantTagline}
             </motion.p>
 
-            <motion.div
-              className="mt-1 flex w-full items-center justify-center"
-              initial={{ opacity: 0, scale: 0.9, y: 12 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.65, ease: easeOutQuart }}
-            >
-              <IntroMonsterMascot />
-            </motion.div>
+            {!isDinoTheme && (
+              <motion.div
+                className="mt-1 flex w-full items-center justify-center"
+                initial={{ opacity: 0, scale: 0.9, y: 12 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                transition={{ duration: 0.7, delay: 0.65, ease: easeOutQuart }}
+              >
+                <IntroMonsterMascot />
+              </motion.div>
+            )}
 
             <IntroCallToAction
               label={introCopy.buttonLabel}
               onComplete={onRevealLanding}
               fontFamily={typography.body}
               isTransitioning={isTransitioning}
+              themeToken={themeToken}
             />
           </motion.div>
         </motion.section>
