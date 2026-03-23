@@ -1,0 +1,1 @@
+export { IntroPrincessBackground } from "./IntroPrincessBackground";

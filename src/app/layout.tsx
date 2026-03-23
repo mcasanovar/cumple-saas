@@ -1,11 +1,18 @@
 import type { Metadata } from "next";
-import { Baloo_2 } from "next/font/google";
+import { Baloo_2, Great_Vibes } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 
 import "./globals.css";
 
 const baloo = Baloo_2({
   variable: "--font-kids",
+  subsets: ["latin"],
+  display: "swap",
+});
+
+const greatVibes = Great_Vibes({
+  variable: "--font-script",
+  weight: "400",
   subsets: ["latin"],
   display: "swap",
 });
@@ -28,7 +35,7 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en">
-        <body className={`${baloo.variable} antialiased`}>
+        <body className={`${baloo.variable} ${greatVibes.variable} antialiased`}>
           {children}
         </body>
       </html>

@@ -1,6 +1,7 @@
 import { ThemeConfig, ThemeToken } from "@/lib/types/invitation";
 
 const kidsFont = '"Baloo 2", "Fredoka", "Comic Neue", sans-serif';
+const princessFont = '"Waltograph", cursive';
 
 export const themes: Record<ThemeToken, ThemeConfig> = {
   safari: {
@@ -250,41 +251,49 @@ export const themes: Record<ThemeToken, ThemeConfig> = {
   princesa: {
     name: "Reino Encantado",
     primaryGradient:
-      "linear-gradient(135deg, #f8b4ff 0%, #fda4af 50%, #fca5a5 100%)",
-    accentGradient: "linear-gradient(135deg, #f472b6 0%, #fb7185 100%)",
-    accentColor: "#f472b6",
+      "linear-gradient(135deg, #FF1493 0%, #FF69B4 45%, #FFB6D9 100%)",
+    accentGradient: "linear-gradient(135deg, #FF1493 0%, #FF69B4 100%)",
+    accentColor: "#FF1493",
     backgroundPattern:
-      "radial-gradient(circle at 50% 0%, rgba(255,255,255,0.35) 0%, rgba(255,255,255,0) 45%), linear-gradient(180deg, #fff0f8 0%, #ffe3f1 100%)",
-    floatingDecorations: [
-      {
-        id: "star-1",
-        type: "star",
-        color: "rgba(255,255,255,0.9)",
-        size: 120,
-        oscillation: 15,
-        position: { top: "24%", left: "20%" },
+      "radial-gradient(circle at 20% 15%, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0) 45%), radial-gradient(circle at 80% 85%, rgba(255,182,217,0.15) 0%, rgba(255,182,217,0) 50%), linear-gradient(180deg, #FFF0F5 0%, #FFE8F0 100%)",
+    floatingDecorations: [],
+    introScene: {
+      backgroundGradient:
+        "radial-gradient(circle at 30% 20%, rgba(255, 240, 245, 0.8) 0%, rgba(255, 240, 245, 0.4) 50%), radial-gradient(circle at 70% 80%, rgba(255, 182, 217, 0.2) 0%, rgba(255, 182, 217, 0) 50%), linear-gradient(180deg, #FFF0F5 0%, #FFE8F0 50%, #FFD4EC 100%)",
+      overlayGradient:
+        "linear-gradient(135deg, rgba(255, 255, 255, 0.7) 0%, rgba(255, 240, 245, 0.5) 50%, rgba(255, 228, 240, 0.3) 100%)",
+      textureOpacity: 0.15,
+      frame: {
+        borderGradient:
+          "linear-gradient(135deg, rgba(255, 20, 147, 0.3) 0%, rgba(255, 105, 180, 0.3) 50%, rgba(255, 182, 217, 0.3) 100%)",
+        fill: "linear-gradient(180deg, rgba(255,255,255,0.98) 0%, rgba(255,240,245,0.95) 100%)",
+        highlight: "rgba(255, 255, 255, 0.8)",
+        shadow: "rgba(255, 20, 147, 0.15)",
       },
-      {
-        id: "balloon-1",
-        type: "balloon",
-        color: "#fbcfe8",
-        size: 160,
-        oscillation: 20,
-        position: { top: "40%", left: "68%" },
+      bannerColors: ["#FF1493", "#FF69B4", "#FFB6D9", "#F4D03F", "#FFD4EC", "#F7DC6F"],
+      decorations: [],
+      ambientBalloons: [],
+      balloonClusters: [],
+      monogram: {
+        background:
+          "linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(255, 240, 245, 0.95) 100%)",
+        textColor: "#FF1493",
+        shadow: "0 18px 60px rgba(255, 20, 147, 0.2)",
       },
-      {
-        id: "cloud-1",
-        type: "cloud",
-        color: "rgba(255,255,255,0.75)",
-        size: 240,
-        oscillation: 18,
-        blur: true,
-        position: { top: "62%", left: "50%" },
+      hint: {
+        headlineColor: "rgba(255, 20, 147, 0.95)",
+        secondaryColor: "rgba(255, 105, 180, 0.85)",
+        button: {
+          background: "linear-gradient(135deg, #FF1493 0%, #FF69B4 100%)",
+          textColor: "#FFFFFF",
+          shadow: "0 22px 48px rgba(255, 20, 147, 0.35)",
+          border: "1px solid rgba(255, 20, 147, 0.2)",
+        },
       },
-    ],
+    },
     typography: {
-      heading: kidsFont,
-      body: kidsFont,
+      heading: princessFont,
+      body: princessFont,
     },
   },
   dinosaurios: {

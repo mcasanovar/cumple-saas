@@ -1,11 +1,12 @@
 import type { TemplateDefinition, TemplateId, TemplateCategory } from "@/lib/types/template";
 
 import { dinoPartyTemplate } from "./dino-party/template";
+import { princessPartyTemplate } from "./princess-party/template";
 import { safariAdventureTemplate } from "./safari-adventure/template";
 
 const TEMPLATE_REGISTRY: Record<TemplateId, TemplateDefinition | null> = {
   "safari-adventure": safariAdventureTemplate,
-  "princess-dreams": null,
+  "princess-dreams": princessPartyTemplate,
   "dino-party": dinoPartyTemplate,
   "space-explorer": null,
   "unicorn-magic": null,

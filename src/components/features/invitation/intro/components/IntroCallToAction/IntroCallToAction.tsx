@@ -9,6 +9,7 @@ import { useThemeDetection } from "@/hooks/useThemeDetection";
 import { easeOutQuart } from "../../constants";
 
 export type IntroCallToActionProps = {
+  className?: string;
   label: string;
   onComplete: () => void;
   fontFamily: string;
@@ -16,8 +17,8 @@ export type IntroCallToActionProps = {
   themeToken?: ThemeToken;
 };
 
-export function IntroCallToAction({ label, onComplete, fontFamily, isTransitioning, themeToken }: IntroCallToActionProps) {
-  const { isDinoTheme } = useThemeDetection(themeToken);
+export function IntroCallToAction({ className, label, onComplete, fontFamily, isTransitioning, themeToken }: IntroCallToActionProps) {
+  const { isDinoTheme, isPrincessTheme } = useThemeDetection(themeToken);
   const [isAnimating, setIsAnimating] = useState(false);
   const [confettiActive, setConfettiActive] = useState(false);
   const [fadeActive, setFadeActive] = useState(false);
@@ -155,7 +156,7 @@ export function IntroCallToAction({ label, onComplete, fontFamily, isTransitioni
         type="button"
         disabled={isAnimating || isTransitioning}
         onClick={handlePress}
-        className="group relative mt-4 flex w-full max-w-[min(520px,94vw)] flex-col items-center gap-5 overflow-visible rounded-[32px] focus:outline-none focus-visible:ring-4 focus-visible:ring-rose-300/45 disabled:cursor-default"
+        className={`group relative flex w-full max-w-[min(520px,94vw)] flex-col items-center gap-5 overflow-visible rounded-[32px] focus:outline-none focus-visible:ring-4 focus-visible:ring-rose-300/45 disabled:cursor-default ${className || "mt-4"}`}
         aria-label={label}
         style={{ fontFamily }}
         whileHover={hoverAnimation}
@@ -166,15 +167,19 @@ export function IntroCallToAction({ label, onComplete, fontFamily, isTransitioni
           <div
             className="relative flex w-full flex-col items-center justify-center gap-1 overflow-hidden rounded-[32px] px-10 py-6"
             style={{
-              background: isDinoTheme
-                ? "linear-gradient(135deg, rgba(90, 138, 93, 0.98) 0%, rgba(74, 115, 80, 0.95) 52%, rgba(107, 155, 110, 0.92) 100%)"
-                : "linear-gradient(135deg, rgba(255,112,161,0.95) 0%, rgba(255,149,89,0.92) 52%, rgba(255,213,102,0.88) 100%)",
-              boxShadow: isDinoTheme
-                ? "0 22px 48px rgba(74, 115, 80, 0.4)"
-                : "0 22px 45px rgba(244,63,94,0.25)",
+              background: isPrincessTheme
+                ? "linear-gradient(135deg, rgba(146, 120, 185, 0.95) 0%, rgba(248, 166, 186, 0.92) 52%, rgba(200, 162, 200, 0.88) 100%)"
+                : isDinoTheme
+                  ? "linear-gradient(135deg, rgba(90, 138, 93, 0.98) 0%, rgba(74, 115, 80, 0.95) 52%, rgba(107, 155, 110, 0.92) 100%)"
+                  : "linear-gradient(135deg, rgba(255,112,161,0.95) 0%, rgba(255,149,89,0.92) 52%, rgba(255,213,102,0.88) 100%)",
+              boxShadow: isPrincessTheme
+                ? "0 22px 45px rgba(146, 120, 185, 0.35)"
+                : isDinoTheme
+                  ? "0 22px 48px rgba(74, 115, 80, 0.4)"
+                  : "0 22px 45px rgba(244,63,94,0.25)",
             }}
           >
-            {!isDinoTheme && (
+            {!isDinoTheme && !isPrincessTheme && (
               <div className="pointer-events-none absolute inset-0">
                 <span className="absolute -left-6 top-4 h-14 w-14 rounded-full bg-white/14 blur-xl" />
                 <span className="absolute -right-8 bottom-3 h-16 w-16 rounded-full bg-white/18 blur-[22px]" />
@@ -185,7 +190,47 @@ export function IntroCallToAction({ label, onComplete, fontFamily, isTransitioni
               </div>
             )}
 
-            {isDinoTheme ? (
+            {isPrincessTheme ? (
+              <div className="pointer-events-none absolute inset-0 overflow-hidden">
+                {/* Flores decorativas para princesa */}
+                <svg className="absolute left-[8%] top-[20%]" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                  <circle cx="12" cy="12" r="4" fill="#f8a6ba" />
+                  <ellipse cx="12" cy="5" rx="3" ry="4" fill="#f8a6ba" opacity="0.8" />
+                  <ellipse cx="12" cy="19" rx="3" ry="4" fill="#f8a6ba" opacity="0.8" />
+                  <ellipse cx="5" cy="12" rx="4" ry="3" fill="#f8a6ba" opacity="0.8" />
+                  <ellipse cx="19" cy="12" rx="4" ry="3" fill="#f8a6ba" opacity="0.8" />
+                  <circle cx="12" cy="12" r="2" fill="#fff" opacity="0.9" />
+                </svg>
+                <svg className="absolute right-[10%] top-[25%]" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                  <circle cx="12" cy="12" r="4" fill="#c8a2c8" />
+                  <ellipse cx="12" cy="5" rx="3" ry="4" fill="#c8a2c8" opacity="0.8" />
+                  <ellipse cx="12" cy="19" rx="3" ry="4" fill="#c8a2c8" opacity="0.8" />
+                  <ellipse cx="5" cy="12" rx="4" ry="3" fill="#c8a2c8" opacity="0.8" />
+                  <ellipse cx="19" cy="12" rx="4" ry="3" fill="#c8a2c8" opacity="0.8" />
+                  <circle cx="12" cy="12" r="2" fill="#fff" opacity="0.9" />
+                </svg>
+                <svg className="absolute left-[15%] bottom-[20%]" width="18" height="18" viewBox="0 0 24 24" fill="none">
+                  <circle cx="12" cy="12" r="4" fill="#9278b9" opacity="0.7" />
+                  <ellipse cx="12" cy="5" rx="3" ry="4" fill="#9278b9" opacity="0.5" />
+                  <ellipse cx="12" cy="19" rx="3" ry="4" fill="#9278b9" opacity="0.5" />
+                  <ellipse cx="5" cy="12" rx="4" ry="3" fill="#9278b9" opacity="0.5" />
+                  <ellipse cx="19" cy="12" rx="4" ry="3" fill="#9278b9" opacity="0.5" />
+                  <circle cx="12" cy="12" r="2" fill="#fff" opacity="0.8" />
+                </svg>
+                <svg className="absolute right-[12%] bottom-[25%]" width="16" height="16" viewBox="0 0 24 24" fill="none">
+                  <circle cx="12" cy="12" r="4" fill="#f8a6ba" opacity="0.8" />
+                  <ellipse cx="12" cy="5" rx="3" ry="4" fill="#f8a6ba" opacity="0.6" />
+                  <ellipse cx="12" cy="19" rx="3" ry="4" fill="#f8a6ba" opacity="0.6" />
+                  <ellipse cx="5" cy="12" rx="4" ry="3" fill="#f8a6ba" opacity="0.6" />
+                  <ellipse cx="19" cy="12" rx="4" ry="3" fill="#f8a6ba" opacity="0.6" />
+                  <circle cx="12" cy="12" r="2" fill="#fff" opacity="0.9" />
+                </svg>
+                {/* Pequeños brillos */}
+                <span className="absolute left-[30%] top-[15%] h-1.5 w-1.5 rounded-full bg-white/70" />
+                <span className="absolute right-[25%] top-[35%] h-1 w-1 rounded-full bg-white/60" />
+                <span className="absolute left-[40%] bottom-[30%] h-1 w-1 rounded-full bg-white/50" />
+              </div>
+            ) : isDinoTheme ? (
               <div className="pointer-events-none absolute inset-0 overflow-hidden">
                 {/* Pasto prehistórico animado desde atrás */}
                 {[
@@ -267,9 +312,11 @@ export function IntroCallToAction({ label, onComplete, fontFamily, isTransitioni
             <span
               className="relative text-lg font-extrabold uppercase tracking-[0.4em] text-white"
               style={{
-                textShadow: isDinoTheme
-                  ? "0 3px 6px rgba(45, 61, 45, 0.5)"
-                  : "0 3px 6px rgba(236,72,153,0.45)",
+                textShadow: isPrincessTheme
+                  ? "0 3px 6px rgba(146, 120, 185, 0.5)"
+                  : isDinoTheme
+                    ? "0 3px 6px rgba(45, 61, 45, 0.5)"
+                    : "0 3px 6px rgba(236,72,153,0.45)",
               }}
             >
               {buttonText.toUpperCase()}

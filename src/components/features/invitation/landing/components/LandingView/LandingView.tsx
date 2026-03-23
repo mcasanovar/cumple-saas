@@ -8,6 +8,8 @@ import { SceneBackground } from "@/components/shared/invitation/scene-background
 import { EventLocationMap } from "../EventLocationMap";
 import { RSVPForm } from "../RSVPForm";
 import { LandingDinoBackground } from "../LandingDinoBackground/LandingDinoBackground";
+import { LandingPrincessBackground } from "../LandingPrincessBackground";
+import { IntroPetalConfetti } from "../../../intro/components/IntroPetalConfetti/IntroPetalConfetti";
 
 import type { LandingViewProps } from "./LandingView.types";
 
@@ -43,12 +45,18 @@ export function LandingView({
   themeToken,
   venue,
 }: LandingViewProps) {
-  const { isDinoTheme } = useThemeDetection(themeToken);
+  const { isDinoTheme, isPrincessTheme } = useThemeDetection(themeToken);
 
   return (
     <div className="relative flex min-h-screen flex-col overflow-hidden">
-      <SceneBackground scene={scene} showConfettiDots={!isDinoTheme} />
+      <SceneBackground scene={scene} showConfettiDots={!isDinoTheme && !isPrincessTheme} />
       {isDinoTheme && <LandingDinoBackground />}
+      {isPrincessTheme && (
+        <>
+          <LandingPrincessBackground />
+          <IntroPetalConfetti />
+        </>
+      )}
 
       <section className="relative z-10 flex flex-col items-center gap-16 px-6 pb-24 pt-24 text-center sm:pt-28">
         <motion.div
@@ -80,9 +88,11 @@ export function LandingView({
               style={
                 !heroNameLineClass
                   ? {
-                    backgroundImage: isDinoTheme
-                      ? "linear-gradient(135deg, #6B9B6E 0%, #5A8A5D 50%, #4A7350 100%)"
-                      : "linear-gradient(90deg, #ffd166 0%, #ff9f1c 30%, #f15bb5 60%, #4361ee 100%)",
+                    backgroundImage: isPrincessTheme
+                      ? "linear-gradient(135deg, #9278b9 0%, #f8a6ba 52%, #c8a2c8 100%)"
+                      : isDinoTheme
+                        ? "linear-gradient(135deg, #6B9B6E 0%, #5A8A5D 50%, #4A7350 100%)"
+                        : "linear-gradient(90deg, #ffd166 0%, #ff9f1c 30%, #f15bb5 60%, #4361ee 100%)",
                     WebkitBackgroundClip: "text",
                     filter: isDinoTheme ? "drop-shadow(2px 2px 4px rgba(0,0,0,0.15))" : "none",
                   }
@@ -122,7 +132,7 @@ export function LandingView({
                     <span className="text-xl">{item.icon}</span>
                     <span
                       className="mt-3 text-[0.72rem] font-semibold uppercase tracking-[0.4em]"
-                      style={{ color: isDinoTheme ? "#5A8A5D" : "#6f6bb3" }}
+                      style={{ color: isDinoTheme ? "#5A8A5D" : isPrincessTheme ? "#9278b9" : "#6f6bb3" }}
                     >
                       {item.label}
                     </span>
@@ -130,7 +140,7 @@ export function LandingView({
                       className="mt-3 text-[1.75rem] font-black"
                       style={{
                         fontFamily: typography.heading,
-                        color: isDinoTheme ? "#2D3D2D" : "#262147",
+                        color: isDinoTheme ? "#2D3D2D" : isPrincessTheme ? "#9278b9" : "#262147",
                       }}
                     >
                       {item.value}
@@ -138,7 +148,7 @@ export function LandingView({
                     {item.helper ? (
                       <span
                         className="mt-1 text-sm font-semibold"
-                        style={{ color: isDinoTheme ? "#2D3D2D" : "#262147" }}
+                        style={{ color: isDinoTheme ? "#2D3D2D" : isPrincessTheme ? "#ffaabe" : "#262147" }}
                       >
                         {item.helper}
                       </span>
@@ -227,9 +237,9 @@ export function LandingView({
                 color: isDinoTheme ? "#2D3D2D" : "#1d1a43",
               }}
             >
-              <span style={{ color: isDinoTheme ? "#5A8A5D" : "#2f6bff" }}>{celebrantName}</span> cumple
-              <span style={{ color: isDinoTheme ? "#8B7355" : "#ff6b3d" }}> {celebrantAge}</span>
-              <span style={{ color: isDinoTheme ? "#8B7355" : "#ff6b3d" }}> {celebrantAge === 1 ? "año" : "años"}</span>
+              <span style={{ color: isDinoTheme ? "#5A8A5D" : isPrincessTheme ? "#ffaabe" : "#2f6bff" }}>{celebrantName}</span> cumple
+              <span style={{ color: isDinoTheme ? "#8B7355" : isPrincessTheme ? "#9278b9" : "#ff6b3d" }}> {celebrantAge}</span>
+              <span style={{ color: isDinoTheme ? "#8B7355" : isPrincessTheme ? "#9278b9" : "#ff6b3d" }}> {celebrantAge === 1 ? "año" : "años"}</span>
             </h2>
             <p className="max-w-3xl text-base leading-relaxed text-[#6f6bb3] sm:text-lg" style={{ fontFamily: typography.body }}>
               {celebrantDescription}

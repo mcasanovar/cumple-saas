@@ -986,6 +986,147 @@ El proyecto está preparado para:
 - Arquitectura preparada para escalar
 - Mock data temporal, backend pendiente
 
+### Creación de Nuevos Templates:
+
+Cuando necesites crear un nuevo template (ej: princess, superhero, etc.), sigue este flujo:
+
+#### 1. Estructura de Rutas:
+```
+Las invitaciones se acceden mediante: /invitacion/{invitation_id}
+- El {invitation_id} es el slug único de cada invitación (ej: "maria-princess-party")
+- La ruta está definida en: app/(public)/invitacion/[slug]/page.tsx
+- El slug se mapea a una invitación en data/invitations.ts
+- Cada invitación tiene un templateId que determina su tema visual
+```
+
+#### 2. Pasos para Crear un Template:
+
+**A. Configuración del Tema** (`config/themes.ts`):
+```typescript
+// Agregar nuevo tema al objeto themes
+princesa: {
+  name: "Reino Encantado",
+  primaryGradient: "...",
+  accentGradient: "...",
+  accentColor: "...",
+  backgroundPattern: "...",
+  floatingDecorations: [...],
+  typography: { heading: kidsFont, body: kidsFont },
+  introScene: {
+    backgroundGradient: "...",
+    overlayGradient: "...",
+    textureOpacity: 0.3,
+    frame: { ... },
+    bannerColors: [...],
+    decorations: [...],
+    ambientBalloons: [...],
+    balloonClusters: [...],
+    monogram: { ... },
+    hint: { ... }
+  }
+}
+```
+
+**B. Template Definition** (`lib/templates/{template-name}/template.ts`):
+```typescript
+export const princessPartyTemplate: TemplateDefinition = {
+  id: "princess-party",
+  name: "Princess Party",
+  description: "...",
+  theme: "princesa",  // Debe coincidir con key en themes.ts
+  category: "fantasy",
+  hero: { ... },
+  intro: { ... },
+  defaultMessages: { ... }
+};
+```
+
+**C. Registro del Template**:
+- Agregar en `lib/templates/registry.ts`
+- Exportar en `lib/templates/index.ts`
+
+**D. Theme Detection** (`hooks/useThemeDetection.ts`):
+```typescript
+export type ThemeDetection = {
+  isDinoTheme: boolean;
+  isSafariTheme: boolean;
+  isPrincessTheme: boolean;  // Agregar nuevo
+};
+
+export function useThemeDetection(themeToken?: ThemeToken): ThemeDetection {
+  return useMemo(() => {
+    return {
+      isDinoTheme: themeToken === "dinosaurios",
+      isSafariTheme: themeToken === "safari",
+      isPrincessTheme: themeToken === "princesa",  // Agregar nuevo
+    };
+  }, [themeToken]);
+}
+```
+
+**E. Componentes de Background**:
+
+Para Intro:
+```
+components/features/invitation/intro/components/Intro{Theme}Background/
+  └── Intro{Theme}Background.tsx
+```
+
+Para Landing:
+```
+components/features/invitation/landing/components/Landing{Theme}Background/
+  └── Landing{Theme}Background.tsx
+```
+
+**F. Integración en Vistas**:
+
+En `IntroView.tsx`:
+```typescript
+{isDinoTheme ? (
+  <>
+    <IntroCrackedBackground />
+    <IntroCautionStripes />
+  </>
+) : isPrincessTheme ? (
+  <IntroPrincessBackground />
+) : (
+  <IntroSceneBackground scene={scene} isTransitioning={isTransitioning} />
+)}
+```
+
+En `LandingView.tsx`:
+```typescript
+<SceneBackground scene={scene} showConfettiDots={!isDinoTheme && !isPrincessTheme} />
+{isDinoTheme && <LandingDinoBackground />}
+{isPrincessTheme && <LandingPrincessBackground />}
+```
+
+**G. Invitación de Prueba** (`data/invitations.ts`):
+```typescript
+{
+  id: "unique-slug",
+  templateId: "princess-party",
+  celebrant: { ... },
+  event: { ... },
+  venue: { ... },
+  // ... resto de configuración
+}
+```
+
+#### 3. Assets Requeridos:
+- Imágenes en `public/` (ej: princess_castle.jpeg, princess.jpeg)
+- SVG decorativos inline en componentes de background
+- Texturas opcionales en `public/textures/`
+
+#### 4. Verificación:
+```bash
+# Compilar proyecto
+npm run build
+
+# Acceder a la invitación
+http://localhost:3000/invitacion/{invitationId}
+```
+
 ---
 
 ## 📋 CHECKLIST FINAL - Antes de Completar Cualquier Tarea

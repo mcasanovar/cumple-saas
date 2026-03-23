@@ -109,6 +109,60 @@ export const userInvitations: UserInvitationData[] = [
     createdAt: "2026-02-10T12:00:00Z",
     updatedAt: "2026-02-10T12:00:00Z",
   },
+  {
+    id: "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+    userId: "user_demo_003",
+    templateId: "princess-dreams",
+    slug: "sofia-princesa-5",
+    metaTitle: "Sofía cumple 5 años | Reino Encantado",
+    metaDescription:
+      "Únete a la celebración mágica de Sofía en un reino lleno de princesas, coronas doradas y sueños encantados.",
+    celebrantName: "Sofía",
+    age: 5,
+    date: "Domingo 25 de Mayo, 2026",
+    time: "16:00 hrs",
+    venueName: "Salón de Fiestas Mágico",
+    venueAddress: "Avenida de los Sueños 456",
+    googleMapsUrl: "https://maps.google.com",
+    coordinates: {
+      lat: -34.603684,
+      lng: -58.381559,
+    },
+    celebrantDescription:
+      "Le encantan las princesas, los vestidos brillantes y las coronas doradas. ¡Este año celebramos como la realeza!",
+    gallery: [
+      {
+        id: "img-1",
+        caption: "Sofía lista para la fiesta",
+        imageUrl: "/emi1.jpeg",
+      },
+      {
+        id: "img-2",
+        caption: "Decoración de princesas",
+        imageUrl: "/emi2.jpeg",
+      },
+      {
+        id: "img-3",
+        caption: "Reino encantado",
+        imageUrl: "/emi3.jpeg",
+      },
+    ],
+    targetDateISO: "2026-05-25T16:00:00-03:00",
+    introOverrides: {
+      detailLeft: {
+        title: "Domingo",
+        subtitle: "25 MAYO",
+        helper: "Celebración real",
+      },
+      detailRight: {
+        title: "4 PM",
+        subtitle: "Salón Mágico",
+        helper: "Av. de los Sueños",
+      },
+    },
+    createdAt: "2026-03-01T10:00:00Z",
+    updatedAt: "2026-03-01T10:00:00Z",
+  },
 ];
 
 export function getInvitationById(
