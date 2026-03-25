@@ -5,6 +5,7 @@ export type ThemeDetection = {
   isDinoTheme: boolean;
   isSafariTheme: boolean;
   isPrincessTheme: boolean;
+  isKPopTheme: boolean;
 };
 
 export function useThemeDetection(themeToken?: ThemeToken): ThemeDetection {
@@ -13,6 +14,7 @@ export function useThemeDetection(themeToken?: ThemeToken): ThemeDetection {
       isDinoTheme: themeToken === "dinosaurios",
       isSafariTheme: themeToken === "safari",
       isPrincessTheme: themeToken === "princesa",
+      isKPopTheme: themeToken === "k-pop",
     };
   }, [themeToken]);
 }

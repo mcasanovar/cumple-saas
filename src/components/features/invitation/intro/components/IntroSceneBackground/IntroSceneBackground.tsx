@@ -4,11 +4,13 @@ import { useMemo } from "react";
 import { motion } from "framer-motion";
 
 import { SceneBackground } from "@/components/shared/invitation/scene-background";
-import type { IntroSceneConfig } from "@/lib/types/invitation";
+import { IntroKPopBackground } from "../IntroKPopBackground/IntroKPopBackground";
+import type { IntroSceneConfig, ThemeToken } from "@/lib/types/invitation";
 
 type IntroSceneBackgroundProps = {
   scene: IntroSceneConfig;
   isTransitioning: boolean;
+  themeToken?: ThemeToken;
 };
 
 function IntroConfettiBackdrop() {
@@ -201,7 +203,19 @@ function IntroOverlayDecorations({ scene, isTransitioning }: IntroSceneBackgroun
   );
 }
 
-export function IntroSceneBackground({ scene, isTransitioning }: IntroSceneBackgroundProps) {
+export function IntroSceneBackground({ scene, isTransitioning, themeToken }: IntroSceneBackgroundProps) {
+  // Use K-pop specific background for K-pop theme
+  if (themeToken === "k-pop") {
+    return (
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        <IntroKPopBackground />
+        <IntroBalloonClusters scene={scene} />
+        <IntroAmbientBalloons scene={scene} />
+        <IntroOverlayDecorations scene={scene} isTransitioning={isTransitioning} />
+      </div>
+    );
+  }
+
   return (
     <div className="pointer-events-none absolute inset-0 overflow-hidden">
       <SceneBackground

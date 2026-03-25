@@ -5,9 +5,10 @@ export type TemplateId =
   | "princess-dreams"
   | "dino-party"
   | "space-explorer"
-  | "unicorn-magic";
+  | "unicorn-magic"
+  | "k-pop";
 
-export type TemplateCategory = "animals" | "fantasy" | "adventure" | "space";
+export type TemplateCategory = "animals" | "fantasy" | "adventure" | "space" | "music";
 
 export interface TemplateDefinition {
   id: TemplateId;

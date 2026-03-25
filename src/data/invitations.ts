@@ -163,6 +163,60 @@ export const userInvitations: UserInvitationData[] = [
     createdAt: "2026-03-01T10:00:00Z",
     updatedAt: "2026-03-01T10:00:00Z",
   },
+  {
+    id: "b2c3d4e5-f6g7-8901-bcde-f23456789012",
+    userId: "user_demo_004",
+    templateId: "k-pop",
+    slug: "mia-kpop-7",
+    metaTitle: "Mia cumple 7 años | Fiesta K-Pop",
+    metaDescription:
+      "Únete a la celebración musical de Mia con una fiesta llena de brillo, música y diversión al estilo K-pop.",
+    celebrantName: "Mia",
+    age: 7,
+    date: "Sábado 15 de Junio, 2026",
+    time: "15:30 hrs",
+    venueName: "Estudio de Danza Estrella",
+    venueAddress: "Avenida Musical 789",
+    googleMapsUrl: "https://maps.google.com",
+    coordinates: {
+      lat: -34.603684,
+      lng: -58.381559,
+    },
+    celebrantDescription:
+      "Le encanta bailar, cantar y brillar como una verdadera estrella. ¡Este año celebramos con mucha música y diversión K-pop!",
+    gallery: [
+      {
+        id: "img-1",
+        caption: "Mia lista para brillar",
+        imageUrl: "/emi1.jpeg",
+      },
+      {
+        id: "img-2",
+        caption: "Decoración estrellada",
+        imageUrl: "/emi2.jpeg",
+      },
+      {
+        id: "img-3",
+        caption: "Fiesta musical",
+        imageUrl: "/emi3.jpeg",
+      },
+    ],
+    targetDateISO: "2026-06-15T15:30:00-03:00",
+    introOverrides: {
+      detailLeft: {
+        title: "Sábado",
+        subtitle: "15 JUNIO",
+        helper: "¡Vamos a brillar!",
+      },
+      detailRight: {
+        title: "3:30 PM",
+        subtitle: "Estudio Estrella",
+        helper: "Av. Musical 789",
+      },
+    },
+    createdAt: "2026-03-15T14:00:00Z",
+    updatedAt: "2026-03-15T14:00:00Z",
+  },
 ];
 
 export function getInvitationById(

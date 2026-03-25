@@ -2,6 +2,7 @@ import { ThemeConfig, ThemeToken } from "@/lib/types/invitation";
 
 const kidsFont = '"Baloo 2", "Fredoka", "Comic Neue", sans-serif';
 const princessFont = '"Waltograph", cursive';
+const kpopFont = 'var(--font-kpop), "Kalam", cursive';
 
 export const themes: Record<ThemeToken, ThemeConfig> = {
   safari: {
@@ -462,6 +463,132 @@ export const themes: Record<ThemeToken, ThemeConfig> = {
     typography: {
       heading: kidsFont,
       body: kidsFont,
+    },
+  },
+  "k-pop": {
+    name: "K-Pop Stars",
+    primaryGradient:
+      "linear-gradient(135deg, #FF1493 0%, #DA70D6 45%, #9370DB 100%)",
+    accentGradient: "linear-gradient(135deg, #FF69B4 0%, #BA55D3 100%)",
+    accentColor: "#FF1493",
+    backgroundPattern:
+      "radial-gradient(circle at 25% 15%, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 45%), radial-gradient(circle at 75% 85%, rgba(255,20,147,0.15) 0%, rgba(255,20,147,0) 50%), linear-gradient(180deg, #FFE4E6 0%, #FECDD3 50%, #FBB6CE 100%)",
+    floatingDecorations: [
+      {
+        id: "star-1",
+        type: "star",
+        color: "#FFD700",
+        size: 120,
+        oscillation: 15,
+        position: { top: "20%", left: "15%" },
+      },
+      {
+        id: "star-2",
+        type: "star",
+        color: "#FF69B4",
+        size: 90,
+        oscillation: 12,
+        position: { top: "35%", left: "75%" },
+      },
+      {
+        id: "balloon-1",
+        type: "balloon",
+        color: "#DA70D6",
+        size: 140,
+        oscillation: 18,
+        position: { top: "60%", left: "20%" },
+      },
+    ],
+    introScene: {
+      backgroundGradient:
+        "radial-gradient(circle at 30% 20%, rgba(255, 20, 147, 0.3) 0%, rgba(218, 112, 214, 0.2) 50%), radial-gradient(circle at 70% 80%, rgba(147, 112, 219, 0.25) 0%, rgba(147, 112, 219, 0.1) 50%), linear-gradient(180deg, #FFE4E6 0%, #FECDD3 50%, #FBB6CE 100%)",
+      overlayGradient:
+        "linear-gradient(135deg, rgba(255, 255, 255, 0.6) 0%, rgba(255, 228, 230, 0.4) 50%, rgba(251, 182, 206, 0.3) 100%)",
+      textureOpacity: 0.2,
+      frame: {
+        borderGradient:
+          "linear-gradient(135deg, rgba(255, 20, 147, 0.8) 0%, rgba(218, 112, 214, 0.8) 50%, rgba(147, 112, 219, 0.8) 100%)",
+        fill: "linear-gradient(180deg, rgba(255,255,255,0.95) 0%, rgba(255,228,230,0.92) 100%)",
+        highlight: "rgba(255, 255, 255, 0.7)",
+        shadow: "rgba(255, 20, 147, 0.25)",
+      },
+      bannerColors: ["#FF1493", "#FF69B4", "#DA70D6", "#9370DB", "#FFD700", "#FFF"],
+      decorations: [
+        {
+          id: "disco-ball",
+          type: "star",
+          color: "linear-gradient(45deg, #C0C0C0 0%, #FFD700 50%, #C0C0C0 100%)",
+          size: 80,
+          opacity: 0.9,
+          position: { top: "25%", left: "50%" },
+          blur: false,
+        },
+        {
+          id: "glitter-left",
+          type: "spark",
+          color: "rgba(255, 215, 0, 0.8)",
+          size: 40,
+          position: { top: "40%", left: "25%" },
+          blur: true,
+        },
+        {
+          id: "glitter-right",
+          type: "spark",
+          color: "rgba(255, 105, 180, 0.8)",
+          size: 45,
+          position: { top: "55%", left: "70%" },
+          blur: true,
+        },
+      ],
+      ambientBalloons: [
+        {
+          id: "ambient-pink-1",
+          color: "linear-gradient(180deg, #FF1493 0%, #FF69B4 100%)",
+          accentColor: "rgba(255, 255, 255, 0.4)",
+          size: 160,
+          position: { top: "15%", left: "-5%" },
+          oscillation: 16,
+        },
+        {
+          id: "ambient-purple-1",
+          color: "linear-gradient(180deg, #DA70D6 0%, #9370DB 100%)",
+          accentColor: "rgba(255, 255, 255, 0.35)",
+          size: 180,
+          position: { top: "8%", left: "85%" },
+          oscillation: 18,
+          delay: 0.3,
+        },
+        {
+          id: "ambient-gold-1",
+          color: "linear-gradient(180deg, #FFD700 0%, #FFA500 100%)",
+          accentColor: "rgba(255, 255, 255, 0.5)",
+          size: 140,
+          position: { top: "65%", left: "90%" },
+          oscillation: 20,
+          delay: 0.6,
+        },
+      ],
+      balloonClusters: [],
+      monogram: {
+        background:
+          "linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 228, 230, 0.92) 100%)",
+        textColor: "#FF1493",
+        shadow: "0 18px 60px rgba(255, 20, 147, 0.3)",
+      },
+      hint: {
+        headlineColor: "rgba(255, 20, 147, 0.9)",
+        secondaryColor: "rgba(218, 112, 214, 0.8)",
+        button: {
+          background: "linear-gradient(135deg, #FF1493 0%, #DA70D6 100%)",
+          textColor: "#FFFFFF",
+          shadow: "0 22px 48px rgba(255, 20, 147, 0.4)",
+          border: "1px solid rgba(255, 20, 147, 0.3)",
+        },
+      },
+    },
+    typography: {
+      heading: kpopFont,
+      body: kpopFont,
     },
   },
 };

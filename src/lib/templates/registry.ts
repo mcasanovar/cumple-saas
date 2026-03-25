@@ -1,6 +1,7 @@
 import type { TemplateDefinition, TemplateId, TemplateCategory } from "@/lib/types/template";
 
 import { dinoPartyTemplate } from "./dino-party/template";
+import { kPopTemplate } from "./k-pop/template";
 import { princessPartyTemplate } from "./princess-party/template";
 import { safariAdventureTemplate } from "./safari-adventure/template";
 
@@ -10,6 +11,7 @@ const TEMPLATE_REGISTRY: Record<TemplateId, TemplateDefinition | null> = {
   "dino-party": dinoPartyTemplate,
   "space-explorer": null,
   "unicorn-magic": null,
+  "k-pop": kPopTemplate,
 };
 
 export function getTemplateById(id: TemplateId): TemplateDefinition {

@@ -134,11 +134,11 @@ export function IntroPrincessBackground() {
       {/* Princesa - capa media encima del castillo */}
       <div className="absolute inset-0 z-10 flex items-center justify-center">
         <img
-          src="/princess.svg"
+          src="/princess-2.png"
           alt=""
-          className="opacity-95"
+          className="opacity-75"
           style={{
-            width: "150px",
+            width: "250px",
             height: "auto",
             transform: "translateY(-30%)",
             filter: "drop-shadow(0 10px 30px rgba(255, 20, 147, 0.3))",

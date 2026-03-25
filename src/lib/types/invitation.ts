@@ -4,7 +4,8 @@ export type ThemeToken =
   | "dinosaurios"
   | "ositos"
   | "cielo"
-  | "bosque";
+  | "bosque"
+  | "k-pop";
 
 export interface ThemeConfig {
   name: string;

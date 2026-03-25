@@ -18,7 +18,7 @@ export type IntroCallToActionProps = {
 };
 
 export function IntroCallToAction({ className, label, onComplete, fontFamily, isTransitioning, themeToken }: IntroCallToActionProps) {
-  const { isDinoTheme, isPrincessTheme } = useThemeDetection(themeToken);
+  const { isDinoTheme, isPrincessTheme, isKPopTheme } = useThemeDetection(themeToken);
   const [isAnimating, setIsAnimating] = useState(false);
   const [confettiActive, setConfettiActive] = useState(false);
   const [fadeActive, setFadeActive] = useState(false);
@@ -171,15 +171,20 @@ export function IntroCallToAction({ className, label, onComplete, fontFamily, is
                 ? "linear-gradient(135deg, rgba(146, 120, 185, 0.95) 0%, rgba(248, 166, 186, 0.92) 52%, rgba(200, 162, 200, 0.88) 100%)"
                 : isDinoTheme
                   ? "linear-gradient(135deg, rgba(90, 138, 93, 0.98) 0%, rgba(74, 115, 80, 0.95) 52%, rgba(107, 155, 110, 0.92) 100%)"
-                  : "linear-gradient(135deg, rgba(255,112,161,0.95) 0%, rgba(255,149,89,0.92) 52%, rgba(255,213,102,0.88) 100%)",
+                  : isKPopTheme
+                    ? "linear-gradient(135deg, rgba(0, 0, 0, 0.8) 0%, rgba(45, 27, 105, 0.9) 100%)"
+                    : "linear-gradient(135deg, rgba(255,112,161,0.95) 0%, rgba(255,149,89,0.92) 52%, rgba(255,213,102,0.88) 100%)",
               boxShadow: isPrincessTheme
                 ? "0 22px 45px rgba(146, 120, 185, 0.35)"
                 : isDinoTheme
                   ? "0 22px 48px rgba(74, 115, 80, 0.4)"
-                  : "0 22px 45px rgba(244,63,94,0.25)",
+                  : isKPopTheme
+                    ? "0 0 30px rgba(243, 99, 180, 0.6), 0 0 60px rgba(147, 51, 234, 0.4), inset 0 0 0 2px rgba(243, 99, 180, 0.8)"
+                    : "0 22px 45px rgba(244,63,94,0.25)",
+              border: isKPopTheme ? "2px solid rgba(243, 99, 180, 0.8)" : undefined,
             }}
           >
-            {!isDinoTheme && !isPrincessTheme && (
+            {!isDinoTheme && !isPrincessTheme && !isKPopTheme && (
               <div className="pointer-events-none absolute inset-0">
                 <span className="absolute -left-6 top-4 h-14 w-14 rounded-full bg-white/14 blur-xl" />
                 <span className="absolute -right-8 bottom-3 h-16 w-16 rounded-full bg-white/18 blur-[22px]" />
@@ -278,6 +283,43 @@ export function IntroCallToAction({ className, label, onComplete, fontFamily, is
                   </motion.div>
                 ))}
               </div>
+            ) : isKPopTheme ? (
+              <div className="pointer-events-none absolute inset-0">
+                {/* Neon glow effects */}
+                <div className="absolute inset-0 rounded-[32px] bg-gradient-to-r from-pink-500/20 to-purple-600/20 blur-sm" />
+                <div className="absolute inset-2 rounded-[28px] bg-gradient-to-r from-pink-400/10 to-purple-500/10 blur-md" />
+                {/* Sparkle effects */}
+                {[
+                  { color: "#f363b4", size: 3, top: "20%", left: "15%", delay: 0 },
+                  { color: "#9333ea", size: 2, top: "70%", left: "80%", delay: 0.5 },
+                  { color: "#f363b4", size: 4, top: "40%", left: "85%", delay: 1 },
+                  { color: "#9333ea", size: 2, top: "60%", left: "10%", delay: 1.5 },
+                  { color: "#f363b4", size: 3, top: "25%", left: "75%", delay: 2 },
+                ].map((sparkle, idx) => (
+                  <motion.div
+                    key={`k-pop-sparkle-${idx}`}
+                    className="absolute rounded-full"
+                    style={{
+                      backgroundColor: sparkle.color,
+                      width: sparkle.size,
+                      height: sparkle.size,
+                      top: sparkle.top,
+                      left: sparkle.left,
+                      boxShadow: `0 0 10px ${sparkle.color}, 0 0 20px ${sparkle.color}`,
+                    }}
+                    animate={{
+                      opacity: [0.3, 1, 0.3],
+                      scale: [0.8, 1.2, 0.8],
+                    }}
+                    transition={{
+                      duration: 2,
+                      repeat: Infinity,
+                      delay: sparkle.delay,
+                      ease: "easeInOut",
+                    }}
+                  />
+                ))}
+              </div>
             ) : (
               <div className="pointer-events-none absolute inset-0">
                 {["#fff5f7", "#ffe7f1", "#fff0d6"].map((color, idx) => (
@@ -310,13 +352,24 @@ export function IntroCallToAction({ className, label, onComplete, fontFamily, is
             )}
 
             <span
-              className="relative text-lg font-extrabold uppercase tracking-[0.4em] text-white"
+              className={`relative text-lg font-extrabold uppercase tracking-[0.4em] ${isKPopTheme ? "text-transparent" : "text-white"
+                }`}
               style={{
                 textShadow: isPrincessTheme
                   ? "0 3px 6px rgba(146, 120, 185, 0.5)"
                   : isDinoTheme
                     ? "0 3px 6px rgba(45, 61, 45, 0.5)"
-                    : "0 3px 6px rgba(236,72,153,0.45)",
+                    : isKPopTheme
+                      ? "none"
+                      : "0 3px 6px rgba(236,72,153,0.45)",
+                background: isKPopTheme
+                  ? "linear-gradient(45deg, #f363b4 0%, #ffd166 50%, #f363b4 100%)"
+                  : undefined,
+                WebkitBackgroundClip: isKPopTheme ? "text" : undefined,
+                WebkitTextStroke: isKPopTheme ? "2px rgba(243, 99, 180, 0.8)" : undefined,
+                filter: isKPopTheme
+                  ? "drop-shadow(0 0 10px rgba(243, 99, 180, 0.8)) drop-shadow(0 0 20px rgba(147, 51, 234, 0.6))"
+                  : undefined,
               }}
             >
               {buttonText.toUpperCase()}

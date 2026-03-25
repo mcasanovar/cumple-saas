@@ -8,6 +8,7 @@ import { SceneBackground } from "@/components/shared/invitation/scene-background
 import { EventLocationMap } from "../EventLocationMap";
 import { RSVPForm } from "../RSVPForm";
 import { LandingDinoBackground } from "../LandingDinoBackground/LandingDinoBackground";
+import { LandingKPopBackground } from "../LandingKPopBackground";
 import { LandingPrincessBackground } from "../LandingPrincessBackground";
 import { IntroPetalConfetti } from "../../../intro/components/IntroPetalConfetti/IntroPetalConfetti";
 
@@ -45,11 +46,11 @@ export function LandingView({
   themeToken,
   venue,
 }: LandingViewProps) {
-  const { isDinoTheme, isPrincessTheme } = useThemeDetection(themeToken);
+  const { isDinoTheme, isPrincessTheme, isKPopTheme } = useThemeDetection(themeToken);
 
   return (
     <div className="relative flex min-h-screen flex-col overflow-hidden">
-      <SceneBackground scene={scene} showConfettiDots={!isDinoTheme && !isPrincessTheme} />
+      <SceneBackground scene={scene} showConfettiDots={!isDinoTheme && !isPrincessTheme && !isKPopTheme} />
       {isDinoTheme && <LandingDinoBackground />}
       {isPrincessTheme && (
         <>
@@ -57,6 +58,7 @@ export function LandingView({
           <IntroPetalConfetti />
         </>
       )}
+      {isKPopTheme && <LandingKPopBackground />}
 
       <section className="relative z-10 flex flex-col items-center gap-16 px-6 pb-24 pt-24 text-center sm:pt-28">
         <motion.div
@@ -66,7 +68,8 @@ export function LandingView({
           animate="visible"
         >
           <motion.span
-            className="text-sm font-semibold uppercase tracking-[0.42em] text-[#6f6bb3]"
+            className="text-sm font-semibold uppercase tracking-[0.42em]"
+            style={{ color: isKPopTheme ? "#f363b4" : "#6f6bb3" }}
             variants={fadeInUp}
             transition={{ delay: 0.05, ease: easeOutQuint, duration: 0.7 }}
           >
@@ -74,8 +77,11 @@ export function LandingView({
           </motion.span>
 
           <motion.h1
-            className="flex flex-col gap-2 text-balance text-[clamp(2.8rem,6vw,4.2rem)] font-black leading-[1.05] text-[#262147]"
-            style={{ fontFamily: typography.heading }}
+            className="flex flex-col gap-2 text-balance text-[clamp(2.8rem,6vw,4.2rem)] font-black leading-[1.05]"
+            style={{
+              fontFamily: typography.heading,
+              color: isKPopTheme ? "#f363b4" : "#262147"
+            }}
             variants={fadeInUp}
             transition={{ delay: 0.12, ease: easeOutQuint, duration: 0.85 }}
           >
@@ -132,7 +138,7 @@ export function LandingView({
                     <span className="text-xl">{item.icon}</span>
                     <span
                       className="mt-3 text-[0.72rem] font-semibold uppercase tracking-[0.4em]"
-                      style={{ color: isDinoTheme ? "#5A8A5D" : isPrincessTheme ? "#9278b9" : "#6f6bb3" }}
+                      style={{ color: isDinoTheme ? "#5A8A5D" : isPrincessTheme ? "#9278b9" : isKPopTheme ? "#f363b4" : "#6f6bb3" }}
                     >
                       {item.label}
                     </span>
@@ -140,7 +146,7 @@ export function LandingView({
                       className="mt-3 text-[1.75rem] font-black"
                       style={{
                         fontFamily: typography.heading,
-                        color: isDinoTheme ? "#2D3D2D" : isPrincessTheme ? "#9278b9" : "#262147",
+                        color: isDinoTheme ? "#2D3D2D" : isPrincessTheme ? "#9278b9" : isKPopTheme ? "#f363b4" : "#262147",
                       }}
                     >
                       {item.value}
@@ -148,7 +154,7 @@ export function LandingView({
                     {item.helper ? (
                       <span
                         className="mt-1 text-sm font-semibold"
-                        style={{ color: isDinoTheme ? "#2D3D2D" : isPrincessTheme ? "#ffaabe" : "#262147" }}
+                        style={{ color: isDinoTheme ? "#2D3D2D" : isPrincessTheme ? "#ffaabe" : isKPopTheme ? "#f363b4" : "#262147" }}
                       >
                         {item.helper}
                       </span>
@@ -234,12 +240,12 @@ export function LandingView({
               className="text-[clamp(2.4rem,5vw,3.4rem)] font-black leading-[1.08]"
               style={{
                 fontFamily: typography.heading,
-                color: isDinoTheme ? "#2D3D2D" : "#1d1a43",
+                color: isDinoTheme ? "#2D3D2D" : isKPopTheme ? "#f363b4" : "#1d1a43",
               }}
             >
-              <span style={{ color: isDinoTheme ? "#5A8A5D" : isPrincessTheme ? "#ffaabe" : "#2f6bff" }}>{celebrantName}</span> cumple
-              <span style={{ color: isDinoTheme ? "#8B7355" : isPrincessTheme ? "#9278b9" : "#ff6b3d" }}> {celebrantAge}</span>
-              <span style={{ color: isDinoTheme ? "#8B7355" : isPrincessTheme ? "#9278b9" : "#ff6b3d" }}> {celebrantAge === 1 ? "año" : "años"}</span>
+              <span style={{ color: isDinoTheme ? "#5A8A5D" : isPrincessTheme ? "#ffaabe" : isKPopTheme ? "#f363b4" : "#2f6bff" }}>{celebrantName}</span> cumple
+              <span style={{ color: isDinoTheme ? "#8B7355" : isPrincessTheme ? "#9278b9" : isKPopTheme ? "#f363b4" : "#ff6b3d" }}> {celebrantAge}</span>
+              <span style={{ color: isDinoTheme ? "#8B7355" : isPrincessTheme ? "#9278b9" : isKPopTheme ? "#f363b4" : "#ff6b3d" }}> {celebrantAge === 1 ? "año" : "años"}</span>
             </h2>
             <p className="max-w-3xl text-base leading-relaxed text-[#6f6bb3] sm:text-lg" style={{ fontFamily: typography.body }}>
               {celebrantDescription}

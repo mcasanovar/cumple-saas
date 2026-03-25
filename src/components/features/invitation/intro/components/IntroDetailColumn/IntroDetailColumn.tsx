@@ -13,13 +13,14 @@ export type IntroDetailColumnProps = {
     body: string;
   };
   isPrincessTheme?: boolean;
+  isKPopTheme?: boolean;
 };
 
-export function IntroDetailColumn({ data, align, typography, isPrincessTheme }: IntroDetailColumnProps) {
+export function IntroDetailColumn({ data, align, typography, isPrincessTheme, isKPopTheme }: IntroDetailColumnProps) {
   if (!data) return <span />;
 
-  const textColor = isPrincessTheme ? "#9278b9" : undefined;
-  const textSecondaryColor = isPrincessTheme ? "#f8a6ba" : undefined;
+  const textColor = isPrincessTheme ? "#9278b9" : isKPopTheme ? "#2D1B69" : undefined;
+  const textSecondaryColor = isPrincessTheme ? "#f8a6ba" : isKPopTheme ? "#2D1B69" : undefined;
 
   return (
     <motion.div
@@ -29,12 +30,12 @@ export function IntroDetailColumn({ data, align, typography, isPrincessTheme }: 
       transition={{ duration: 0.6, ease: easeOutQuart, delay: 0.55 }}
       style={{ textAlign: align, fontFamily: typography?.body }}
     >
-      <span className={isPrincessTheme ? "text-sm font-semibold uppercase tracking-[0.3em]" : "text-sm font-semibold uppercase tracking-[0.3em] text-amber-900/80"} style={{ color: textColor }}>
+      <span className={isPrincessTheme ? "text-sm font-semibold uppercase tracking-[0.3em]" : isKPopTheme ? "text-sm font-bold uppercase tracking-[0.3em]" : "text-sm font-semibold uppercase tracking-[0.3em] text-amber-900/80"} style={{ color: textColor }}>
         {data.title}
       </span>
-      <span className={isPrincessTheme ? "text-2xl font-extrabold uppercase" : "text-2xl font-extrabold uppercase text-slate-900"} style={{ fontFamily: typography?.heading, color: textSecondaryColor }}>{data.subtitle}</span>
+      <span className={isPrincessTheme ? "text-2xl font-extrabold uppercase" : isKPopTheme ? "text-2xl font-black uppercase" : "text-2xl font-extrabold uppercase text-slate-900"} style={{ fontFamily: typography?.heading, color: textSecondaryColor }}>{data.subtitle}</span>
       {data.helper ? (
-        <span className={isPrincessTheme ? "text-xs uppercase tracking-[0.25em]" : "text-xs uppercase tracking-[0.25em] text-slate-500"} style={{ color: textColor }}>{data.helper}</span>
+        <span className={isPrincessTheme ? "text-xs uppercase tracking-[0.25em]" : isKPopTheme ? "text-xs font-bold uppercase tracking-[0.25em]" : "text-xs uppercase tracking-[0.25em] text-slate-500"} style={{ color: textColor }}>{data.helper}</span>
       ) : null}
     </motion.div>
   );
