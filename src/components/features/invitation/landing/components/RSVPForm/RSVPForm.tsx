@@ -53,7 +53,7 @@ function Confetti() {
 }
 
 export function RSVPForm({ typography, themeToken }: RSVPFormProps) {
-  const { isDinoTheme } = useThemeDetection(themeToken);
+  const { isDinoTheme, isKPopTheme } = useThemeDetection(themeToken);
   const [willAttend, setWillAttend] = useState<boolean | null>(null);
   const [guestCount, setGuestCount] = useState<number>(1);
   const [guestNames, setGuestNames] = useState<string[]>([""]);
@@ -163,14 +163,14 @@ export function RSVPForm({ typography, themeToken }: RSVPFormProps) {
       <div className="relative space-y-6">
         <div className="text-center">
           <h3
-            className="mb-2 text-3xl font-bold text-[#262147]"
-            style={{ fontFamily: typography.heading }}
+            className="mb-2 text-3xl font-bold"
+            style={{ fontFamily: typography.heading, color: isDinoTheme ? "#2D3D2D" : isKPopTheme ? "#9333ea" : "#262147" }}
           >
             Confirma tu asistencia
           </h3>
           <p
-            className="text-base text-[#6f6bb3]"
-            style={{ fontFamily: typography.body }}
+            className="text-base"
+            style={{ fontFamily: typography.body, color: isDinoTheme ? "#5A8A5D" : isKPopTheme ? "#E91E63" : "#6f6bb3" }}
           >
             ¿Podrás acompañarnos?
           </p>
@@ -185,13 +185,17 @@ export function RSVPForm({ typography, themeToken }: RSVPFormProps) {
               background: willAttend === true
                 ? isDinoTheme
                   ? "linear-gradient(135deg, rgba(90, 138, 93, 0.98) 0%, rgba(74, 115, 80, 0.95) 52%, rgba(107, 155, 110, 0.92) 100%)"
-                  : "linear-gradient(135deg, rgba(255,112,161,0.95) 0%, rgba(255,149,89,0.92) 52%, rgba(255,213,102,0.88) 100%)"
+                  : isKPopTheme
+                    ? "linear-gradient(135deg, rgba(233, 30, 99, 0.95) 0%, rgba(147, 51, 234, 0.95) 100%)"
+                    : "linear-gradient(135deg, rgba(255,112,161,0.95) 0%, rgba(255,149,89,0.92) 52%, rgba(255,213,102,0.88) 100%)"
                 : "rgba(255, 255, 255, 0.8)",
               color: willAttend === true ? "#ffffff" : "#6f6bb3",
               boxShadow: willAttend === true
                 ? isDinoTheme
                   ? "0 22px 48px rgba(74, 115, 80, 0.4)"
-                  : "0 22px 45px rgba(244,63,94,0.25)"
+                  : isKPopTheme
+                    ? "0 22px 45px rgba(218, 112, 214, 0.3)"
+                    : "0 22px 45px rgba(244,63,94,0.25)"
                 : "none",
             }}
             whileHover={{ scale: 1.05 }}
@@ -207,13 +211,17 @@ export function RSVPForm({ typography, themeToken }: RSVPFormProps) {
               background: willAttend === false
                 ? isDinoTheme
                   ? "linear-gradient(135deg, rgba(90, 138, 93, 0.98) 0%, rgba(74, 115, 80, 0.95) 52%, rgba(107, 155, 110, 0.92) 100%)"
-                  : "linear-gradient(135deg, rgba(255,112,161,0.95) 0%, rgba(255,149,89,0.92) 52%, rgba(255,213,102,0.88) 100%)"
+                  : isKPopTheme
+                    ? "linear-gradient(135deg, rgba(233, 30, 99, 0.95) 0%, rgba(147, 51, 234, 0.95) 100%)"
+                    : "linear-gradient(135deg, rgba(255,112,161,0.95) 0%, rgba(255,149,89,0.92) 52%, rgba(255,213,102,0.88) 100%)"
                 : "rgba(255, 255, 255, 0.8)",
               color: willAttend === false ? "#ffffff" : "#6f6bb3",
               boxShadow: willAttend === false
                 ? isDinoTheme
                   ? "0 22px 48px rgba(74, 115, 80, 0.4)"
-                  : "0 22px 45px rgba(244,63,94,0.25)"
+                  : isKPopTheme
+                    ? "0 22px 45px rgba(218, 112, 214, 0.3)"
+                    : "0 22px 45px rgba(244,63,94,0.25)"
                 : "none",
             }}
             whileHover={{ scale: 1.05 }}
@@ -290,10 +298,14 @@ export function RSVPForm({ typography, themeToken }: RSVPFormProps) {
             style={{
               background: isDinoTheme
                 ? "linear-gradient(135deg, rgba(90, 138, 93, 0.98) 0%, rgba(74, 115, 80, 0.95) 52%, rgba(107, 155, 110, 0.92) 100%)"
-                : "linear-gradient(135deg, rgba(255,112,161,0.95) 0%, rgba(255,149,89,0.92) 52%, rgba(255,213,102,0.88) 100%)",
+                : isKPopTheme
+                  ? "linear-gradient(135deg, rgba(233, 30, 99, 0.95) 0%, rgba(147, 51, 234, 0.95) 100%)"
+                  : "linear-gradient(135deg, rgba(255,112,161,0.95) 0%, rgba(255,149,89,0.92) 52%, rgba(255,213,102,0.88) 100%)",
               boxShadow: isDinoTheme
                 ? "0 22px 48px rgba(74, 115, 80, 0.4)"
-                : "0 22px 45px rgba(244,63,94,0.25)",
+                : isKPopTheme
+                  ? "0 22px 45px rgba(218, 112, 214, 0.3)"
+                  : "0 22px 45px rgba(244,63,94,0.25)",
             }}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}

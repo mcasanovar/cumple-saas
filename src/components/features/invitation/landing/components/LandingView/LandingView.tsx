@@ -98,7 +98,9 @@ export function LandingView({
                       ? "linear-gradient(135deg, #9278b9 0%, #f8a6ba 52%, #c8a2c8 100%)"
                       : isDinoTheme
                         ? "linear-gradient(135deg, #6B9B6E 0%, #5A8A5D 50%, #4A7350 100%)"
-                        : "linear-gradient(90deg, #ffd166 0%, #ff9f1c 30%, #f15bb5 60%, #4361ee 100%)",
+                        : isKPopTheme
+                          ? "linear-gradient(135deg, #9333ea 0%, #9333ea 52%, #9333ea 100%)"
+                          : "linear-gradient(90deg, #ffd166 0%, #ff9f1c 30%, #f15bb5 60%, #4361ee 100%)",
                     WebkitBackgroundClip: "text",
                     filter: isDinoTheme ? "drop-shadow(2px 2px 4px rgba(0,0,0,0.15))" : "none",
                   }
@@ -111,19 +113,41 @@ export function LandingView({
 
           <motion.button
             type="button"
-            className="rounded-[36px] px-14 py-4 text-lg font-extrabold uppercase tracking-[0.32em] text-white transition hover:-translate-y-0.5"
+            className={`rounded-[36px] px-14 py-4 text-lg font-extrabold uppercase tracking-[0.32em] transition hover:-translate-y-0.5 ${isKPopTheme ? "text-transparent" : "text-white"}`}
             style={{
               background: isDinoTheme
                 ? "linear-gradient(135deg, rgba(90, 138, 93, 0.98) 0%, rgba(74, 115, 80, 0.95) 52%, rgba(107, 155, 110, 0.92) 100%)"
-                : "linear-gradient(135deg, rgba(255,112,161,0.95) 0%, rgba(255,149,89,0.92) 52%, rgba(255,213,102,0.88) 100%)",
+                : isKPopTheme
+                  ? "linear-gradient(135deg, rgba(0, 0, 0, 0.8) 0%, rgba(45, 27, 105, 0.9) 100%)"
+                  : "linear-gradient(135deg, rgba(255,112,161,0.95) 0%, rgba(255,149,89,0.92) 52%, rgba(255,213,102,0.88) 100%)",
               boxShadow: isDinoTheme
                 ? "0 22px 48px rgba(74, 115, 80, 0.4)"
-                : "0 22px 45px rgba(244,63,94,0.25)",
+                : isKPopTheme
+                  ? "0 0 30px rgba(243, 99, 180, 0.6), 0 0 60px rgba(147, 51, 234, 0.4), inset 0 0 0 2px rgba(243, 99, 180, 0.8)"
+                  : "0 22px 45px rgba(244,63,94,0.25)",
+              border: isKPopTheme ? "2px solid rgba(243, 99, 180, 0.8)" : undefined,
+              backgroundClip: isKPopTheme ? undefined : undefined,
+              WebkitTextFillColor: isKPopTheme ? "transparent" : undefined,
+              backgroundImage: isKPopTheme ? "linear-gradient(135deg, rgba(0, 0, 0, 0.8) 0%, rgba(45, 27, 105, 0.9) 100%)" : undefined,
             }}
             variants={fadeInUp}
             transition={{ delay: 0.2, ease: easeOutQuint, duration: 0.75 }}
           >
-            Cumpleaños
+            {isKPopTheme ? (
+              <span
+                style={{
+                  background: "linear-gradient(45deg, #f363b4 0%, #ffd166 50%, #f363b4 100%)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  WebkitTextStroke: "2px rgba(243, 99, 180, 0.8)",
+                  filter: "drop-shadow(0 0 10px rgba(243, 99, 180, 0.8)) drop-shadow(0 0 20px rgba(147, 51, 234, 0.6))",
+                }}
+              >
+                Cumpleaños
+              </span>
+            ) : (
+              "Cumpleaños"
+            )}
           </motion.button>
 
           <motion.div
@@ -179,13 +203,13 @@ export function LandingView({
         >
           <div className="flex flex-col items-center gap-8">
             <div className="flex flex-col items-center gap-1">
-              <span className="text-xs font-semibold uppercase tracking-[0.36em] text-[#6f6bb3]">
+              <span className="text-xs font-semibold uppercase tracking-[0.36em]" style={{ color: isDinoTheme ? "#5A8A5D" : isPrincessTheme ? "#ffaabe" : isKPopTheme ? "#FFFFFF" : "#6f6bb3", opacity: isKPopTheme ? 0.95 : 1 }}>
                 Dónde festejamos
               </span>
-              <h2 className="text-2xl font-extrabold text-[#262147] sm:text-[2.35rem]" style={{ fontFamily: typography.heading }}>
+              <h2 className="text-2xl font-extrabold sm:text-[2.35rem]" style={{ fontFamily: typography.heading, color: isDinoTheme ? "#2D3D2D" : isPrincessTheme ? "#9278b9" : isKPopTheme ? "#FFFFFF" : "#262147", textShadow: isKPopTheme ? "0 4px 12px rgba(220, 20, 60, 0.4)" : undefined }}>
                 {venue.name}
               </h2>
-              <p className="text-base font-semibold text-[#433f8c]" style={{ fontFamily: typography.body }}>
+              <p className="text-base font-semibold" style={{ fontFamily: typography.body, color: isDinoTheme ? "#2D3D2D" : isPrincessTheme ? "#6c5491" : isKPopTheme ? "#FFFFFF" : "#433f8c", opacity: isKPopTheme ? 0.9 : 1 }}>
                 {venue.address}
               </p>
             </div>
@@ -240,14 +264,15 @@ export function LandingView({
               className="text-[clamp(2.4rem,5vw,3.4rem)] font-black leading-[1.08]"
               style={{
                 fontFamily: typography.heading,
-                color: isDinoTheme ? "#2D3D2D" : isKPopTheme ? "#f363b4" : "#1d1a43",
+                color: isDinoTheme ? "#2D3D2D" : isKPopTheme ? "#9333ea" : "#1d1a43",
+                textShadow: isKPopTheme ? "0 4px 12px rgba(220, 20, 60, 0.4)" : undefined,
               }}
             >
-              <span style={{ color: isDinoTheme ? "#5A8A5D" : isPrincessTheme ? "#ffaabe" : isKPopTheme ? "#f363b4" : "#2f6bff" }}>{celebrantName}</span> cumple
-              <span style={{ color: isDinoTheme ? "#8B7355" : isPrincessTheme ? "#9278b9" : isKPopTheme ? "#f363b4" : "#ff6b3d" }}> {celebrantAge}</span>
-              <span style={{ color: isDinoTheme ? "#8B7355" : isPrincessTheme ? "#9278b9" : isKPopTheme ? "#f363b4" : "#ff6b3d" }}> {celebrantAge === 1 ? "año" : "años"}</span>
+              <span style={{ color: isDinoTheme ? "#5A8A5D" : isPrincessTheme ? "#ffaabe" : isKPopTheme ? "#FFFFFF" : "#2f6bff" }}>{celebrantName}</span> cumple
+              <span style={{ color: isDinoTheme ? "#8B7355" : isPrincessTheme ? "#9278b9" : isKPopTheme ? "#FFFFFF" : "#ff6b3d" }}> {celebrantAge}</span>
+              <span style={{ color: isDinoTheme ? "#8B7355" : isPrincessTheme ? "#9278b9" : isKPopTheme ? "#9333ea" : "#ff6b3d" }}> {celebrantAge === 1 ? "año" : "años"}</span>
             </h2>
-            <p className="max-w-3xl text-base leading-relaxed text-[#6f6bb3] sm:text-lg" style={{ fontFamily: typography.body }}>
+            <p className="max-w-3xl text-base leading-relaxed sm:text-lg" style={{ fontFamily: typography.body, color: isKPopTheme ? "#FFFFFF" : "#6f6bb3", opacity: isKPopTheme ? 0.95 : 1 }}>
               {celebrantDescription}
             </p>
           </div>
@@ -256,15 +281,20 @@ export function LandingView({
             {galleryItems.map((item, index) => (
               <motion.figure
                 key={item.id}
-                className={`flex items-center justify-center rounded-full border-[6px] border-white/90 ${index === 1 ? "scale-105" : ""
+                className={`flex items-center justify-center rounded-full border-[6px] ${index === 1 ? "scale-105" : ""
                   } h-32 w-32 sm:h-40 sm:w-40`}
                 style={{
+                  border: isKPopTheme ? "6px solid #9333ea" : "6px solid #fff6ef",
                   background: isDinoTheme
                     ? "linear-gradient(135deg, #6B9B6E 0%, #5A8A5D 100%)"
-                    : "linear-gradient(135deg, #fff6ef 0%, #ffe0f3 100%)",
+                    : isKPopTheme
+                      ? "linear-gradient(135deg, #9333ea 0%, #f363b4 100%)"
+                      : "linear-gradient(135deg, #fff6ef 0%, #ffe0f3 100%)",
                   boxShadow: isDinoTheme
                     ? "0 20px 45px rgba(107, 155, 110, 0.35)"
-                    : "0 20px 45px rgba(255,180,200,0.32)",
+                    : isKPopTheme
+                      ? "0 20px 45px rgba(147, 51, 234, 0.35)"
+                      : "0 20px 45px rgba(255,180,200,0.32)",
                 }}
                 whileHover={{ scale: 1.05 }}
                 transition={{ duration: 0.35, ease: easeOutQuint }}
@@ -284,10 +314,12 @@ export function LandingView({
         <motion.section
           className="mx-auto flex w-full max-w-6xl flex-col items-center gap-8 rounded-[48px] px-5 py-12 text-center sm:gap-10 sm:px-10 sm:py-16"
           style={{
-            background: isDinoTheme ? "#6B9B6E" : "#fdeee2",
+            background: isDinoTheme ? "#6B9B6E" : isKPopTheme ? "#f363b4" : "#fdeee2",
             boxShadow: isDinoTheme
               ? "0 24px 90px rgba(90, 138, 93, 0.25)"
-              : "0 24px 90px rgba(255,188,170,0.25)",
+              : isKPopTheme
+                ? "0 24px 90px rgba(218, 112, 214, 0.3)"
+                : "0 24px 90px rgba(255,188,170,0.25)",
           }}
           variants={fadeInUp}
           initial="hidden"
@@ -296,14 +328,22 @@ export function LandingView({
           transition={{ ease: easeOutQuint, duration: 0.95 }}
         >
           <div className="flex flex-col items-center gap-2 sm:gap-3">
-            <h2 className="text-[clamp(2.6rem,5vw,3.4rem)] font-black leading-[1.08] text-[#1f1a48]" style={{ fontFamily: typography.heading }}>
+            <h2 
+              className="text-[clamp(2.6rem,5vw,3.4rem)] font-black leading-[1.08]" 
+              style={{ 
+                fontFamily: typography.heading,
+                color: isDinoTheme ? "#2D3D2D" : isKPopTheme ? "#FFFFFF" : "#1f1a48",
+                textShadow: isKPopTheme ? "0 4px 12px rgba(220, 20, 60, 0.3)" : undefined
+              }}
+            >
               ¿Qué te espera?
             </h2>
             <p
               className="text-base font-medium sm:text-lg"
               style={{
                 fontFamily: typography.body,
-                color: isDinoTheme ? "#2D3D2D" : "#6f6bb3",
+                color: isDinoTheme ? "#2D3D2D" : isKPopTheme ? "#FFFFFF" : "#6f6bb3",
+                opacity: isKPopTheme ? 0.95 : 1
               }}
             >
               Una fiesta llena de sorpresas para grandes y chiquitos
@@ -319,7 +359,9 @@ export function LandingView({
                   background: isDinoTheme ? "#E8F5E9" : "#ffffff",
                   boxShadow: isDinoTheme
                     ? "0 18px 44px rgba(107, 155, 110, 0.22)"
-                    : "0 18px 44px rgba(255,170,160,0.18)",
+                    : isKPopTheme
+                      ? "0 18px 44px rgba(218, 112, 214, 0.25)"
+                      : "0 18px 44px rgba(255,170,160,0.18)",
                 }}
                 whileHover={{ y: -6 }}
                 transition={{ duration: 0.35, ease: easeOutQuint }}
@@ -327,10 +369,10 @@ export function LandingView({
                 <span className="text-4xl" style={{ color: feature.color }}>
                   {feature.icon}
                 </span>
-                <h3 className="text-xl font-semibold text-[#1f1a48]" style={{ fontFamily: typography.heading }}>
+                <h3 className="text-xl font-semibold" style={{ fontFamily: typography.heading, color: isDinoTheme ? "#2D3D2D" : isKPopTheme ? "#9333ea" : "#1f1a48" }}>
                   {feature.title}
                 </h3>
-                <p className="text-sm font-medium text-[#6f6bb3]" style={{ fontFamily: typography.body }}>
+                <p className="text-sm font-medium" style={{ fontFamily: typography.body, color: isDinoTheme ? "#5A8A5D" : isKPopTheme ? "#E91E63" : "#6f6bb3" }}>
                   {feature.description}
                 </p>
               </motion.div>
@@ -339,17 +381,24 @@ export function LandingView({
         </motion.section>
 
         <motion.section
-          className="mx-auto flex w-full max-w-4xl flex-col items-center gap-4 rounded-[44px] bg-gradient-to-br from-white via-white/85 to-white/70 p-12 text-center shadow-[0_18px_70px_rgba(210,187,255,0.22)]"
+          className="mx-auto flex w-full max-w-4xl flex-col items-center gap-4 rounded-[44px] bg-gradient-to-br from-white via-white/85 to-white/70 p-12 text-center"
+          style={{
+            boxShadow: isDinoTheme 
+              ? "0 18px 70px rgba(107, 155, 110, 0.15)" 
+              : isKPopTheme 
+                ? "0 18px 70px rgba(218, 112, 214, 0.25)" 
+                : "0 18px 70px rgba(210,187,255,0.22)",
+          }}
           variants={fadeInUp}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, amount: 0.35 }}
           transition={{ ease: easeOutQuint, duration: 1 }}
         >
-          <h2 className="text-3xl font-bold text-slate-900 sm:text-4xl" style={{ fontFamily: typography.heading }}>
+          <h2 className="text-3xl font-bold sm:text-4xl" style={{ fontFamily: typography.heading, color: isDinoTheme ? "#2D3D2D" : isKPopTheme ? "#9333ea" : "#0f172a" }}>
             {closingMessage}
           </h2>
-          <p className="max-w-2xl text-base text-slate-600" style={{ fontFamily: typography.body }}>
+          <p className="max-w-2xl text-base" style={{ fontFamily: typography.body, color: isDinoTheme ? "#5A8A5D" : isKPopTheme ? "#E91E63" : "#475569" }}>
             {heroSubheadline}
           </p>
         </motion.section>
