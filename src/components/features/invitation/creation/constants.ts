@@ -16,6 +16,7 @@ export const AVAILABLE_TEMPLATES: TemplateOption[] = [
     theme: "princesa",
     emoji: "👑",
     description: "Un reino mágico de princesas y castillos",
+    previewImage: "/elsa-frozen.png",
   },
   {
     id: "dino-party" as TemplateId,
@@ -25,18 +26,12 @@ export const AVAILABLE_TEMPLATES: TemplateOption[] = [
     description: "Viaja al pasado con dinosaurios gigantes",
   },
   {
-    id: "space-explorer" as TemplateId,
-    name: "Space Explorer",
-    theme: "cielo",
-    emoji: "🚀",
-    description: "Explora el universo en una aventura espacial",
-  },
-  {
-    id: "unicorn-magic" as TemplateId,
-    name: "Unicorn Magic",
-    theme: "bosque",
-    emoji: "🦄",
-    description: "Un mundo mágico de unicornios y arcoíris",
+    id: "k-pop" as TemplateId,
+    name: "K-Pop Stars",
+    theme: "k-pop",
+    emoji: "🎤",
+    description: "Para la próxima gran estrella de la música",
+    previewImage: "/k-pop.png",
   },
 ];
 

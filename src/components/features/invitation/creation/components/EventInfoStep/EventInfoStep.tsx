@@ -92,21 +92,40 @@ export function EventInfoStep({ formData, onUpdate }: EventInfoStepProps) {
           </div>
         </div>
 
-        <div>
-          <label
-            htmlFor="venueAddress"
-            className="block text-sm font-medium text-gray-700"
-          >
-            Dirección del evento
-          </label>
-          <input
-            type="text"
-            id="venueAddress"
-            value={formData.venueAddress || ""}
-            onChange={(e) => onUpdate({ venueAddress: e.target.value })}
-            placeholder="Ej: Av. Providencia 1234, Santiago"
-            className="mt-2 w-full rounded-xl border border-gray-300 px-4 py-3 text-gray-900 outline-none transition focus:border-purple-500 focus:ring-2 focus:ring-purple-200"
-          />
+        <div className="grid gap-6 sm:grid-cols-2">
+          <div>
+            <label
+              htmlFor="venueName"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Nombre del lugar
+            </label>
+            <input
+              type="text"
+              id="venueName"
+              value={formData.venueName || ""}
+              onChange={(e) => onUpdate({ venueName: e.target.value })}
+              placeholder="Ej: Salón Fiesta Mágica"
+              className="mt-2 w-full rounded-xl border border-gray-300 px-4 py-3 text-gray-900 outline-none transition focus:border-purple-500 focus:ring-2 focus:ring-purple-200"
+            />
+          </div>
+
+          <div>
+            <label
+              htmlFor="venueAddress"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Dirección del evento
+            </label>
+            <input
+              type="text"
+              id="venueAddress"
+              value={formData.venueAddress || ""}
+              onChange={(e) => onUpdate({ venueAddress: e.target.value })}
+              placeholder="Ej: Av. Providencia 1234"
+              className="mt-2 w-full rounded-xl border border-gray-300 px-4 py-3 text-gray-900 outline-none transition focus:border-purple-500 focus:ring-2 focus:ring-purple-200"
+            />
+          </div>
         </div>
 
         {formData.venueAddress && (
@@ -203,6 +222,65 @@ export function EventInfoStep({ formData, onUpdate }: EventInfoStepProps) {
               </motion.div>
             )}
           </AnimatePresence>
+        </div>
+
+        <div className="rounded-2xl border-2 border-purple-200 bg-purple-50 p-6">
+          <h3 className="text-lg font-bold text-gray-900">
+            Textos Personalizados (Opcional)
+          </h3>
+          <p className="mt-1 text-sm text-gray-600 mb-4">
+            Cambia los textos que aparecerán al abrir la invitación.
+          </p>
+
+          <div className="grid gap-6 sm:grid-cols-2">
+            <div>
+              <label
+                htmlFor="introHeadline"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Título de apertura
+              </label>
+              <input
+                type="text"
+                id="introHeadline"
+                value={formData.customTexts?.introHeadline || ""}
+                onChange={(e) =>
+                  onUpdate({
+                    customTexts: {
+                      ...formData.customTexts,
+                      introHeadline: e.target.value,
+                    },
+                  })
+                }
+                placeholder="Ej: ¿Estás listo?"
+                className="mt-2 w-full rounded-xl border border-gray-300 px-4 py-3 text-gray-900 outline-none transition focus:border-purple-500 focus:ring-2 focus:ring-purple-200"
+              />
+            </div>
+
+            <div>
+              <label
+                htmlFor="introButton"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Texto del botón
+              </label>
+              <input
+                type="text"
+                id="introButton"
+                value={formData.customTexts?.introButton || ""}
+                onChange={(e) =>
+                  onUpdate({
+                    customTexts: {
+                      ...formData.customTexts,
+                      introButton: e.target.value,
+                    },
+                  })
+                }
+                placeholder="Ej: Abrir invitación"
+                className="mt-2 w-full rounded-xl border border-gray-300 px-4 py-3 text-gray-900 outline-none transition focus:border-purple-500 focus:ring-2 focus:ring-purple-200"
+              />
+            </div>
+          </div>
         </div>
       </motion.div>
     </div>

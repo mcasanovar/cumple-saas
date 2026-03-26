@@ -1,12 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useActionState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-import type { ThemeToken } from "@/lib/types/invitation";
+import type { ThemeToken, RSVPActionState } from "@/lib/types/invitation";
 import { useThemeDetection } from "@/hooks/useThemeDetection";
+import { submitRSVP } from "@/app/(public)/invitacion/[invitationId]/actions";
 
 type RSVPFormProps = {
+  invitationId: string;
   typography: {
     heading: string;
     body: string;
@@ -52,7 +54,7 @@ function Confetti() {
   );
 }
 
-export function RSVPForm({ typography, themeToken }: RSVPFormProps) {
+export function RSVPForm({ invitationId, typography, themeToken }: RSVPFormProps) {
   const { isDinoTheme, isKPopTheme } = useThemeDetection(themeToken);
   const [willAttend, setWillAttend] = useState<boolean | null>(null);
   const [guestCount, setGuestCount] = useState<number>(1);
@@ -60,6 +62,23 @@ export function RSVPForm({ typography, themeToken }: RSVPFormProps) {
   const [email, setEmail] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
+
+  const [state, formAction, isPending] = useActionState<RSVPActionState, FormData>(
+    submitRSVP,
+    { status: "idle" }
+  );
+
+  useEffect(() => {
+    if (state.status === "success") {
+      setIsSubmitted(true);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+
+      if (willAttend) {
+        setShowConfetti(true);
+        setTimeout(() => setShowConfetti(false), 4000);
+      }
+    }
+  }, [state.status, willAttend]);
 
   const handleAttendanceChange = (value: boolean) => {
     setWillAttend(value);
@@ -79,28 +98,6 @@ export function RSVPForm({ typography, themeToken }: RSVPFormProps) {
     const newNames = [...guestNames];
     newNames[index] = name;
     setGuestNames(newNames);
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    await new Promise(resolve => setTimeout(resolve, 800));
-
-    console.log("RSVP Data:", {
-      willAttend,
-      guestCount: willAttend ? guestCount : 0,
-      guestNames: willAttend ? guestNames : [],
-      email: willAttend ? email : "",
-    });
-
-    setIsSubmitted(true);
-
-    window.scrollTo({ top: 0, behavior: "smooth" });
-
-    if (willAttend) {
-      setShowConfetti(true);
-      setTimeout(() => setShowConfetti(false), 4000);
-    }
   };
 
   if (isSubmitted) {
@@ -131,7 +128,7 @@ export function RSVPForm({ typography, themeToken }: RSVPFormProps) {
               className="mb-4 text-3xl font-bold text-[#262147]"
               style={{ fontFamily: typography.heading }}
             >
-              {willAttend
+              {state.status === "success" ? state.message : willAttend
                 ? "¡Gracias por confirmar!"
                 : "Lamentamos no tenerte con nosotros"}
             </h3>
@@ -151,12 +148,16 @@ export function RSVPForm({ typography, themeToken }: RSVPFormProps) {
 
   return (
     <motion.form
-      onSubmit={handleSubmit}
+      action={formAction}
       className="relative overflow-hidden rounded-[32px] border border-white/60 bg-white/90 p-8 shadow-[0_24px_80px_rgba(15,11,29,0.12)] backdrop-blur-2xl"
       initial={{ opacity: 0, y: 32 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
     >
+      <input type="hidden" name="invitationId" value={invitationId} />
+      <input type="hidden" name="willAttend" value={String(willAttend)} />
+      <input type="hidden" name="guestNames" value={JSON.stringify(guestNames)} />
+
       <div className="pointer-events-none absolute -left-20 top-10 h-40 w-40 rounded-full bg-[#fddae4]/60 blur-3xl" />
       <div className="pointer-events-none absolute -right-24 bottom-6 h-44 w-44 rounded-full bg-[#e7defa]/50 blur-3xl" />
 
@@ -174,6 +175,12 @@ export function RSVPForm({ typography, themeToken }: RSVPFormProps) {
           >
             ¿Podrás acompañarnos?
           </p>
+          
+          {state.status === "error" && (
+            <p className="mt-2 text-sm text-red-500 font-medium">
+              {state.message}
+            </p>
+          )}
         </div>
 
         <div className="flex justify-center gap-4">
@@ -241,8 +248,20 @@ export function RSVPForm({ typography, themeToken }: RSVPFormProps) {
               transition={{ duration: 0.4 }}
             >
               <label className="flex flex-col gap-2 text-sm font-medium text-slate-600">
+                Tu nombre
+                <input
+                  name="name"
+                  type="text"
+                  placeholder="Escribe tu nombre"
+                  className="rounded-2xl border border-white/70 bg-white/90 px-4 py-3 text-base text-slate-800 shadow-inner shadow-white/40 outline-none transition focus:border-slate-300 focus:shadow-lg"
+                  required
+                />
+              </label>
+
+              <label className="flex flex-col gap-2 text-sm font-medium text-slate-600">
                 ¿Cuántas personas asistirán?
                 <select
+                  name="guestCount"
                   value={guestCount}
                   onChange={(e) => handleGuestCountChange(Number(e.target.value))}
                   className="rounded-2xl border border-white/70 bg-white/90 px-4 py-3 text-base text-slate-800 shadow-inner shadow-white/40 outline-none transition focus:border-slate-300 focus:shadow-lg"
@@ -279,10 +298,32 @@ export function RSVPForm({ typography, themeToken }: RSVPFormProps) {
               <label className="flex flex-col gap-2 text-sm font-medium text-slate-600">
                 Correo electrónico
                 <input
+                  name="email"
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="tu@email.com"
+                  className="rounded-2xl border border-white/70 bg-white/90 px-4 py-3 text-base text-slate-800 shadow-inner shadow-white/40 outline-none transition focus:border-slate-300 focus:shadow-lg"
+                  required
+                />
+              </label>
+            </motion.div>
+          )}
+          
+          {willAttend === false && (
+            <motion.div
+              className="space-y-5"
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.4 }}
+            >
+              <label className="flex flex-col gap-2 text-sm font-medium text-slate-600">
+                Tu nombre
+                <input
+                  name="name"
+                  type="text"
+                  placeholder="Escribe tu nombre"
                   className="rounded-2xl border border-white/70 bg-white/90 px-4 py-3 text-base text-slate-800 shadow-inner shadow-white/40 outline-none transition focus:border-slate-300 focus:shadow-lg"
                   required
                 />
@@ -294,7 +335,8 @@ export function RSVPForm({ typography, themeToken }: RSVPFormProps) {
         {willAttend !== null && (
           <motion.button
             type="submit"
-            className="w-full rounded-full px-8 py-4 text-lg font-bold text-white transition hover:-translate-y-0.5"
+            disabled={isPending}
+            className="w-full rounded-full px-8 py-4 text-lg font-bold text-white transition hover:-translate-y-0.5 disabled:opacity-50"
             style={{
               background: isDinoTheme
                 ? "linear-gradient(135deg, rgba(90, 138, 93, 0.98) 0%, rgba(74, 115, 80, 0.95) 52%, rgba(107, 155, 110, 0.92) 100%)"
@@ -312,7 +354,7 @@ export function RSVPForm({ typography, themeToken }: RSVPFormProps) {
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
           >
-            Enviar confirmación
+            {isPending ? "Enviando..." : "Enviar confirmación"}
           </motion.button>
         )}
       </div>

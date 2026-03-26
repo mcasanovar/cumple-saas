@@ -1,0 +1,289 @@
+
+> web@0.1.0 lint
+> eslint
+
+
+/Users/mariocasanovaramirez/Documents/CumpleSaaS/web/src/app/(private)/dashboard/invitaciones/nueva/actions.ts
+  54:31  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/mariocasanovaramirez/Documents/CumpleSaaS/web/src/app/(private)/dashboard/pago/exitoso/page.tsx
+  8:43  warning  'status' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/Users/mariocasanovaramirez/Documents/CumpleSaaS/web/src/app/(public)/invitacion/preview/page.tsx
+  5:10  warning  'motion' is defined but never used           @typescript-eslint/no-unused-vars
+  5:18  warning  'AnimatePresence' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/mariocasanovaramirez/Documents/CumpleSaaS/web/src/app/test-supabase/page.tsx
+  24:29  error  Unexpected any. Specify a different type                         @typescript-eslint/no-explicit-any
+  31:63  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+  31:69  error  `'` can be escaped with `&apos;`, `&lsquo;`, `&#39;`, `&rsquo;`  react/no-unescaped-entities
+
+/Users/mariocasanovaramirez/Documents/CumpleSaaS/web/src/components/features/invitation/creation/InvitationCreation.tsx
+   3:10  warning  'useCallback' is defined but never used      @typescript-eslint/no-unused-vars
+  15:9   warning  'router' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/Users/mariocasanovaramirez/Documents/CumpleSaaS/web/src/components/features/invitation/creation/components/PreviewStep/PreviewStep.tsx
+   32:5    error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+/Users/mariocasanovaramirez/Documents/CumpleSaaS/web/src/components/features/invitation/creation/components/PreviewStep/PreviewStep.tsx:32:5
+  30 |
+  31 |   useEffect(() => {
+> 32 |     setMounted(true);
+     |     ^^^^^^^^^^ Avoid calling setState() directly within an effect
+  33 |   }, []);
+  34 |
+  35 |   const renderConfig = useMemo(() => mapFormDataToRenderConfig(formData), [formData]);  react-hooks/set-state-in-effect
+  119:72   error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                react/no-unescaped-entities
+  119:104  error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                react/no-unescaped-entities
+
+/Users/mariocasanovaramirez/Documents/CumpleSaaS/web/src/components/features/invitation/creation/hooks/useCreationFlow.ts
+   3:47  warning  'CreationFlowState' is defined but never used  @typescript-eslint/no-unused-vars
+  25:34  error    Unexpected any. Specify a different type       @typescript-eslint/no-explicit-any
+  26:34  error    Unexpected any. Specify a different type       @typescript-eslint/no-explicit-any
+
+/Users/mariocasanovaramirez/Documents/CumpleSaaS/web/src/components/features/invitation/intro/components/IntroCrackedBackground/IntroCrackedBackground.tsx
+  39:7  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  49:7  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  78:7  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+/Users/mariocasanovaramirez/Documents/CumpleSaaS/web/src/components/features/invitation/intro/components/IntroKPopBackground/IntroKPopBackground.tsx
+  16:11  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+/Users/mariocasanovaramirez/Documents/CumpleSaaS/web/src/components/features/invitation/intro/components/IntroPetalConfetti/IntroPetalConfetti.tsx
+  22:10  error  Error: Cannot call impure function during render
+
+`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+/Users/mariocasanovaramirez/Documents/CumpleSaaS/web/src/components/features/invitation/intro/components/IntroPetalConfetti/IntroPetalConfetti.tsx:22:10
+  20 |     return Array.from({ length: 20 }).map((_, i) => ({
+  21 |       id: i,
+> 22 |       x: Math.random() * 100,
+     |          ^^^^^^^^^^^^^ Cannot call impure function
+  23 |       size: 8 + Math.random() * 12,
+  24 |       delay: Math.random() * 8,
+  25 |       duration: 6 + Math.random() * 6,                                   react-hooks/purity
+  23:17  error  Error: Cannot call impure function during render
+
+`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+/Users/mariocasanovaramirez/Documents/CumpleSaaS/web/src/components/features/invitation/intro/components/IntroPetalConfetti/IntroPetalConfetti.tsx:23:17
+  21 |       id: i,
+  22 |       x: Math.random() * 100,
+> 23 |       size: 8 + Math.random() * 12,
+     |                 ^^^^^^^^^^^^^ Cannot call impure function
+  24 |       delay: Math.random() * 8,
+  25 |       duration: 6 + Math.random() * 6,
+  26 |       rotation: Math.random() * 360,                                              react-hooks/purity
+  24:14  error  Error: Cannot call impure function during render
+
+`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+/Users/mariocasanovaramirez/Documents/CumpleSaaS/web/src/components/features/invitation/intro/components/IntroPetalConfetti/IntroPetalConfetti.tsx:24:14
+  22 |       x: Math.random() * 100,
+  23 |       size: 8 + Math.random() * 12,
+> 24 |       delay: Math.random() * 8,
+     |              ^^^^^^^^^^^^^ Cannot call impure function
+  25 |       duration: 6 + Math.random() * 6,
+  26 |       rotation: Math.random() * 360,
+  27 |       swayAmount: 20 + Math.random() * 40,                   react-hooks/purity
+  25:21  error  Error: Cannot call impure function during render
+
+`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+/Users/mariocasanovaramirez/Documents/CumpleSaaS/web/src/components/features/invitation/intro/components/IntroPetalConfetti/IntroPetalConfetti.tsx:25:21
+  23 |       size: 8 + Math.random() * 12,
+  24 |       delay: Math.random() * 8,
+> 25 |       duration: 6 + Math.random() * 6,
+     |                     ^^^^^^^^^^^^^ Cannot call impure function
+  26 |       rotation: Math.random() * 360,
+  27 |       swayAmount: 20 + Math.random() * 40,
+  28 |       color: colors[i % colors.length],  react-hooks/purity
+  26:17  error  Error: Cannot call impure function during render
+
+`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+/Users/mariocasanovaramirez/Documents/CumpleSaaS/web/src/components/features/invitation/intro/components/IntroPetalConfetti/IntroPetalConfetti.tsx:26:17
+  24 |       delay: Math.random() * 8,
+  25 |       duration: 6 + Math.random() * 6,
+> 26 |       rotation: Math.random() * 360,
+     |                 ^^^^^^^^^^^^^ Cannot call impure function
+  27 |       swayAmount: 20 + Math.random() * 40,
+  28 |       color: colors[i % colors.length],
+  29 |     }));                                 react-hooks/purity
+  27:24  error  Error: Cannot call impure function during render
+
+`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+/Users/mariocasanovaramirez/Documents/CumpleSaaS/web/src/components/features/invitation/intro/components/IntroPetalConfetti/IntroPetalConfetti.tsx:27:24
+  25 |       duration: 6 + Math.random() * 6,
+  26 |       rotation: Math.random() * 360,
+> 27 |       swayAmount: 20 + Math.random() * 40,
+     |                        ^^^^^^^^^^^^^ Cannot call impure function
+  28 |       color: colors[i % colors.length],
+  29 |     }));
+  30 |   }, []);                                                react-hooks/purity
+
+/Users/mariocasanovaramirez/Documents/CumpleSaaS/web/src/components/features/invitation/intro/components/IntroPrincessBackground/IntroPrincessBackground.tsx
+   94:9  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  107:9  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  120:9  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  136:9  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+/Users/mariocasanovaramirez/Documents/CumpleSaaS/web/src/components/features/invitation/intro/components/IntroSceneBackground/IntroSceneBackground.tsx
+  16:10  warning  'IntroConfettiBackdrop' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/mariocasanovaramirez/Documents/CumpleSaaS/web/src/components/features/invitation/intro/components/IntroView/IntroView.tsx
+  46:5  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+/Users/mariocasanovaramirez/Documents/CumpleSaaS/web/src/components/features/invitation/intro/components/IntroView/IntroView.tsx:46:5
+  44 |
+  45 |   useEffect(() => {
+> 46 |     setIsMounted(true);
+     |     ^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  47 |   }, []);
+  48 |
+  49 |   const subtitleParts = introCopy.celebrantSubtitle.split("{celebrantName}");  react-hooks/set-state-in-effect
+
+/Users/mariocasanovaramirez/Documents/CumpleSaaS/web/src/components/features/invitation/landing/components/LandingDinoBackground/LandingDinoBackground.tsx
+   45:7  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+   74:7  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  123:7  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+/Users/mariocasanovaramirez/Documents/CumpleSaaS/web/src/components/features/invitation/landing/components/LandingKPopBackground/LandingKPopBackground.tsx
+  13:5  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+/Users/mariocasanovaramirez/Documents/CumpleSaaS/web/src/components/features/invitation/landing/components/LandingKPopBackground/LandingKPopBackground.tsx:13:5
+  11 |
+  12 |   useEffect(() => {
+> 13 |     setIsMounted(true);
+     |     ^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  14 |   }, []);
+  15 |
+  16 |   return (  react-hooks/set-state-in-effect
+
+/Users/mariocasanovaramirez/Documents/CumpleSaaS/web/src/components/features/invitation/landing/components/LandingPrincessBackground/LandingPrincessBackground.tsx
+   11:9  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  221:9  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  234:9  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+/Users/mariocasanovaramirez/Documents/CumpleSaaS/web/src/components/features/invitation/landing/components/RSVPForm/RSVPForm.tsx
+  22:8   error  Error: Cannot call impure function during render
+
+`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+/Users/mariocasanovaramirez/Documents/CumpleSaaS/web/src/components/features/invitation/landing/components/RSVPForm/RSVPForm.tsx:22:8
+  20 |   const confettiPieces = Array.from({ length: 50 }, (_, i) => ({
+  21 |     id: i,
+> 22 |     x: Math.random() * 100,
+     |        ^^^^^^^^^^^^^ Cannot call impure function
+  23 |     delay: Math.random() * 0.5,
+  24 |     duration: 2 + Math.random() * 2,
+  25 |     rotation: Math.random() * 360,                                                                                                                                                                                                                                                                                                                                                               react-hooks/purity
+  23:12  error  Error: Cannot call impure function during render
+
+`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+/Users/mariocasanovaramirez/Documents/CumpleSaaS/web/src/components/features/invitation/landing/components/RSVPForm/RSVPForm.tsx:23:12
+  21 |     id: i,
+  22 |     x: Math.random() * 100,
+> 23 |     delay: Math.random() * 0.5,
+     |            ^^^^^^^^^^^^^ Cannot call impure function
+  24 |     duration: 2 + Math.random() * 2,
+  25 |     rotation: Math.random() * 360,
+  26 |     color: ["#ff6b3d", "#ffb347", "#4ECDC4", "#ff7a3d", "#6f6bb3"][Math.floor(Math.random() * 5)],                                                                                                                                                                                                                                                                                                                        react-hooks/purity
+  24:19  error  Error: Cannot call impure function during render
+
+`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+/Users/mariocasanovaramirez/Documents/CumpleSaaS/web/src/components/features/invitation/landing/components/RSVPForm/RSVPForm.tsx:24:19
+  22 |     x: Math.random() * 100,
+  23 |     delay: Math.random() * 0.5,
+> 24 |     duration: 2 + Math.random() * 2,
+     |                   ^^^^^^^^^^^^^ Cannot call impure function
+  25 |     rotation: Math.random() * 360,
+  26 |     color: ["#ff6b3d", "#ffb347", "#4ECDC4", "#ff7a3d", "#6f6bb3"][Math.floor(Math.random() * 5)],
+  27 |   }));                                                                                                                                                                                                                                                                                                                     react-hooks/purity
+  25:15  error  Error: Cannot call impure function during render
+
+`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+/Users/mariocasanovaramirez/Documents/CumpleSaaS/web/src/components/features/invitation/landing/components/RSVPForm/RSVPForm.tsx:25:15
+  23 |     delay: Math.random() * 0.5,
+  24 |     duration: 2 + Math.random() * 2,
+> 25 |     rotation: Math.random() * 360,
+     |               ^^^^^^^^^^^^^ Cannot call impure function
+  26 |     color: ["#ff6b3d", "#ffb347", "#4ECDC4", "#ff7a3d", "#6f6bb3"][Math.floor(Math.random() * 5)],
+  27 |   }));
+  28 |                                                                                                                                                                                                                                                                                                                                                     react-hooks/purity
+  26:79  error  Error: Cannot call impure function during render
+
+`Math.random` is an impure function. Calling an impure function can produce unstable results that update unpredictably when the component happens to re-render. (https://react.dev/reference/rules/components-and-hooks-must-be-pure#components-and-hooks-must-be-idempotent).
+
+/Users/mariocasanovaramirez/Documents/CumpleSaaS/web/src/components/features/invitation/landing/components/RSVPForm/RSVPForm.tsx:26:79
+  24 |     duration: 2 + Math.random() * 2,
+  25 |     rotation: Math.random() * 360,
+> 26 |     color: ["#ff6b3d", "#ffb347", "#4ECDC4", "#ff7a3d", "#6f6bb3"][Math.floor(Math.random() * 5)],
+     |                                                                               ^^^^^^^^^^^^^ Cannot call impure function
+  27 |   }));
+  28 |
+  29 |   return (                                                                                                                                                                                                                                                                                                          react-hooks/purity
+  73:7   error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+/Users/mariocasanovaramirez/Documents/CumpleSaaS/web/src/components/features/invitation/landing/components/RSVPForm/RSVPForm.tsx:73:7
+  71 |   useEffect(() => {
+  72 |     if (state.status === "success") {
+> 73 |       setIsSubmitted(true);
+     |       ^^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  74 |       window.scrollTo({ top: 0, behavior: "smooth" });
+  75 |
+  76 |       if (willAttend) {  react-hooks/set-state-in-effect
+
+/Users/mariocasanovaramirez/Documents/CumpleSaaS/web/src/data/invitations.ts
+  271:36  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/mariocasanovaramirez/Documents/CumpleSaaS/web/src/lib/prisma.ts
+  8:40  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/mariocasanovaramirez/Documents/CumpleSaaS/web/src/lib/templates/preview-utils.ts
+   3:10  warning  'themes' is defined but never used        @typescript-eslint/no-unused-vars
+  15:46  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/mariocasanovaramirez/Documents/CumpleSaaS/web/src/types/leaflet.d.ts
+  2:21  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  3:22  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  4:55  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  5:60  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  5:66  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  6:62  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  6:68  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  7:33  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/mariocasanovaramirez/Documents/CumpleSaaS/web/src/utils/supabase/middleware.ts
+  24:48  warning  'options' is defined but never used  @typescript-eslint/no-unused-vars
+
+✖ 57 problems (34 errors, 23 warnings)
+

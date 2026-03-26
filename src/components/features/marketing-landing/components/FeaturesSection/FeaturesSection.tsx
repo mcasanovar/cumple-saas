@@ -67,7 +67,7 @@ export function FeaturesSection() {
         >
           <div className="bg-[#E63946] px-8 py-12 text-center text-white">
             <p className="mb-2 text-sm font-semibold uppercase tracking-wider opacity-90">
-              INVITACIÓN DIGITAL
+              INVITACIÓN DIGITAL DESDE
             </p>
             <div className="mb-2 flex items-baseline justify-center gap-1">
               <span className="text-7xl font-bold">$5,990</span>

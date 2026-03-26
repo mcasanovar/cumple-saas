@@ -1,213 +1,204 @@
 "use client";
 
+import { useMemo, useState, useEffect } from "react";
 import { motion } from "framer-motion";
 
+import { mapFormDataToRenderConfig } from "@/lib/templates/preview-utils";
+import { InvitationExperience } from "@/components/features/invitation/InvitationExperience";
 import { PRICE_CLP, AVAILABLE_TEMPLATES } from "../../constants";
 import type { CreationFormData } from "../../types";
 
 export type PreviewStepProps = {
   formData: Partial<CreationFormData>;
   onConfirm: () => void;
+  onOpenPreview?: () => void;
+  isProcessing?: boolean;
+  error?: string | null;
 };
 
-export function PreviewStep({ formData, onConfirm }: PreviewStepProps) {
+export function PreviewStep({ 
+  formData, 
+  onConfirm, 
+  onOpenPreview,
+  isProcessing, 
+  error 
+}: PreviewStepProps) {
+  const [mounted, setMounted] = useState(false);
   const selectedTemplate = AVAILABLE_TEMPLATES.find(
     (t) => t.id === formData.templateId
   );
 
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const renderConfig = useMemo(() => mapFormDataToRenderConfig(formData), [formData]);
+
   return (
-    <div className="mx-auto w-full max-w-5xl">
-      <motion.div
-        className="mb-8 text-center"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-      >
-        <h1 className="text-4xl font-bold text-gray-900">
-          ¡Tu invitación está lista!
-        </h1>
-        <p className="mt-3 text-lg text-gray-600">
-          Revisa los detalles antes de confirmar tu compra
-        </p>
-      </motion.div>
+    <div className="mx-auto w-full max-w-6xl">
+      {!mounted ? (
+        <div className="flex h-[600px] w-full items-center justify-center">
+          <div className="h-12 w-12 animate-spin rounded-full border-4 border-purple-500 border-t-transparent" />
+        </div>
+      ) : (
+        <>
+          <motion.div
+            className="mb-8 text-center"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <h1 className="text-4xl font-bold text-gray-900">
+              ¡Tu invitación está lista!
+            </h1>
+            <p className="mt-3 text-lg text-gray-600">
+              Revisa cómo quedó tu invitación antes de confirmar
+            </p>
+          </motion.div>
 
-      <div className="grid gap-8 lg:grid-cols-3">
-        <motion.div
-          className="lg:col-span-2"
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.2, duration: 0.5 }}
-        >
-          <div className="overflow-hidden rounded-2xl border-2 border-gray-200 bg-white shadow-lg">
-            <div className="bg-gradient-to-br from-purple-500 to-pink-500 p-8 text-white">
-              <div className="text-center">
-                <div className="mb-4 text-6xl">{selectedTemplate?.emoji}</div>
-                <h2 className="text-3xl font-bold">
-                  {formData.celebrantName} cumple {formData.age} años
-                </h2>
-                <p className="mt-2 text-lg opacity-90">
-                  {selectedTemplate?.name}
-                </p>
-              </div>
-            </div>
-
-            <div className="space-y-6 p-8">
-              <div>
-                <h3 className="text-sm font-semibold uppercase tracking-wide text-gray-500">
-                  Fecha y hora
-                </h3>
-                <p className="mt-1 text-lg text-gray-900">
-                  {formData.eventDate} a las {formData.eventTime}
-                </p>
-              </div>
-
-              <div>
-                <h3 className="text-sm font-semibold uppercase tracking-wide text-gray-500">
-                  Lugar
-                </h3>
-                <p className="mt-1 text-lg text-gray-900">
-                  {formData.venueAddress}
-                </p>
-              </div>
-
-              <div>
-                <h3 className="text-sm font-semibold uppercase tracking-wide text-gray-500">
-                  El evento incluye
-                </h3>
-                <ul className="mt-2 space-y-1">
-                  {formData.eventIncludes?.map((item, index) => (
-                    <li key={index} className="flex items-center text-gray-900">
-                      <svg
-                        className="mr-2 h-5 w-5 text-green-500"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M5 13l4 4L19 7"
-                        />
-                      </svg>
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              <div>
-                <h3 className="text-sm font-semibold uppercase tracking-wide text-gray-500">
-                  Galería
-                </h3>
-                <div className="mt-2 grid grid-cols-3 gap-2">
-                  {formData.celebrantImages?.map((img, index) => (
-                    <div
-                      key={index}
-                      className="aspect-square rounded-lg bg-gradient-to-br from-purple-200 to-pink-200"
-                    />
-                  ))}
+          <div className="grid gap-12 lg:grid-cols-2 lg:items-start">
+            {/* Lado Izquierdo: Device Mockup */}
+            <motion.div
+              className="flex flex-col items-center"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.2, duration: 0.5 }}
+            >
+              <div className="relative mx-auto h-[700px] w-[340px] overflow-hidden rounded-[3rem] border-[8px] border-gray-900 bg-gray-900 shadow-2xl ring-1 ring-gray-800">
+                {/* Speaker/Camera notch */}
+                <div className="absolute left-1/2 top-0 z-50 h-6 w-32 -translate-x-1/2 rounded-b-2xl bg-gray-900" />
+                
+                {/* Preview Iframe-like container */}
+                <div className="h-full w-full overflow-y-auto bg-white">
+                  <div className="pointer-events-none origin-top h-full">
+                    {/* Forzamos el renderizado de la landing en el preview (saltando la intro para ver rápido) */}
+                    <InvitationExperience invitation={renderConfig} />
+                  </div>
                 </div>
-              </div>
-            </div>
-          </div>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.4, duration: 0.5 }}
-        >
-          <div className="sticky top-8 rounded-2xl border-2 border-gray-200 bg-white p-6 shadow-lg">
-            <h3 className="text-xl font-bold text-gray-900">
-              Resumen de compra
-            </h3>
-
-            <div className="mt-6 space-y-4">
-              <div className="flex items-start justify-between">
-                <div>
-                  <p className="font-medium text-gray-900">
-                    Invitación Digital Premium
-                  </p>
-                  <p className="text-sm text-gray-600">
-                    Plantilla: {selectedTemplate?.name}
-                  </p>
-                </div>
-                <p className="font-bold text-gray-900">
-                  ${PRICE_CLP.toLocaleString("es-CL")}
-                </p>
-              </div>
-
-              <div className="border-t border-gray-200 pt-4">
-                <div className="flex justify-between text-lg font-bold">
-                  <span>Total</span>
-                  <span className="text-purple-600">
-                    ${PRICE_CLP.toLocaleString("es-CL")} CLP
-                  </span>
-                </div>
+                
+                {/* Gloss overlay */}
+                <div className="pointer-events-none absolute inset-0 z-40 rounded-[2.5rem] bg-gradient-to-tr from-white/5 to-white/10" />
               </div>
 
               <button
-                onClick={onConfirm}
-                className="w-full rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 py-4 text-lg font-bold text-white shadow-lg transition hover:shadow-xl hover:brightness-110"
+                onClick={onOpenPreview}
+                className="mt-8 flex items-center gap-2 rounded-full bg-white px-6 py-2.5 font-bold text-purple-600 shadow-md ring-1 ring-purple-100 transition hover:bg-purple-50"
               >
-                Confirmar y pagar
+                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                </svg>
+                Ver Preview Pantalla Completa
               </button>
+            </motion.div>
 
-              <div className="space-y-2 text-xs text-gray-500">
-                <p className="flex items-center">
-                  <svg
-                    className="mr-2 h-4 w-4 text-green-500"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
+            {/* Lado Derecho: Resumen y Checkout */}
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.4, duration: 0.5 }}
+            >
+              <div className="rounded-2xl border-2 border-gray-200 bg-white p-8 shadow-lg">
+                <h3 className="text-2xl font-bold text-gray-900">
+                  Resumen de tu invitación
+                </h3>
+                
+                <div className="mt-8 divide-y divide-gray-100">
+                  <div className="py-4">
+                    <span className="text-sm font-semibold text-gray-400 uppercase tracking-widest">Plantilla</span>
+                    <div className="mt-1 flex items-center gap-3">
+                      <span className="text-2xl">{selectedTemplate?.emoji}</span>
+                      <span className="text-lg font-bold text-gray-900">{selectedTemplate?.name}</span>
+                    </div>
+                  </div>
+
+                  <div className="py-4">
+                    <span className="text-sm font-semibold text-gray-400 uppercase tracking-widest">Celebración</span>
+                    <p className="mt-1 text-lg font-medium text-gray-800">
+                      {formData.celebrantName} cumple {formData.age} años
+                    </p>
+                    <p className="text-sm text-gray-500 italic mt-0.5">"{formData.celebrantDescription}"</p>
+                  </div>
+
+                  <div className="py-4">
+                    <span className="text-sm font-semibold text-gray-400 uppercase tracking-widest">Lugar y Fecha</span>
+                    <p className="mt-1 text-lg text-gray-800">
+                      {formData.venueName} — {formData.venueAddress}
+                    </p>
+                    <p className="text-gray-600">
+                      {formData.eventDate} a las {formData.eventTime}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="mt-8 rounded-2xl bg-purple-50 p-6 ring-1 ring-purple-100/50">
+                  <h3 className="text-lg font-bold text-gray-900">
+                    Resumen de compra
+                  </h3>
+
+                  <div className="mt-4 space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-gray-600">Invitación Digital Premium</span>
+                      <span className="font-bold text-gray-900">${PRICE_CLP.toLocaleString("es-CL")}</span>
+                    </div>
+                    
+                    <div className="border-t border-purple-200 pt-3">
+                      <div className="flex justify-between text-xl font-bold">
+                        <span className="text-gray-900">Total</span>
+                        <span className="text-purple-600">
+                          ${PRICE_CLP.toLocaleString("es-CL")} CLP
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {error && (
+                    <div className="mt-4 rounded-lg bg-red-50 p-3 text-sm text-red-600 border border-red-100">
+                      {error}
+                    </div>
+                  )}
+
+                  <button
+                    onClick={onConfirm}
+                    disabled={isProcessing}
+                    className={`mt-6 flex w-full items-center justify-center rounded-xl py-4 text-lg font-bold text-white shadow-lg transition ${
+                      isProcessing
+                        ? "cursor-not-allowed bg-purple-400"
+                        : "bg-gradient-to-r from-purple-500 to-pink-500 hover:shadow-xl hover:brightness-110"
+                    }`}
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M5 13l4 4L19 7"
-                    />
-                  </svg>
-                  Acceso inmediato después del pago
-                </p>
-                <p className="flex items-center">
-                  <svg
-                    className="mr-2 h-4 w-4 text-green-500"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M5 13l4 4L19 7"
-                    />
-                  </svg>
-                  Editable hasta el día del evento
-                </p>
-                <p className="flex items-center">
-                  <svg
-                    className="mr-2 h-4 w-4 text-green-500"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M5 13l4 4L19 7"
-                    />
-                  </svg>
-                  Gestión de confirmaciones RSVP
-                </p>
+                    {isProcessing ? (
+                      <>
+                        <svg className="mr-3 h-5 w-5 animate-spin text-white" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                        </svg>
+                        Procesando...
+                      </>
+                    ) : (
+                      "Confirmar y pagar"
+                    )}
+                  </button>
+
+                  <div className="mt-6 flex flex-col gap-2 text-xs text-gray-500">
+                    <div className="flex items-center gap-2">
+                      <div className="h-1.5 w-1.5 rounded-full bg-green-500" />
+                      Acceso inmediato después del pago
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="h-1.5 w-1.5 rounded-full bg-green-500" />
+                      Editable hasta el día del evento
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="h-1.5 w-1.5 rounded-full bg-green-500" />
+                      Gestión de confirmaciones RSVP
+                    </div>
+                  </div>
+                </div>
               </div>
-            </div>
+            </motion.div>
           </div>
-        </motion.div>
-      </div>
+        </>
+      )}
     </div>
   );
 }

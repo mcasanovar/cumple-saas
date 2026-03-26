@@ -21,13 +21,11 @@ export function InvitationCreation() {
     goToPreviousStep,
     canGoNext,
     canGoBack,
+    handlePurchase,
+    handleOpenPreview,
+    isProcessingPayment,
+    paymentError,
   } = useCreationFlow();
-
-  const handleConfirmPurchase = useCallback(() => {
-    console.log("Datos de la invitación:", formData);
-    alert("¡Compra confirmada! Redirigiendo al dashboard...");
-    router.push("/dashboard/invitaciones");
-  }, [formData, router]);
 
   const currentStepNumber = CREATION_STEPS.findIndex(
     (step) => step.id === currentStep
@@ -100,7 +98,10 @@ export function InvitationCreation() {
             {currentStep === "preview" && (
               <PreviewStep
                 formData={formData}
-                onConfirm={handleConfirmPurchase}
+                onConfirm={handlePurchase}
+                onOpenPreview={handleOpenPreview}
+                isProcessing={isProcessingPayment}
+                error={paymentError}
               />
             )}
           </motion.div>

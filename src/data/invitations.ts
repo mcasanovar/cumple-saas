@@ -1,3 +1,4 @@
+import prisma from "@/lib/prisma";
 import type { UserInvitationData } from "@/lib/types/template";
 
 export const userInvitations: UserInvitationData[] = [
@@ -183,7 +184,7 @@ export const userInvitations: UserInvitationData[] = [
       lng: -58.381559,
     },
     celebrantDescription:
-      "Le encanta bailar, cantar y brillar como una verdadera estrella. ¡Este año celebramos con mucha música y diversión K-pop!",
+      "Le encanto bailar, cantar y brillar como una verdadera estrella. ¡Este año celebramos con mucha música y diversión K-pop!",
     gallery: [
       {
         id: "img-1",
@@ -219,17 +220,63 @@ export const userInvitations: UserInvitationData[] = [
   },
 ];
 
-export function getInvitationById(
+export async function getInvitationById(
   invitationId: string
-): UserInvitationData | undefined {
+): Promise<UserInvitationData | undefined> {
+  // 1. Try to fetch from Prisma
+  try {
+    const invitation = await prisma.invitation.findUnique({
+      where: { id: invitationId },
+    });
+
+    if (invitation && invitation.config) {
+      return invitation.config as unknown as UserInvitationData;
+    }
+  } catch (error) {
+    console.error("Error fetching invitation from Prisma:", error);
+  }
+
+  // 2. Fallback to mock data
   return userInvitations.find((inv) => inv.id === invitationId);
 }
 
-export function getInvitationBySlug(slug: string): UserInvitationData | undefined {
+export async function getInvitationBySlug(
+  slug: string
+): Promise<UserInvitationData | undefined> {
+  // 1. Try to fetch from Prisma
+  try {
+    const invitation = await prisma.invitation.findUnique({
+      where: { slug: slug },
+    });
+
+    if (invitation && invitation.config) {
+      return invitation.config as unknown as UserInvitationData;
+    }
+  } catch (error) {
+    console.error("Error fetching invitation by slug from Prisma:", error);
+  }
+
+  // 2. Fallback to mock data
   return userInvitations.find((inv) => inv.slug === slug);
 }
 
-export function getAllInvitationIds(): Array<{ invitationId: string }> {
+export async function getAllInvitationIds(): Promise<Array<{ invitationId: string }>> {
+  // 1. Try to fetch from Prisma
+  try {
+    const invitations = await prisma.invitation.findMany({
+      select: { id: true },
+    });
+
+    if (invitations && invitations.length > 0) {
+      return invitations.map((inv: Record<string, any>) => ({
+        invitationId: inv.id,
+      }));
+    }
+  } catch (error) {
+    console.error("Error fetching all invitation IDs from Prisma:", error);
+  }
+
+  // 2. Fallback to mock data
   return userInvitations.map((inv) => ({
     invitationId: inv.id,
   }));

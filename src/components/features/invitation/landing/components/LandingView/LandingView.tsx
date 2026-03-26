@@ -29,6 +29,7 @@ const fadeInUp: Variants = {
 };
 
 export function LandingView({
+  invitationId,
   scene,
   badgeLabel,
   heroTopLine,
@@ -411,7 +412,7 @@ export function LandingView({
           viewport={{ once: true, amount: 0.2 }}
           transition={{ ease: easeOutQuint, duration: 1 }}
         >
-          <RSVPForm typography={typography} themeToken={themeToken} />
+          <RSVPForm invitationId={invitationId} typography={typography} themeToken={themeToken} />
         </motion.section>
       </section>
     </div>

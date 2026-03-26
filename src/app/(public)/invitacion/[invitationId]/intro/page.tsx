@@ -17,7 +17,7 @@ export async function generateMetadata({
   params: Promise<{ invitationId: string }>;
 }): Promise<Metadata> {
   const { invitationId } = await params;
-  const userData = getInvitationById(invitationId);
+  const userData = await getInvitationById(invitationId);
 
   if (!userData) {
     return {
@@ -43,7 +43,7 @@ export default async function InvitationIntroPage({
   params: Promise<{ invitationId: string }>;
 }) {
   const { invitationId } = await params;
-  const userData = getInvitationById(invitationId);
+  const userData = await getInvitationById(invitationId);
 
   if (!userData) {
     notFound();

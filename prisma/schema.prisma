@@ -1,0 +1,90 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/client"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id            String       @id @default(cuid())
+  clerkId       String       @unique
+  email         String?      @unique
+  name          String?
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  invitations   Invitation[]
+}
+
+model Invitation {
+  id            String   @id @default(uuid())
+  slug          String?  @unique
+  templateId    String
+  
+  // Metadatos extraídos para consultas rápidas en el dashboard
+  celebrantName String
+  celebrantAge  Int
+  eventDate     DateTime
+  eventTime     String
+  venueName     String
+  
+  // Configuración completa (JSON) para renderizado
+  config        Json     
+  
+  isPaid        Boolean  @default(false)
+  status        String   @default("draft") // draft, published, archived
+  
+  userId        String
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  rsvps         RSVP[]
+  purchase      Purchase?
+  
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([userId])
+  @@index([eventDate])
+}
+
+model RSVP {
+  id            String     @id @default(cuid())
+  invitationId  String
+  invitation    Invitation @relation(fields: [invitationId], references: [id], onDelete: Cascade)
+  
+  name          String     // Nombre del contacto principal
+  email         String?
+  willAttend    Boolean
+  guestCount    Int        @default(0)
+  guestNames    Json?      // Array de nombres si aplica (se guarda como JSON ["Juan", "Maria"])
+  
+  createdAt     DateTime   @default(now())
+
+  @@index([invitationId])
+}
+
+model Purchase {
+  id                String     @id @default(cuid())
+  invitationId      String     @unique
+  invitation        Invitation @relation(fields: [invitationId], references: [id], onDelete: Cascade)
+  
+  externalReference String?    @unique // ID de preferencia de MercadoPago
+  paymentId         String?    // ID de pago real de MercadoPago
+  status            String     @default("pending") // pending, approved, rejected, etc.
+  amount            Int
+  currency          String     @default("CLP")
+  
+  createdAt         DateTime   @default(now())
+  updatedAt         DateTime   @updatedAt
+
+  @@index([invitationId])
+}

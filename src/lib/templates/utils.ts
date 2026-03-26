@@ -45,6 +45,7 @@ export function mergeTemplateWithUserData(
       celebrantTagline: template.intro.celebrantTagline,
       hintHeadline: template.intro.hintHeadline,
       buttonLabel: template.intro.buttonLabel,
+      celebrateNameClass: template.intro.celebrateNameClass,
       detailLeft: userData.introOverrides?.detailLeft,
       detailRight: userData.introOverrides?.detailRight,
     },

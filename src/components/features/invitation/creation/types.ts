@@ -13,14 +13,25 @@ export type CreationFormData = {
   templateId: string;
   celebrantName: string;
   age: number;
+  celebrantDescription: string;
+
   eventDate: string;
   eventTime: string;
+  venueName: string;
   venueAddress: string;
   coordinates: {
     lat: number;
     lng: number;
   } | null;
   eventIncludes: string[];
+
+  customTexts: {
+    introHeadline?: string;
+    introButton?: string;
+    detailLeftTitle?: string;
+    detailRightTitle?: string;
+  };
+
   celebrantImages: (File | null)[];
   venueImage: File | null;
 };
