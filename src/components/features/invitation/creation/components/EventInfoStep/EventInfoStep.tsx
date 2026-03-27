@@ -4,6 +4,9 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 import type { CreationFormData } from "../../types";
+import { EVENT_ICONS } from "../../constants";
+import { IconSelector } from "./components/IconSelector";
+import MapView from "@/components/shared/map-view/MapView";
 
 export type EventInfoStepProps = {
   formData: Partial<CreationFormData>;
@@ -12,29 +15,30 @@ export type EventInfoStepProps = {
 
 export function EventInfoStep({ formData, onUpdate }: EventInfoStepProps) {
   const [newItem, setNewItem] = useState("");
+  const [selectedIcon, setSelectedIcon] = useState<string>(EVENT_ICONS[0]);
+  const [iconSelectorOpen, setIconSelectorOpen] = useState(false);
 
   const handleAddItem = () => {
     if (newItem.trim()) {
       const currentItems = formData.eventIncludes || [];
-      onUpdate({ eventIncludes: [...currentItems, newItem.trim()] });
+      onUpdate({
+        eventIncludes: [...currentItems, { description: newItem.trim(), icon: selectedIcon }]
+      });
       setNewItem("");
     }
   };
 
   const handleRemoveItem = (index: number) => {
     const currentItems = formData.eventIncludes || [];
-    onUpdate({ eventIncludes: currentItems.filter((_, i) => i !== index) });
+    onUpdate({ eventIncludes: currentItems.filter((item, i) => i !== index) });
   };
 
-  const handleMapClick = () => {
-    if (formData.venueAddress) {
-      onUpdate({
-        coordinates: {
-          lat: -33.4489,
-          lng: -70.6693,
-        },
-      });
-    }
+  const handleEditItem = (index: number, updates: Partial<{ description: string; icon: string }>) => {
+    const currentItems = formData.eventIncludes || [];
+    const updatedItems = currentItems.map((item, i) =>
+      i === index ? { ...item, ...updates } : item
+    );
+    onUpdate({ eventIncludes: updatedItems });
   };
 
   return (
@@ -129,34 +133,18 @@ export function EventInfoStep({ formData, onUpdate }: EventInfoStepProps) {
           </div>
         </div>
 
-        {formData.venueAddress && (
-          <motion.div
-            className="overflow-hidden rounded-xl border-2 border-gray-200"
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 300 }}
-            transition={{ duration: 0.4 }}
-          >
-            <div className="flex h-full items-center justify-center bg-gray-100">
-              <div className="text-center">
-                <div className="mb-4 text-6xl">🗺️</div>
-                <p className="mb-4 text-gray-600">
-                  Mapa interactivo (simulado)
-                </p>
-                <button
-                  onClick={handleMapClick}
-                  className="rounded-full bg-purple-500 px-6 py-2 text-white transition hover:bg-purple-600"
-                >
-                  Confirmar ubicación
-                </button>
-                {formData.coordinates && (
-                  <p className="mt-2 text-sm text-green-600">
-                    ✓ Ubicación confirmada
-                  </p>
-                )}
-              </div>
-            </div>
-          </motion.div>
-        )}
+        <div>
+          <MapView
+            initialAddress={formData.venueAddress || ""}
+            initialCoordinates={formData.coordinates}
+            onLocationSelect={(coordinates, address) => {
+              onUpdate({
+                coordinates: coordinates,
+                venueAddress: address
+              });
+            }}
+          />
+        </div>
 
         <div>
           <label className="block text-sm font-medium text-gray-700">
@@ -167,6 +155,12 @@ export function EventInfoStep({ formData, onUpdate }: EventInfoStepProps) {
           </p>
 
           <div className="mt-3 flex gap-2">
+            <IconSelector
+              selectedIcon={selectedIcon}
+              onIconSelect={setSelectedIcon}
+              isOpen={iconSelectorOpen}
+              onToggle={() => setIconSelectorOpen(!iconSelectorOpen)}
+            />
             <input
               type="text"
               value={newItem}
@@ -199,7 +193,10 @@ export function EventInfoStep({ formData, onUpdate }: EventInfoStepProps) {
                     exit={{ opacity: 0, x: 20 }}
                     transition={{ delay: index * 0.05 }}
                   >
-                    <span className="text-gray-900">{item}</span>
+                    <div className="flex items-center gap-3">
+                      <span className="text-xl">{item.icon}</span>
+                      <span className="text-gray-900">{item.description}</span>
+                    </div>
                     <button
                       onClick={() => handleRemoveItem(index)}
                       className="text-red-500 transition hover:text-red-700"

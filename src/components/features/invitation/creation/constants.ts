@@ -42,3 +42,16 @@ export const CREATION_STEPS = [
 ] as const;
 
 export const PRICE_CLP = 5990;
+
+export const ALLOWED_IMAGE_FORMATS = [".jpeg", ".jpg", ".png"] as const;
+export const ALLOWED_MIME_TYPES = ["image/jpeg", "image/png"] as const;
+export const ACCEPTED_IMAGE_TYPES = ".jpeg,.jpg,.png";
+
+export const EVENT_ICONS = [
+  "🎭", "🎪", "🎨", "🎵", "🎤", "🎸", "🎹", "🥁", "🎺", "🎷",
+  "🎯", "🎲", "🎳", "🎮", "🕹️", "🎰", "🧩", "🎭", "🎪", "🎨",
+  "🍕", "🍔", "🍟", "🌭", "🥤", "🧃", "🍬", "🍭", "🧁", "🍰",
+  "🎂", "🎈", "🎉", "🎊", "🎁", "🎀", "🏆", "🥇", "👑", "⭐",
+  "🌟", "✨", "💫", "🎆", "🎇", "🎃", "🎄", "🎅", "🤡", "🦸",
+  "🦹", "🧸", "🎠", "🎡", "🎢", "🎪", "🎭", "🎨", "🎪", "🎭"
+] as const;

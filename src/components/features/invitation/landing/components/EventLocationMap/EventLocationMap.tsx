@@ -1,6 +1,19 @@
 "use client";
 
-import { useMemo } from "react";
+import dynamic from "next/dynamic";
+
+// Dynamically import MapView to avoid SSR issues with Leaflet
+const MapView = dynamic(() => import("@/components/shared/map-view/MapView"), {
+  ssr: false,
+  loading: () => (
+    <div className="flex h-[300px] items-center justify-center rounded-[28px] border-2 border-gray-200 bg-gray-50">
+      <div className="text-center">
+        <div className="mb-3 h-8 w-8 animate-spin rounded-full border-2 border-purple-500 border-t-transparent" />
+        <p className="text-sm text-gray-500">Cargando mapa...</p>
+      </div>
+    </div>
+  ),
+});
 
 type EventLocationMapProps = {
   coordinates?: { lat: number; lng: number };
@@ -9,18 +22,7 @@ type EventLocationMapProps = {
   mapsUrl?: string;
 };
 
-const buildGoogleMapsEmbed = (lat: number, lng: number) =>
-  `https://www.google.com/maps?q=${lat},${lng}&z=16&output=embed`;
-
 export function EventLocationMap({ coordinates, venueName, address, mapsUrl }: EventLocationMapProps) {
-  const fallbackEmbed =
-    "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3976.0!2d-75.57!3d6.25!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNsKwMTUnMDAuMCJOIDc1wrAzNCcxMi4wIlc!5e0!3m2!1ses!2sco!4v1600000000000";
-
-  const iframeSrc = useMemo(() => {
-    if (!coordinates) return fallbackEmbed;
-    return buildGoogleMapsEmbed(coordinates.lat, coordinates.lng);
-  }, [coordinates]);
-
   return (
     <div className="relative mx-auto w-full max-w-4xl overflow-hidden rounded-[28px] border border-white/80 bg-white/95 shadow-[0_18px_60px_rgba(93,75,255,0.18)]">
       {mapsUrl ? (
@@ -33,17 +35,14 @@ export function EventLocationMap({ coordinates, venueName, address, mapsUrl }: E
           Abrir en Maps ↗
         </a>
       ) : null}
-      <iframe
-        title={`Ubicación de ${venueName}`}
-        src={iframeSrc}
-        width="100%"
-        height="260"
-        style={{ border: 0 }}
-        allowFullScreen
-        loading="lazy"
-        referrerPolicy="no-referrer-when-downgrade"
-        className="h-[260px] w-full"
+
+      {/* Leaflet Map */}
+      <MapView
+        initialAddress={address}
+        initialCoordinates={coordinates}
+        showSearch={false}
       />
+
       <div className="px-6 pb-6 pt-4 text-left text-xs text-[#6f6bb3]">
         <p className="font-semibold uppercase tracking-[0.28em]">Dirección</p>
         <p className="mt-1 text-sm font-medium text-[#433f8c]">{address}</p>

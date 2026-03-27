@@ -9,6 +9,11 @@ export type TemplateOption = {
   previewImage?: string;
 };
 
+export type EventIncludeItem = {
+  description: string;
+  icon: string;
+};
+
 export type CreationFormData = {
   templateId: string;
   celebrantName: string;
@@ -23,7 +28,7 @@ export type CreationFormData = {
     lat: number;
     lng: number;
   } | null;
-  eventIncludes: string[];
+  eventIncludes: EventIncludeItem[];
 
   customTexts: {
     introHeadline?: string;

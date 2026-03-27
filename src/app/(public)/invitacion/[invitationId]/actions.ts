@@ -6,12 +6,11 @@ import prisma from "@/lib/prisma";
 import type { RSVPActionState } from "@/lib/types/invitation";
 
 const rsvpSchema = z.object({
-  invitationId: z.string().min(1),
-  name: z.string().min(2, "El nombre debe tener al menos 2 caracteres"),
+  invitationId: z.string().min(1, "ID de invitación requerido"),
   email: z.string().email("Correo electrónico inválido").optional().or(z.literal("")),
   willAttend: z.boolean(),
-  guestCount: z.number().min(0),
-  guestNames: z.array(z.string()).optional(),
+  guestCount: z.number().min(0, "El número de invitados no puede ser negativo").max(20, "Máximo 20 invitados permitidos"),
+  guestNames: z.array(z.string().min(1, "El nombre del invitado no puede estar vacío").max(50, "El nombre del invitado es demasiado largo")).optional(),
 });
 
 export async function submitRSVP(
@@ -20,7 +19,6 @@ export async function submitRSVP(
 ): Promise<RSVPActionState> {
   const rawData = {
     invitationId: formData.get("invitationId"),
-    name: formData.get("name"),
     email: formData.get("email"),
     willAttend: formData.get("willAttend") === "true",
     guestCount: parseInt(formData.get("guestCount") as string || "0"),
@@ -34,7 +32,7 @@ export async function submitRSVP(
     return { status: "error", message: firstError };
   }
 
-  const { invitationId, name, email, willAttend, guestCount, guestNames } = parsed.data;
+  const { invitationId, email, willAttend, guestCount, guestNames } = parsed.data;
 
   try {
     // Verify if invitation exists in DB
@@ -45,17 +43,34 @@ export async function submitRSVP(
     if (!invitation) {
       // If it's a mock invitation, we just log it and return success for the UI
       console.log("Mock RSVP received (Invitation not in DB):", parsed.data);
-      return { 
-        status: "success", 
-        message: "¡Gracias por confirmar! (Modo Demo)" 
+      return {
+        status: "success",
+        message: "¡Gracias por confirmar! (Modo Demo)"
       };
     }
 
+    // Check for duplicate RSVPs with same email (optional business logic)
+    if (email) {
+      const existingRSVP = await prisma.rSVP.findFirst({
+        where: {
+          invitationId,
+          email,
+        },
+      });
+
+      if (existingRSVP) {
+        return {
+          status: "error",
+          message: "Ya existe una confirmación con este correo electrónico para esta invitación."
+        };
+      }
+    }
+
     // Save to DB
-    await prisma.rsvp.create({
+    await prisma.rSVP.create({
       data: {
         invitationId,
-        name,
+        name: guestNames?.[0] || "Invitado", // Usar el primer nombre del array o "Invitado" como fallback
         email: email || null,
         willAttend,
         guestCount,
@@ -67,12 +82,21 @@ export async function submitRSVP(
 
     return {
       status: "success",
-      message: willAttend 
-        ? "¡Gracias por confirmar! Te esperamos." 
+      message: willAttend
+        ? "¡Gracias por confirmar! Te esperamos."
         : "Lamentamos que no puedas venir. ¡Gracias por avisar!",
     };
   } catch (error) {
     console.error("Error submitting RSVP:", error);
+    if (error instanceof Error) {
+      // Handle specific database errors
+      if (error.message.includes('Unique constraint')) {
+        return { status: "error", message: "Ya existe una confirmación para esta invitación." };
+      }
+      if (error.message.includes('Foreign key constraint')) {
+        return { status: "error", message: "La invitación no existe." };
+      }
+    }
     return { status: "error", message: "Hubo un error al procesar tu solicitud. Inténtalo de nuevo." };
   }
 }

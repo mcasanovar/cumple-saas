@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import type { ThemeToken, RSVPActionState } from "@/lib/types/invitation";
 import { useThemeDetection } from "@/hooks/useThemeDetection";
 import { submitRSVP } from "@/app/(public)/invitacion/[invitationId]/actions";
+import { CTAButton } from "@/components/shared/cta-button/CTAButton";
 
 type RSVPFormProps = {
   invitationId: string;
@@ -133,13 +134,29 @@ export function RSVPForm({ invitationId, typography, themeToken }: RSVPFormProps
                 : "Lamentamos no tenerte con nosotros"}
             </h3>
             <p
-              className="text-lg text-[#6f6bb3]"
+              className="text-lg text-[#6f6bb3] mb-6"
               style={{ fontFamily: typography.body }}
             >
               {willAttend
                 ? "Te esperamos con muchas ganas"
                 : "Pero te esperamos para una próxima ocasión."}
             </p>
+
+            {willAttend && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4, duration: 0.5 }}
+                className="pt-4 border-t border-gray-100"
+              >
+                <p className="text-sm text-gray-500 mb-4" style={{ fontFamily: typography.body }}>
+                  ¿Te gustaría crear una invitación así para tu evento?
+                </p>
+                <CTAButton href="/" size="sm">
+                  Crear mi invitación
+                </CTAButton>
+              </motion.div>
+            )}
           </motion.div>
         </motion.div>
       </>
@@ -175,7 +192,7 @@ export function RSVPForm({ invitationId, typography, themeToken }: RSVPFormProps
           >
             ¿Podrás acompañarnos?
           </p>
-          
+
           {state.status === "error" && (
             <p className="mt-2 text-sm text-red-500 font-medium">
               {state.message}
@@ -248,17 +265,6 @@ export function RSVPForm({ invitationId, typography, themeToken }: RSVPFormProps
               transition={{ duration: 0.4 }}
             >
               <label className="flex flex-col gap-2 text-sm font-medium text-slate-600">
-                Tu nombre
-                <input
-                  name="name"
-                  type="text"
-                  placeholder="Escribe tu nombre"
-                  className="rounded-2xl border border-white/70 bg-white/90 px-4 py-3 text-base text-slate-800 shadow-inner shadow-white/40 outline-none transition focus:border-slate-300 focus:shadow-lg"
-                  required
-                />
-              </label>
-
-              <label className="flex flex-col gap-2 text-sm font-medium text-slate-600">
                 ¿Cuántas personas asistirán?
                 <select
                   name="guestCount"
@@ -309,7 +315,7 @@ export function RSVPForm({ invitationId, typography, themeToken }: RSVPFormProps
               </label>
             </motion.div>
           )}
-          
+
           {willAttend === false && (
             <motion.div
               className="space-y-5"
@@ -318,16 +324,9 @@ export function RSVPForm({ invitationId, typography, themeToken }: RSVPFormProps
               exit={{ opacity: 0, height: 0 }}
               transition={{ duration: 0.4 }}
             >
-              <label className="flex flex-col gap-2 text-sm font-medium text-slate-600">
-                Tu nombre
-                <input
-                  name="name"
-                  type="text"
-                  placeholder="Escribe tu nombre"
-                  className="rounded-2xl border border-white/70 bg-white/90 px-4 py-3 text-base text-slate-800 shadow-inner shadow-white/40 outline-none transition focus:border-slate-300 focus:shadow-lg"
-                  required
-                />
-              </label>
+              <p className="text-sm text-gray-500 text-center">
+                Lamentamos que no puedas acompañarnos. ¡Gracias por avisar!
+              </p>
             </motion.div>
           )}
         </AnimatePresence>

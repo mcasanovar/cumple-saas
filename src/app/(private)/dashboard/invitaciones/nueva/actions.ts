@@ -9,7 +9,7 @@ import cloudinary from "@/lib/cloudinary";
 import { mercadopagoClient } from "@/lib/mercadopago";
 import type { CreatePreferenceResult } from "@/lib/types/payment";
 import type { CreationFormData } from "@/components/features/invitation/creation/types";
-import { PRICE_CLP, AVAILABLE_TEMPLATES } from "@/components/features/invitation/creation/constants";
+import { PRICE_CLP, ALLOWED_IMAGE_FORMATS, ALLOWED_MIME_TYPES, AVAILABLE_TEMPLATES } from "@/components/features/invitation/creation/constants";
 
 export async function createPaymentPreference(
   formData: Partial<CreationFormData>
@@ -85,6 +85,15 @@ export async function uploadImageAction(formData: FormData) {
 
     const file = formData.get("file") as File;
     if (!file) throw new Error("No file provided");
+
+    // Validar formato de archivo en servidor
+    const fileExtension = "." + file.name.split('.').pop()?.toLowerCase();
+    const isValidFormat = ALLOWED_IMAGE_FORMATS.includes(fileExtension as any);
+    const isValidMimeType = ALLOWED_MIME_TYPES.includes(file.type as any);
+
+    if (!isValidFormat || !isValidMimeType) {
+      return { success: false, error: "Solo se permiten archivos .jpeg, .jpg y .png" };
+    }
 
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);

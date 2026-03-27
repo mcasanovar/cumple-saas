@@ -132,6 +132,13 @@ export interface InvitationGalleryItem {
   imageUrl: string;
 }
 
+export interface EventFeature {
+  title: string;
+  description: string;
+  icon: string;
+  color: string;
+}
+
 export interface InvitationConfig {
   slug: string;
   theme: ThemeToken;
@@ -144,6 +151,7 @@ export interface InvitationConfig {
   };
   event: InvitationEventInfo;
   gallery: InvitationGalleryItem[];
+  features: EventFeature[];
   countdown: {
     targetDateISO: string;
   };
@@ -197,6 +205,7 @@ export interface InvitationRenderConfig {
   };
   event: InvitationEventInfo;
   gallery: InvitationGalleryItem[];
+  features: EventFeature[];
   countdown: {
     targetDateISO: string;
   };

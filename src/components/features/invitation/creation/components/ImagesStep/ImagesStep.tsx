@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 
 import { uploadImageAction } from "@/app/(private)/dashboard/invitaciones/nueva/actions";
 import type { CreationFormData } from "../../types";
+import { ALLOWED_IMAGE_FORMATS, ALLOWED_MIME_TYPES } from "../../constants";
 
 export type ImagesStepProps = {
   formData: Partial<CreationFormData>;
@@ -20,6 +21,16 @@ export function ImagesStep({ formData, onUpdate }: ImagesStepProps) {
 
   const handleUpload = async (file: File, type: "celebrant" | "venue", index?: number) => {
     const slotKey = type === "venue" ? "venue" : `celebrant-${index}`;
+
+    // Validar formato de archivo
+    const fileExtension = "." + file.name.split('.').pop()?.toLowerCase();
+    const isValidFormat = ALLOWED_IMAGE_FORMATS.includes(fileExtension as any);
+    const isValidMimeType = ALLOWED_MIME_TYPES.includes(file.type as any);
+
+    if (!isValidFormat || !isValidMimeType) {
+      setError("Solo se permiten archivos .jpeg, .jpg y .png");
+      return;
+    }
 
     try {
       setUploadingSlots(prev => ({ ...prev, [slotKey]: true }));
@@ -91,7 +102,7 @@ export function ImagesStep({ formData, onUpdate }: ImagesStepProps) {
       >
         <div>
           <h2 className="text-lg font-semibold text-gray-900">
-            Fotos del niño/a (3 requeridas)
+            Fotos del niño/a (3 requeridas solo en formato jpeg, jpg o png)
           </h2>
           <div className="mt-4 grid gap-4 sm:grid-cols-3">
             {[0, 1, 2].map((index) => {
@@ -105,7 +116,7 @@ export function ImagesStep({ formData, onUpdate }: ImagesStepProps) {
                   <input
                     ref={celebrantRefs[index]}
                     type="file"
-                    accept="image/*"
+                    accept=".jpeg,.jpg,.png"
                     onChange={(e) => {
                       const file = e.target.files?.[0];
                       if (file) handleUpload(file, "celebrant", index);
@@ -189,7 +200,7 @@ export function ImagesStep({ formData, onUpdate }: ImagesStepProps) {
             <input
               ref={venueRef}
               type="file"
-              accept="image/*"
+              accept=".jpeg,.jpg,.png"
               onChange={(e) => {
                 const file = e.target.files?.[0];
                 if (file) handleUpload(file, "venue");

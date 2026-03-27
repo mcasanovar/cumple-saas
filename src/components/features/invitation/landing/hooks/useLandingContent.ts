@@ -6,6 +6,7 @@ import type {
   InvitationGalleryItem,
   ThemeConfig,
   ThemeToken,
+  EventFeature,
 } from "@/lib/types/invitation";
 
 const FALLBACK_SCENE: IntroSceneConfig = {
@@ -81,7 +82,7 @@ export type LandingContent = {
 
 export function useLandingContent(invitation: InvitationConfig, theme: ThemeConfig): LandingContent {
   return useMemo(() => {
-    const { event, hero, gallery, intro, countdown } = invitation;
+    const { event, hero, gallery, intro, countdown, features } = invitation;
 
     const scene = theme.introScene ?? FALLBACK_SCENE;
 
@@ -125,44 +126,51 @@ export function useLandingContent(invitation: InvitationConfig, theme: ThemeConf
       },
     ];
 
-    const featureList: LandingFeature[] = [
-      {
-        title: "Cóctel & Snacks",
-        description: "Bocadillos deliciosos para todos",
-        icon: "🥐",
-        color: "#ff6b3d",
-      },
-      {
-        title: "Barra Libre",
-        description: "Porque los papás también celebran",
-        icon: "🍹",
-        color: "#2f6bff",
-      },
-      {
-        title: "Inflables & Juegos",
-        description: "Diversión sin límites para los peques",
-        icon: "🎠",
-        color: "#ff6b3d",
-      },
-      {
-        title: "Show en Vivo",
-        description: "Animación y personajes increíbles",
-        icon: "🎤",
-        color: "#2f6bff",
-      },
-      {
-        title: "Mesa de Dulces",
-        description: "12 sabores esperándote",
-        icon: "🍭",
-        color: "#2f6bff",
-      },
-      {
-        title: "La Gran Piñata",
-        description: "¡El momento que todos esperan!",
-        icon: "🎉",
-        color: "#ff6b3d",
-      },
-    ];
+    const featureList: LandingFeature[] = features && features.length > 0
+      ? features.map(feature => ({
+        title: feature.title,
+        description: feature.description,
+        icon: feature.icon,
+        color: feature.color,
+      }))
+      : [
+        {
+          title: "Cóctel & Snacks",
+          description: "Bocadillos deliciosos para todos",
+          icon: "🥐",
+          color: "#ff6b3d",
+        },
+        {
+          title: "Barra Libre",
+          description: "Porque los papás también celebran",
+          icon: "🍹",
+          color: "#2f6bff",
+        },
+        {
+          title: "Inflables & Juegos",
+          description: "Diversión sin límites para los peques",
+          icon: "🎠",
+          color: "#ff6b3d",
+        },
+        {
+          title: "Show en Vivo",
+          description: "Animación y personajes increíbles",
+          icon: "🎤",
+          color: "#2f6bff",
+        },
+        {
+          title: "Mesa de Dulces",
+          description: "12 sabores esperándote",
+          icon: "🍭",
+          color: "#2f6bff",
+        },
+        {
+          title: "La Gran Piñata",
+          description: "¡El momento que todos esperan!",
+          icon: "🎉",
+          color: "#ff6b3d",
+        },
+      ];
 
     return {
       scene,

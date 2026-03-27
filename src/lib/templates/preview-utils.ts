@@ -1,5 +1,5 @@
 import type { CreationFormData } from "@/components/features/invitation/creation/types";
-import type { InvitationRenderConfig, ThemeToken } from "@/lib/types/invitation";
+import type { InvitationRenderConfig, ThemeToken, EventFeature } from "@/lib/types/invitation";
 import { themes } from "@/config/themes";
 import { getTemplateById } from "./registry";
 
@@ -24,6 +24,13 @@ export function mapFormDataToRenderConfig(
       caption: `Imagen ${i + 1}`,
     };
   });
+
+  const features: EventFeature[] = (formData.eventIncludes || []).map((item, index) => ({
+    title: item.description,
+    description: item.description,
+    icon: item.icon,
+    color: "#ff6b3d", // Color por defecto, podría variar según tema
+  }));
 
   return {
     invitationId: "preview-id",
@@ -51,6 +58,7 @@ export function mapFormDataToRenderConfig(
     },
 
     gallery,
+    features,
 
     countdown: {
       targetDateISO: formData.eventDate ? `${formData.eventDate}T${formData.eventTime || "00:00"}:00` : new Date().toISOString(),
