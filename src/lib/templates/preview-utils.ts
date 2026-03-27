@@ -15,15 +15,8 @@ export function mapFormDataToRenderConfig(
   const templateId = (formData.templateId as any) || "safari-adventure";
   const template = getTemplateById(templateId);
 
-  // Mapeo de galería: si hay imágenes File, crear objectURL, sino usar placeholders
   const gallery = (formData.celebrantImages || [null, null, null]).map((img, i) => {
-    let imageUrl = "/vercel.svg";
-    
-    if (img instanceof File) {
-      imageUrl = URL.createObjectURL(img);
-    } else if (typeof img === "string") {
-      imageUrl = img;
-    }
+    const imageUrl = (typeof img === "string" ? img : "/vercel.svg");
 
     return {
       id: `preview-img-${i}`,
@@ -51,7 +44,7 @@ export function mapFormDataToRenderConfig(
       venueAddress: formData.venueAddress || "Calle Falsa 123",
       googleMapsUrl: "#",
       coordinates: formData.coordinates || undefined,
-      venueImageUrl: formData.venueImage instanceof File ? URL.createObjectURL(formData.venueImage) : "/vercel.svg",
+      venueImageUrl: typeof formData.venueImage === "string" ? formData.venueImage : "/vercel.svg",
       celebrantDescription: formData.celebrantDescription || "Nuestra gran pequeña estrella",
       invitationMessage: template.defaultMessages.invitationMessage,
       closingMessage: template.defaultMessages.closingMessage,

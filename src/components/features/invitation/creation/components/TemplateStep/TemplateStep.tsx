@@ -80,6 +80,17 @@ export function TemplateStep({ formData, onUpdate }: TemplateStepProps) {
                 </div>
               )}
 
+              {/* Price Label */}
+              <div
+                className="absolute right-0 top-4 z-20 rounded-l-full px-4 py-1.5 text-sm font-bold text-white shadow-lg backdrop-blur-md transition-transform group-hover:translate-x-[-4px]"
+                style={{
+                  background: themeConfig?.primaryGradient || themeConfig?.accentColor || "#9333ea",
+                  boxShadow: `0 4px 12px ${themeConfig?.accentColor}40`,
+                }}
+              >
+                $5.990
+              </div>
+
               <div
                 className={`flex h-full items-start gap-4 rounded-xl p-5 transition-all relative z-10 ${formData.templateId === template.id
                   ? ""

@@ -772,6 +772,7 @@ export const InvitationScalarFieldEnum = {
   config: 'config',
   isPaid: 'isPaid',
   status: 'status',
+  currentStep: 'currentStep',
   userId: 'userId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'

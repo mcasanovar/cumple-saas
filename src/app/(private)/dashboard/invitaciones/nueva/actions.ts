@@ -1,8 +1,11 @@
 "use server";
 
+import { auth } from "@clerk/nextjs/server";
 import { Preference } from "mercadopago";
 import { v4 as uuidv4 } from "uuid";
 
+import prisma from "@/lib/prisma";
+import cloudinary from "@/lib/cloudinary";
 import { mercadopagoClient } from "@/lib/mercadopago";
 import type { CreatePreferenceResult } from "@/lib/types/payment";
 import type { CreationFormData } from "@/components/features/invitation/creation/types";
@@ -48,8 +51,6 @@ export async function createPaymentPreference(
       },
     };
 
-    console.log("[createPaymentPreference] Payload a enviar:", JSON.stringify(preferenceBody, null, 2));
-
     const response = await preference.create({
       body: preferenceBody as any,
     });
@@ -73,5 +74,86 @@ export async function createPaymentPreference(
       success: false,
       error: "Error al crear la preferencia de pago. Intenta nuevamente.",
     };
+  }
+}
+
+
+export async function uploadImageAction(formData: FormData) {
+  try {
+    const { userId } = await auth();
+    if (!userId) throw new Error("Unauthorized");
+
+    const file = formData.get("file") as File;
+    if (!file) throw new Error("No file provided");
+
+    const arrayBuffer = await file.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
+
+    const result = await new Promise<{ secure_url: string }>((resolve, reject) => {
+      cloudinary.uploader.upload_stream(
+        {
+          folder: `cumple-saas/invitations/${userId}`,
+          resource_type: "auto",
+        },
+        (error, result) => {
+          if (error || !result) reject(error || new Error("Upload failed"));
+          else resolve(result);
+        }
+      ).end(buffer);
+    });
+
+    return { success: true, url: result.secure_url };
+  } catch (error) {
+    console.error("Cloudinary upload error:", error);
+    return { success: false, error: "Error al subir la imagen a Cloudinary." };
+  }
+}
+
+export async function saveInvitationProgress(
+  formData: Partial<CreationFormData>,
+  invitationId?: string,
+  currentStep: string = "template"
+) {
+  try {
+    const { userId: clerkId } = await auth();
+    if (!clerkId) throw new Error("Unauthorized");
+
+    // Find our database user
+    const dbUser = await prisma.user.findUnique({
+      where: { clerkId },
+    });
+
+    if (!dbUser) throw new Error("User not found in database");
+
+    const dataToSave = {
+      templateId: formData.templateId || "",
+      celebrantName: formData.celebrantName || "Festejado",
+      celebrantAge: formData.age || 0,
+      eventDate: formData.eventDate ? new Date(formData.eventDate) : new Date(),
+      eventTime: formData.eventTime || "",
+      venueName: formData.venueName || "",
+      celebrantImages: formData.celebrantImages || [null, null, null],
+      venueImage: formData.venueImage || null,
+      status: "draft",
+      currentStep,
+      userId: dbUser.id,
+      config: formData as any, // Persistence of all JSON-serializable data (including Cloudinary URLs)
+    };
+
+    if (invitationId) {
+      const updated = await prisma.invitation.update({
+        where: { id: invitationId, userId: dbUser.id },
+        data: dataToSave,
+      });
+      return { success: true, invitationId: updated.id };
+    } else {
+      const created = await prisma.invitation.create({
+        data: dataToSave,
+      });
+      return { success: true, invitationId: created.id };
+    }
+  } catch (error) {
+    console.error("Error saving invitation progress:", error);
+    return { success: false, error: "No se pudo guardar el progreso." };
   }
 }

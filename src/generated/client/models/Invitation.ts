@@ -45,6 +45,7 @@ export type InvitationMinAggregateOutputType = {
   venueName: string | null
   isPaid: boolean | null
   status: string | null
+  currentStep: string | null
   userId: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -61,6 +62,7 @@ export type InvitationMaxAggregateOutputType = {
   venueName: string | null
   isPaid: boolean | null
   status: string | null
+  currentStep: string | null
   userId: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -78,6 +80,7 @@ export type InvitationCountAggregateOutputType = {
   config: number
   isPaid: number
   status: number
+  currentStep: number
   userId: number
   createdAt: number
   updatedAt: number
@@ -104,6 +107,7 @@ export type InvitationMinAggregateInputType = {
   venueName?: true
   isPaid?: true
   status?: true
+  currentStep?: true
   userId?: true
   createdAt?: true
   updatedAt?: true
@@ -120,6 +124,7 @@ export type InvitationMaxAggregateInputType = {
   venueName?: true
   isPaid?: true
   status?: true
+  currentStep?: true
   userId?: true
   createdAt?: true
   updatedAt?: true
@@ -137,6 +142,7 @@ export type InvitationCountAggregateInputType = {
   config?: true
   isPaid?: true
   status?: true
+  currentStep?: true
   userId?: true
   createdAt?: true
   updatedAt?: true
@@ -241,6 +247,7 @@ export type InvitationGroupByOutputType = {
   config: runtime.JsonValue
   isPaid: boolean
   status: string
+  currentStep: string
   userId: string
   createdAt: Date
   updatedAt: Date
@@ -281,6 +288,7 @@ export type InvitationWhereInput = {
   config?: Prisma.JsonFilter<"Invitation">
   isPaid?: Prisma.BoolFilter<"Invitation"> | boolean
   status?: Prisma.StringFilter<"Invitation"> | string
+  currentStep?: Prisma.StringFilter<"Invitation"> | string
   userId?: Prisma.StringFilter<"Invitation"> | string
   createdAt?: Prisma.DateTimeFilter<"Invitation"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Invitation"> | Date | string
@@ -301,6 +309,7 @@ export type InvitationOrderByWithRelationInput = {
   config?: Prisma.SortOrder
   isPaid?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  currentStep?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -324,6 +333,7 @@ export type InvitationWhereUniqueInput = Prisma.AtLeast<{
   config?: Prisma.JsonFilter<"Invitation">
   isPaid?: Prisma.BoolFilter<"Invitation"> | boolean
   status?: Prisma.StringFilter<"Invitation"> | string
+  currentStep?: Prisma.StringFilter<"Invitation"> | string
   userId?: Prisma.StringFilter<"Invitation"> | string
   createdAt?: Prisma.DateTimeFilter<"Invitation"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Invitation"> | Date | string
@@ -344,6 +354,7 @@ export type InvitationOrderByWithAggregationInput = {
   config?: Prisma.SortOrder
   isPaid?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  currentStep?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -369,6 +380,7 @@ export type InvitationScalarWhereWithAggregatesInput = {
   config?: Prisma.JsonWithAggregatesFilter<"Invitation">
   isPaid?: Prisma.BoolWithAggregatesFilter<"Invitation"> | boolean
   status?: Prisma.StringWithAggregatesFilter<"Invitation"> | string
+  currentStep?: Prisma.StringWithAggregatesFilter<"Invitation"> | string
   userId?: Prisma.StringWithAggregatesFilter<"Invitation"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Invitation"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Invitation"> | Date | string
@@ -386,6 +398,7 @@ export type InvitationCreateInput = {
   config: Prisma.JsonNullValueInput | runtime.InputJsonValue
   isPaid?: boolean
   status?: string
+  currentStep?: string
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutInvitationsInput
@@ -405,6 +418,7 @@ export type InvitationUncheckedCreateInput = {
   config: Prisma.JsonNullValueInput | runtime.InputJsonValue
   isPaid?: boolean
   status?: string
+  currentStep?: string
   userId: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -424,6 +438,7 @@ export type InvitationUpdateInput = {
   config?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  currentStep?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutInvitationsNestedInput
@@ -443,6 +458,7 @@ export type InvitationUncheckedUpdateInput = {
   config?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  currentStep?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -462,6 +478,7 @@ export type InvitationCreateManyInput = {
   config: Prisma.JsonNullValueInput | runtime.InputJsonValue
   isPaid?: boolean
   status?: string
+  currentStep?: string
   userId: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -479,6 +496,7 @@ export type InvitationUpdateManyMutationInput = {
   config?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  currentStep?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -495,6 +513,7 @@ export type InvitationUncheckedUpdateManyInput = {
   config?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  currentStep?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -522,6 +541,7 @@ export type InvitationCountOrderByAggregateInput = {
   config?: Prisma.SortOrder
   isPaid?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  currentStep?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -542,6 +562,7 @@ export type InvitationMaxOrderByAggregateInput = {
   venueName?: Prisma.SortOrder
   isPaid?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  currentStep?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -558,6 +579,7 @@ export type InvitationMinOrderByAggregateInput = {
   venueName?: Prisma.SortOrder
   isPaid?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  currentStep?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -666,6 +688,7 @@ export type InvitationCreateWithoutUserInput = {
   config: Prisma.JsonNullValueInput | runtime.InputJsonValue
   isPaid?: boolean
   status?: string
+  currentStep?: string
   createdAt?: Date | string
   updatedAt?: Date | string
   rsvps?: Prisma.RSVPCreateNestedManyWithoutInvitationInput
@@ -684,6 +707,7 @@ export type InvitationUncheckedCreateWithoutUserInput = {
   config: Prisma.JsonNullValueInput | runtime.InputJsonValue
   isPaid?: boolean
   status?: string
+  currentStep?: string
   createdAt?: Date | string
   updatedAt?: Date | string
   rsvps?: Prisma.RSVPUncheckedCreateNestedManyWithoutInvitationInput
@@ -731,6 +755,7 @@ export type InvitationScalarWhereInput = {
   config?: Prisma.JsonFilter<"Invitation">
   isPaid?: Prisma.BoolFilter<"Invitation"> | boolean
   status?: Prisma.StringFilter<"Invitation"> | string
+  currentStep?: Prisma.StringFilter<"Invitation"> | string
   userId?: Prisma.StringFilter<"Invitation"> | string
   createdAt?: Prisma.DateTimeFilter<"Invitation"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Invitation"> | Date | string
@@ -748,6 +773,7 @@ export type InvitationCreateWithoutRsvpsInput = {
   config: Prisma.JsonNullValueInput | runtime.InputJsonValue
   isPaid?: boolean
   status?: string
+  currentStep?: string
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutInvitationsInput
@@ -766,6 +792,7 @@ export type InvitationUncheckedCreateWithoutRsvpsInput = {
   config: Prisma.JsonNullValueInput | runtime.InputJsonValue
   isPaid?: boolean
   status?: string
+  currentStep?: string
   userId: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -800,6 +827,7 @@ export type InvitationUpdateWithoutRsvpsInput = {
   config?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  currentStep?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutInvitationsNestedInput
@@ -818,6 +846,7 @@ export type InvitationUncheckedUpdateWithoutRsvpsInput = {
   config?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  currentStep?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -836,6 +865,7 @@ export type InvitationCreateWithoutPurchaseInput = {
   config: Prisma.JsonNullValueInput | runtime.InputJsonValue
   isPaid?: boolean
   status?: string
+  currentStep?: string
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutInvitationsInput
@@ -854,6 +884,7 @@ export type InvitationUncheckedCreateWithoutPurchaseInput = {
   config: Prisma.JsonNullValueInput | runtime.InputJsonValue
   isPaid?: boolean
   status?: string
+  currentStep?: string
   userId: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -888,6 +919,7 @@ export type InvitationUpdateWithoutPurchaseInput = {
   config?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  currentStep?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutInvitationsNestedInput
@@ -906,6 +938,7 @@ export type InvitationUncheckedUpdateWithoutPurchaseInput = {
   config?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  currentStep?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -924,6 +957,7 @@ export type InvitationCreateManyUserInput = {
   config: Prisma.JsonNullValueInput | runtime.InputJsonValue
   isPaid?: boolean
   status?: string
+  currentStep?: string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -940,6 +974,7 @@ export type InvitationUpdateWithoutUserInput = {
   config?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  currentStep?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   rsvps?: Prisma.RSVPUpdateManyWithoutInvitationNestedInput
@@ -958,6 +993,7 @@ export type InvitationUncheckedUpdateWithoutUserInput = {
   config?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  currentStep?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   rsvps?: Prisma.RSVPUncheckedUpdateManyWithoutInvitationNestedInput
@@ -976,6 +1012,7 @@ export type InvitationUncheckedUpdateManyWithoutUserInput = {
   config?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   isPaid?: Prisma.BoolFieldUpdateOperationsInput | boolean
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  currentStep?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1023,6 +1060,7 @@ export type InvitationSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   config?: boolean
   isPaid?: boolean
   status?: boolean
+  currentStep?: boolean
   userId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1044,6 +1082,7 @@ export type InvitationSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ex
   config?: boolean
   isPaid?: boolean
   status?: boolean
+  currentStep?: boolean
   userId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1062,6 +1101,7 @@ export type InvitationSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ex
   config?: boolean
   isPaid?: boolean
   status?: boolean
+  currentStep?: boolean
   userId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -1080,12 +1120,13 @@ export type InvitationSelectScalar = {
   config?: boolean
   isPaid?: boolean
   status?: boolean
+  currentStep?: boolean
   userId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type InvitationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "slug" | "templateId" | "celebrantName" | "celebrantAge" | "eventDate" | "eventTime" | "venueName" | "config" | "isPaid" | "status" | "userId" | "createdAt" | "updatedAt", ExtArgs["result"]["invitation"]>
+export type InvitationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "slug" | "templateId" | "celebrantName" | "celebrantAge" | "eventDate" | "eventTime" | "venueName" | "config" | "isPaid" | "status" | "currentStep" | "userId" | "createdAt" | "updatedAt", ExtArgs["result"]["invitation"]>
 export type InvitationInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   rsvps?: boolean | Prisma.Invitation$rsvpsArgs<ExtArgs>
@@ -1118,6 +1159,7 @@ export type $InvitationPayload<ExtArgs extends runtime.Types.Extensions.Internal
     config: runtime.JsonValue
     isPaid: boolean
     status: string
+    currentStep: string
     userId: string
     createdAt: Date
     updatedAt: Date
@@ -1558,6 +1600,7 @@ export interface InvitationFieldRefs {
   readonly config: Prisma.FieldRef<"Invitation", 'Json'>
   readonly isPaid: Prisma.FieldRef<"Invitation", 'Boolean'>
   readonly status: Prisma.FieldRef<"Invitation", 'String'>
+  readonly currentStep: Prisma.FieldRef<"Invitation", 'String'>
   readonly userId: Prisma.FieldRef<"Invitation", 'String'>
   readonly createdAt: Prisma.FieldRef<"Invitation", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Invitation", 'DateTime'>

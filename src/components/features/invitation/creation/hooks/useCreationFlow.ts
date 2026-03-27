@@ -1,10 +1,15 @@
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo, useEffect } from "react";
+import { useRouter } from "next/navigation";
 
-import type { CreationStep, CreationFormData, CreationFlowState } from "../types";
+import type { CreationStep, CreationFormData, CreationFlowState, InvitationInitialData } from "../types";
+import { saveInvitationProgress } from "@/app/(private)/dashboard/invitaciones/nueva/actions";
 
-export function useCreationFlow() {
-  const [currentStep, setCurrentStep] = useState<CreationStep>("template");
-  const [formData, setFormData] = useState<Partial<CreationFormData>>({
+export function useCreationFlow(initialData?: InvitationInitialData | null) {
+  const router = useRouter();
+  const [currentStep, setCurrentStep] = useState<CreationStep>(initialData?.currentStep || "template");
+  const [invitationId, setInvitationId] = useState<string | null>(initialData?.id || null);
+  const [isSaving, setIsSaving] = useState(false);
+  const [formData, setFormData] = useState<Partial<CreationFormData>>(initialData?.formData || {
     eventIncludes: [],
     celebrantImages: [null, null, null],
     venueImage: null,
@@ -15,23 +20,20 @@ export function useCreationFlow() {
 
   const updateFormData = useCallback(
     (updates: Partial<CreationFormData>) => {
-      setFormData((prev) => {
-        const next = { ...prev, ...updates };
-        
-        // Guardar en localStorage para previsualización (excluyendo archivos por ahora)
-        if (typeof window !== "undefined") {
-          const previewData = { ...next };
-          // Los Files no se pueden serializar a JSON
-          delete (previewData as any).celebrantImages;
-          delete (previewData as any).venueImage;
-          localStorage.setItem("invitation_preview_data", JSON.stringify(previewData));
-        }
-        
-        return next;
-      });
+      setFormData((prev) => ({ ...prev, ...updates }));
     },
     []
   );
+
+  // Sincronizar con localStorage para previsualización mediante efecto (más robusto contra hidratación)
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const timeout = setTimeout(() => {
+        localStorage.setItem("invitation_preview_data", JSON.stringify(formData));
+      }, 300); // Debounce leve para no penalizar performance e hidratación inmediata
+      return () => clearTimeout(timeout);
+    }
+  }, [formData]);
 
   const handleOpenPreview = useCallback(() => {
     // Para el preview completo en pestaña nueva, usamos localStorage
@@ -40,13 +42,30 @@ export function useCreationFlow() {
     window.open("/invitacion/preview", "_blank");
   }, []);
 
-  const goToNextStep = useCallback(() => {
+  const goToNextStep = useCallback(async () => {
     const steps: CreationStep[] = ["template", "event-info", "images", "preview"];
     const currentIndex = steps.indexOf(currentStep);
+    
     if (currentIndex < steps.length - 1) {
-      setCurrentStep(steps[currentIndex + 1]);
+      try {
+        setIsSaving(true);
+        // Persistir progreso en cada paso
+        const result = await saveInvitationProgress(formData, invitationId ?? undefined, steps[currentIndex + 1]);
+        
+        if (result.success && result.invitationId) {
+          setInvitationId(result.invitationId);
+          setCurrentStep(steps[currentIndex + 1]);
+        } else {
+          console.error("Failed to save progress:", result.error);
+          alert("Ocurrió un error al guardar tu progreso. Por favor intenta de nuevo.");
+        }
+      } catch (error) {
+        console.error("Step transition error:", error);
+      } finally {
+        setIsSaving(false);
+      }
     }
-  }, [currentStep]);
+  }, [currentStep, formData, invitationId]);
 
   const goToPreviousStep = useCallback(() => {
     const steps: CreationStep[] = ["template", "event-info", "images", "preview"];
@@ -71,8 +90,11 @@ export function useCreationFlow() {
           formData.celebrantDescription
         );
       case "event-info":
+        // Validar fecha mayor o igual a hoy
+        const isDateValid = !!formData.eventDate && new Date(formData.eventDate) >= new Date(new Date().setHours(0, 0, 0, 0));
+        
         return !!(
-          formData.eventDate &&
+          isDateValid &&
           formData.eventTime &&
           formData.venueName &&
           formData.venueAddress &&
@@ -148,5 +170,7 @@ export function useCreationFlow() {
     handleOpenPreview,
     isProcessingPayment,
     paymentError,
+    isSaving,
+    invitationId,
   };
 }

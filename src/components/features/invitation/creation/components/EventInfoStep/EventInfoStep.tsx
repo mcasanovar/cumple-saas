@@ -69,6 +69,7 @@ export function EventInfoStep({ formData, onUpdate }: EventInfoStepProps) {
             <input
               type="date"
               id="eventDate"
+              min={new Date().toISOString().split("T")[0]}
               value={formData.eventDate || ""}
               onChange={(e) => onUpdate({ eventDate: e.target.value })}
               className="mt-2 w-full rounded-xl border border-gray-300 px-4 py-3 text-gray-900 outline-none transition focus:border-purple-500 focus:ring-2 focus:ring-purple-200"

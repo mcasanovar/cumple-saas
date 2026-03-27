@@ -32,12 +32,17 @@ export type CreationFormData = {
     detailRightTitle?: string;
   };
 
-  celebrantImages: (File | null)[];
-  venueImage: File | null;
+  celebrantImages: (string | null)[];
+  venueImage: string | null;
 };
 
 export type CreationFlowState = {
   currentStep: CreationStep;
   formData: Partial<CreationFormData>;
   isValid: boolean;
+};
+export type InvitationInitialData = {
+  id: string;
+  currentStep: CreationStep;
+  formData: Partial<CreationFormData>;
 };
