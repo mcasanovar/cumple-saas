@@ -329,9 +329,9 @@ export function LandingView({
           transition={{ ease: easeOutQuint, duration: 0.95 }}
         >
           <div className="flex flex-col items-center gap-2 sm:gap-3">
-            <h2 
-              className="text-[clamp(2.6rem,5vw,3.4rem)] font-black leading-[1.08]" 
-              style={{ 
+            <h2
+              className="text-[clamp(2.6rem,5vw,3.4rem)] font-black leading-[1.08]"
+              style={{
                 fontFamily: typography.heading,
                 color: isDinoTheme ? "#2D3D2D" : isKPopTheme ? "#FFFFFF" : "#1f1a48",
                 textShadow: isKPopTheme ? "0 4px 12px rgba(220, 20, 60, 0.3)" : undefined
@@ -384,10 +384,10 @@ export function LandingView({
         <motion.section
           className="mx-auto flex w-full max-w-4xl flex-col items-center gap-4 rounded-[44px] bg-gradient-to-br from-white via-white/85 to-white/70 p-12 text-center"
           style={{
-            boxShadow: isDinoTheme 
-              ? "0 18px 70px rgba(107, 155, 110, 0.15)" 
-              : isKPopTheme 
-                ? "0 18px 70px rgba(218, 112, 214, 0.25)" 
+            boxShadow: isDinoTheme
+              ? "0 18px 70px rgba(107, 155, 110, 0.15)"
+              : isKPopTheme
+                ? "0 18px 70px rgba(218, 112, 214, 0.25)"
                 : "0 18px 70px rgba(210,187,255,0.22)",
           }}
           variants={fadeInUp}

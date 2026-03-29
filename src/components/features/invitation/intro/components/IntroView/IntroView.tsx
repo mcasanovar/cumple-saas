@@ -24,6 +24,7 @@ export type IntroViewProps = IntroContent & {
   isTransitioning: boolean;
   isVisible: boolean;
   themeToken?: ThemeToken;
+  isPreview?: boolean;
 };
 
 export function IntroView({
@@ -37,6 +38,7 @@ export function IntroView({
   isTransitioning,
   isVisible,
   themeToken,
+  isPreview,
 }: IntroViewProps) {
   const { isDinoTheme, isPrincessTheme, isKPopTheme } = useThemeDetection(themeToken);
   const isMobile = useIsMobile();
@@ -192,6 +194,7 @@ export function IntroView({
                   fontFamily={typography.body}
                   isTransitioning={isTransitioning}
                   themeToken={themeToken}
+                  isPreview={isPreview}
                 />
               </motion.div>
             </>
@@ -321,6 +324,7 @@ export function IntroView({
                 fontFamily={typography.body}
                 isTransitioning={isTransitioning}
                 themeToken={themeToken}
+                isPreview={isPreview}
               />
             </motion.div>
           )}

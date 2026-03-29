@@ -54,10 +54,15 @@ export interface UserInvitationData {
     lng: number;
   };
   celebrantDescription: string;
+  venueImage?: string;
   gallery: Array<{
     id: string;
     imageUrl: string;
     caption: string;
+  }>;
+  eventIncludes?: Array<{
+    description: string;
+    icon: string;
   }>;
   targetDateISO: string;
   introOverrides?: {

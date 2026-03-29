@@ -2,7 +2,7 @@ import { useMemo } from "react";
 
 import type {
   IntroSceneConfig,
-  InvitationConfig,
+  InvitationRenderConfig,
   InvitationIntroCopy,
   ThemeConfig,
 } from "@/lib/types/invitation";
@@ -24,7 +24,7 @@ export type IntroContent = {
   typography: ThemeConfig["typography"];
 };
 
-export function useIntroContent(invitation: InvitationConfig, theme: ThemeConfig): IntroContent {
+export function useIntroContent(invitation: InvitationRenderConfig, theme: ThemeConfig): IntroContent {
   return useMemo(() => {
     const rawIntroCopy: InvitationIntroCopy =
       invitation.intro ?? {
@@ -42,11 +42,20 @@ export function useIntroContent(invitation: InvitationConfig, theme: ThemeConfig
 
     const scene = theme.introScene ?? FALLBACK_INTRO_SCENE;
 
+    const formatDateToDDMMYYYY = (dateStr: string): string => {
+      const date = new Date(dateStr);
+      const day = String(date.getDate()).padStart(2, '0');
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const year = date.getFullYear();
+      return `${day}-${month}-${year}`;
+    };
+
+    const formattedDate = formatDateToDDMMYYYY(invitation.event.date);
+
     const detailLeft: IntroDetail =
       rawIntroCopy.detailLeft ?? {
-        title: invitation.event.date.split(",")[0]?.toUpperCase() ?? "SÁBADO",
-        subtitle:
-          invitation.event.date.split(",")[1]?.trim().toUpperCase() ?? invitation.event.date.toUpperCase(),
+        title: formattedDate.toUpperCase(),
+        subtitle: invitation.event.time.toUpperCase(),
         helper: "EVENTO ESPECIAL",
       };
 

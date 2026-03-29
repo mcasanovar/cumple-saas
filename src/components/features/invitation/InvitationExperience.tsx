@@ -12,12 +12,14 @@ import { IntroTransition } from "./intro/components/IntroTransition";
 
 interface InvitationExperienceProps {
   invitation: InvitationRenderConfig;
+  isPreview?: boolean;
 }
 
 type ExperiencePhase = "intro" | "transition" | "landing";
 
 export function InvitationExperience({
   invitation,
+  isPreview = false,
 }: InvitationExperienceProps) {
   const theme = themes[invitation.theme];
   const [phase, setPhase] = useState<ExperiencePhase>("intro");
@@ -52,6 +54,7 @@ export function InvitationExperience({
         onRevealLanding={handleRevealLanding}
         isTransitioning={isTransitioning}
         isVisible={phase !== "landing"}
+        isPreview={isPreview}
       />
 
       <IntroTransition isActive={isTransitioning} />

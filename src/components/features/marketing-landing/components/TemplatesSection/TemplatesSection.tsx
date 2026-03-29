@@ -1,13 +1,51 @@
 "use client";
 
+import { useState, useMemo } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 
 import { themes } from "@/config/themes";
 import type { ThemeToken } from "@/lib/types/invitation";
+import type { UserInvitationData } from "@/lib/types/template";
 import { AVAILABLE_TEMPLATES } from "@/components/features/invitation/creation/constants";
+import { userInvitations } from "@/data/mock-invitations";
+
+import { TemplatePreviewModal } from "./components/TemplatePreviewModal";
 
 export function TemplatesSection() {
+  const [selectedTemplate, setSelectedTemplate] = useState<UserInvitationData | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // Map template IDs to invitation data for previews
+  const templateToInvitationMap = useMemo(() => {
+    const map = new Map<string, UserInvitationData>();
+
+    // Match templates to invitation data by templateId
+    AVAILABLE_TEMPLATES.forEach((template) => {
+      const matchingInvitation = userInvitations.find(
+        (inv) => inv.templateId === template.id
+      );
+      if (matchingInvitation) {
+        map.set(template.id, matchingInvitation);
+      }
+    });
+
+    return map;
+  }, []);
+
+  const handleOpenPreview = (templateId: string) => {
+    const invitationData = templateToInvitationMap.get(templateId);
+    if (invitationData) {
+      setSelectedTemplate(invitationData);
+      setIsModalOpen(true);
+    }
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setTimeout(() => setSelectedTemplate(null), 300);
+  };
+
   return (
     <section id="plantillas" className="bg-[#F8FAFC] px-6 py-24 md:py-32">
       <div className="mx-auto max-w-7xl">
@@ -30,6 +68,7 @@ export function TemplatesSection() {
           {AVAILABLE_TEMPLATES.map((template, index) => {
             const themeConfig = themes[template.theme as ThemeToken];
             const hasBackground = !!themeConfig;
+            const hasPreview = templateToInvitationMap.has(template.id);
 
             return (
               <motion.div
@@ -87,7 +126,34 @@ export function TemplatesSection() {
                       </h3>
                     </div>
                   </div>
+
+                  {/* Desktop: Hover Button (centered) */}
+                  {hasPreview && (
+                    <div className="absolute inset-0 z-20 flex items-center justify-center opacity-0 transition-opacity duration-300 group-hover:opacity-100 hidden md:flex">
+                      <button
+                        onClick={() => handleOpenPreview(template.id)}
+                        className="transform rounded-full bg-white px-6 py-3 text-sm font-bold text-gray-900 shadow-xl transition hover:scale-105 hover:shadow-2xl"
+                      >
+                        Ver ejemplo
+                      </button>
+                    </div>
+                  )}
+
+                  {/* Mobile: Bottom gradient overlay for button visibility */}
+                  <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-black/20 to-transparent opacity-0 transition-opacity group-hover:opacity-100 hidden md:block" />
                 </div>
+
+                {/* Mobile: Permanent Button at bottom */}
+                {hasPreview && (
+                  <div className="mt-4 md:hidden">
+                    <button
+                      onClick={() => handleOpenPreview(template.id)}
+                      className="w-full rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 py-3 text-sm font-bold text-white shadow-lg transition active:scale-95"
+                    >
+                      Ver ejemplo
+                    </button>
+                  </div>
+                )}
 
                 <div className="mt-6 px-4 text-center">
                   <p className="text-sm font-medium text-slate-500 leading-relaxed">
@@ -109,6 +175,13 @@ export function TemplatesSection() {
           <p className="text-slate-400 font-medium">¿Buscas algo diferente? Estamos creando nuevas temáticas cada mes.</p>
         </motion.div>
       </div>
+
+      {/* Modal */}
+      <TemplatePreviewModal
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        invitationData={selectedTemplate}
+      />
     </section>
   );
 }

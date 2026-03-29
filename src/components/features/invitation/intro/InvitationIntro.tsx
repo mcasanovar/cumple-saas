@@ -1,16 +1,17 @@
 "use client";
 
-import type { InvitationConfig, ThemeConfig } from "@/lib/types/invitation";
+import type { InvitationRenderConfig, ThemeConfig } from "@/lib/types/invitation";
 
 import { IntroView } from "./components/IntroView/IntroView";
 import { useIntroContent } from "./hooks/useIntroContent";
 
 type InvitationIntroProps = {
-  invitation: InvitationConfig;
+  invitation: InvitationRenderConfig;
   theme: ThemeConfig;
   onRevealLanding: () => void;
   isTransitioning: boolean;
   isVisible: boolean;
+  isPreview?: boolean;
 };
 
 export function InvitationIntro({
@@ -19,6 +20,7 @@ export function InvitationIntro({
   onRevealLanding,
   isTransitioning,
   isVisible,
+  isPreview,
 }: InvitationIntroProps) {
   const content = useIntroContent(invitation, theme);
 
@@ -28,6 +30,7 @@ export function InvitationIntro({
       onRevealLanding={onRevealLanding}
       isTransitioning={isTransitioning}
       isVisible={isVisible}
+      isPreview={isPreview}
       themeToken={invitation.theme}
     />
   );

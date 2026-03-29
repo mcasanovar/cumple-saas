@@ -42,6 +42,7 @@ export default async function InvitacionesPage() {
     status: inv.status,
     slug: inv.slug || "",
     createdAt: inv.createdAt.toISOString().split("T")[0],
+    isPaid: inv.isPaid,
   }));
 
   return <InvitationsListView initialInvitations={invitations} />;

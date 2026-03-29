@@ -49,7 +49,11 @@ export default async function InvitationIntroPage({
     notFound();
   }
 
+  console.log("User data:", userData);
+
   const renderConfig: InvitationRenderConfig = mergeTemplateWithUserData(userData);
+
+  console.log("Render config:", renderConfig);
 
   return <IntroPage invitation={renderConfig} invitationId={invitationId} />;
 }

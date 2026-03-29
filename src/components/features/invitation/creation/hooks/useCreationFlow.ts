@@ -3,6 +3,7 @@ import { useRouter } from "next/navigation";
 
 import type { CreationStep, CreationFormData, CreationFlowState, InvitationInitialData } from "../types";
 import { saveInvitationProgress } from "@/app/(private)/dashboard/invitaciones/nueva/actions";
+import type { BypassPaymentResult } from "@/app/(private)/dashboard/invitaciones/nueva/actions";
 
 export function useCreationFlow(initialData?: InvitationInitialData | null) {
   const router = useRouter();
@@ -45,13 +46,13 @@ export function useCreationFlow(initialData?: InvitationInitialData | null) {
   const goToNextStep = useCallback(async () => {
     const steps: CreationStep[] = ["template", "event-info", "images", "preview"];
     const currentIndex = steps.indexOf(currentStep);
-    
+
     if (currentIndex < steps.length - 1) {
       try {
         setIsSaving(true);
         // Persistir progreso en cada paso
         const result = await saveInvitationProgress(formData, invitationId ?? undefined, steps[currentIndex + 1]);
-        
+
         if (result.success && result.invitationId) {
           setInvitationId(result.invitationId);
           setCurrentStep(steps[currentIndex + 1]);
@@ -92,7 +93,7 @@ export function useCreationFlow(initialData?: InvitationInitialData | null) {
       case "event-info":
         // Validar fecha mayor o igual a hoy
         const isDateValid = !!formData.eventDate && new Date(formData.eventDate) >= new Date(new Date().setHours(0, 0, 0, 0));
-        
+
         return !!(
           isDateValid &&
           formData.eventTime &&
@@ -132,29 +133,45 @@ export function useCreationFlow(initialData?: InvitationInitialData | null) {
       setIsProcessingPayment(true);
       setPaymentError(null);
 
-      // Creamos un payload liviano solo con lo necesario para MercadoPago
-      // (evitando enviar imágenes base64 que exceden 1MB)
-      const paymentPayload = {
-        templateId: formData.templateId,
-        celebrantName: formData.celebrantName,
-        age: formData.age,
-      };
+      // Detectar si estamos en desarrollo para usar bypass
+      const isDev = process.env.NODE_ENV === "development";
 
-      const { createPaymentPreference } = await import("@/app/(private)/dashboard/invitaciones/nueva/actions");
-      const result = await createPaymentPreference(paymentPayload);
+      if (isDev) {
+        // Modo desarrollo: bypass de pago
+        const { simulatePaymentSuccess } = await import("@/app/(private)/dashboard/invitaciones/nueva/actions");
+        const result: BypassPaymentResult = await simulatePaymentSuccess(formData, invitationId ?? undefined);
 
-      if (result.success) {
-        window.location.href = result.checkoutUrl;
+        if (result.success && result.slug) {
+          // Redirigir a página de éxito con parámetros del bypass
+          window.location.href = `/dashboard/pago/exitoso?bypass=true&slug=${result.slug}&invitationId=${result.invitationId}`;
+        } else {
+          setPaymentError(result.error || "Error al procesar el pago simulado.");
+          setIsProcessingPayment(false);
+        }
       } else {
-        setPaymentError(result.error);
-        setIsProcessingPayment(false);
+        // Modo producción: usar MercadoPago
+        const paymentPayload = {
+          templateId: formData.templateId,
+          celebrantName: formData.celebrantName,
+          age: formData.age,
+        };
+
+        const { createPaymentPreference } = await import("@/app/(private)/dashboard/invitaciones/nueva/actions");
+        const result = await createPaymentPreference(paymentPayload);
+
+        if (result.success) {
+          window.location.href = result.checkoutUrl;
+        } else {
+          setPaymentError(result.error);
+          setIsProcessingPayment(false);
+        }
       }
     } catch (err) {
       console.error("Error initiating purchase:", err);
       setPaymentError("Ocurrió un error inesperado al intentar pagar.");
       setIsProcessingPayment(false);
     }
-  }, [formData, isStepValid]);
+  }, [formData, isStepValid, invitationId]);
 
   return {
     currentStep,

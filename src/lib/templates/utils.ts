@@ -1,5 +1,5 @@
 import type { UserInvitationData } from "@/lib/types/template";
-import type { InvitationRenderConfig } from "@/lib/types/invitation";
+import type { InvitationRenderConfig, EventFeature } from "@/lib/types/invitation";
 
 import { getTemplateById } from "./registry";
 
@@ -27,7 +27,7 @@ export function mergeTemplateWithUserData(
       venueAddress: userData.venueAddress,
       googleMapsUrl: userData.googleMapsUrl,
       coordinates: userData.coordinates,
-      venueImageUrl: undefined,
+      venueImageUrl: userData.venueImage,
       celebrantDescription: userData.celebrantDescription,
       invitationMessage: template.defaultMessages.invitationMessage,
       closingMessage: template.defaultMessages.closingMessage,
@@ -49,5 +49,12 @@ export function mergeTemplateWithUserData(
       detailLeft: userData.introOverrides?.detailLeft,
       detailRight: userData.introOverrides?.detailRight,
     },
+
+    features: (userData.eventIncludes || []).map((item, index): EventFeature => ({
+      title: item.description,
+      description: item.description,
+      icon: item.icon,
+      color: index % 2 === 0 ? "#ff6b3d" : "#2f6bff",
+    })),
   };
 }

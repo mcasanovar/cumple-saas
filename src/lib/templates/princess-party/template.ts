@@ -19,7 +19,7 @@ export const princessPartyTemplate: TemplateDefinition = {
     celebrantTagline: "¡Ven a celebrar en mi reino encantado!",
     hintHeadline: "El reino está en fiesta. ¡Vamos a celebrar!",
     buttonLabel: "Abrir invitación",
-    celebrateNameClass: "font-[family-name:var(--font-script)] text-transparent bg-gradient-to-br from-[#FF1493] via-[#FF69B4] to-[#FFB6D9] bg-clip-text drop-shadow-[2px_2px_8px_rgba(255,20,147,0.3)] text-7xl md:text-8xl tracking-wide",
+    celebrateNameClass: "font-[family-name:var(--font-script)] text-transparent bg-gradient-to-br from-[#FF1493] via-[#FF69B4] to-[#FFB6D9] bg-clip-text drop-shadow-[2px_2px_8px_rgba(255,20,147,0.3)] text-7xl md:text-8xl tracking-wide pt-6",
   },
 
   defaultMessages: {

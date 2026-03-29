@@ -134,6 +134,12 @@ export function EventInfoStep({ formData, onUpdate }: EventInfoStepProps) {
         </div>
 
         <div>
+          <label
+            htmlFor="venueAddress"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Escriba aquí tambien la direccion para agregar el mapa
+          </label>
           <MapView
             initialAddress={formData.venueAddress || ""}
             initialCoordinates={formData.coordinates}

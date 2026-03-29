@@ -15,9 +15,10 @@ export type IntroCallToActionProps = {
   fontFamily: string;
   isTransitioning: boolean;
   themeToken?: ThemeToken;
+  isPreview?: boolean;
 };
 
-export function IntroCallToAction({ className, label, onComplete, fontFamily, isTransitioning, themeToken }: IntroCallToActionProps) {
+export function IntroCallToAction({ className, label, onComplete, fontFamily, isTransitioning, themeToken, isPreview = false }: IntroCallToActionProps) {
   const { isDinoTheme, isPrincessTheme, isKPopTheme } = useThemeDetection(themeToken);
   const [isAnimating, setIsAnimating] = useState(false);
   const [confettiActive, setConfettiActive] = useState(false);
@@ -101,10 +102,12 @@ export function IntroCallToAction({ className, label, onComplete, fontFamily, is
     if (!isAnimating || hasSignalled.current) return;
     hasSignalled.current = true;
     completionTimeout.current = window.setTimeout(() => {
-      onComplete();
+      if (!isPreview) {
+        onComplete();
+      }
       completionTimeout.current = null;
     }, 1200);
-  }, [isAnimating, onComplete]);
+  }, [isAnimating, onComplete, isPreview]);
 
   const handlePress = useCallback(() => {
     if (isAnimating || isTransitioning) return;

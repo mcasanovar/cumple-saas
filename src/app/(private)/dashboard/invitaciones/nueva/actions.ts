@@ -55,9 +55,9 @@ export async function createPaymentPreference(
       body: preferenceBody as any,
     });
 
-    // En Sandbox usar sandbox_init_point; en producción usar init_point
-    const checkoutUrl =
-      response.sandbox_init_point ?? response.init_point ?? "";
+    // Determinar URL según ambiente usando variable de entorno
+    const isSandbox = process.env.MERCADOPAGO_ENV === "sandbox" || process.env.NODE_ENV === "development";
+    const checkoutUrl = isSandbox ? response.sandbox_init_point : response.init_point;
 
     if (!checkoutUrl) {
       return { success: false, error: "No se pudo obtener la URL de pago." };
@@ -164,5 +164,102 @@ export async function saveInvitationProgress(
   } catch (error) {
     console.error("Error saving invitation progress:", error);
     return { success: false, error: "No se pudo guardar el progreso." };
+  }
+}
+
+// Type for bypass payment result
+export type BypassPaymentResult = {
+  success: boolean;
+  error?: string;
+  invitationId?: string;
+  slug?: string;
+  shareableUrl?: string;
+};
+
+/**
+ * Server Action para simular pago exitoso en desarrollo.
+ * Bypass de MercadoPago para testing rápido del flujo completo.
+ */
+export async function simulatePaymentSuccess(
+  formData: Partial<CreationFormData>,
+  invitationId?: string
+): Promise<BypassPaymentResult> {
+  try {
+    const { userId: clerkId } = await auth();
+    if (!clerkId) throw new Error("Unauthorized");
+
+    // Find our database user
+    const dbUser = await prisma.user.findUnique({
+      where: { clerkId },
+    });
+
+    if (!dbUser) throw new Error("User not found in database");
+
+    // Generate unique slug
+    const baseSlug = `${formData.celebrantName?.toLowerCase().replace(/\s+/g, "-") || "invitacion"}-${formData.age || 0}-anos`;
+    const uniqueSuffix = Math.random().toString(36).substring(2, 8);
+    const slug = `${baseSlug}-${uniqueSuffix}`;
+
+    // Prepare full invitation data
+    const dataToSave = {
+      templateId: formData.templateId || "",
+      celebrantName: formData.celebrantName || "Festejado",
+      celebrantAge: formData.age || 0,
+      eventDate: formData.eventDate ? new Date(formData.eventDate) : new Date(),
+      eventTime: formData.eventTime || "",
+      venueName: formData.venueName || "",
+      celebrantImages: formData.celebrantImages || [null, null, null],
+      venueImage: formData.venueImage || null,
+      status: "published",
+      isPaid: true,
+      slug,
+      currentStep: "completed",
+      userId: dbUser.id,
+      config: formData as any,
+    };
+
+    let finalInvitationId: string;
+
+    if (invitationId) {
+      // Update existing invitation
+      const updated = await prisma.invitation.update({
+        where: { id: invitationId, userId: dbUser.id },
+        data: dataToSave,
+      });
+      finalInvitationId = updated.id;
+    } else {
+      // Create new invitation
+      const created = await prisma.invitation.create({
+        data: dataToSave,
+      });
+      finalInvitationId = created.id;
+    }
+
+    // Create purchase record
+    await prisma.purchase.create({
+      data: {
+        invitationId: finalInvitationId,
+        status: "completed",
+        amount: PRICE_CLP,
+        currency: "CLP",
+        externalReference: `bypass-${Date.now()}`,
+      },
+    });
+
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+    const shareableUrl = `${baseUrl}/invitacion/${finalInvitationId}`;
+
+    return {
+      success: true,
+      invitationId: finalInvitationId,
+      slug,
+      shareableUrl,
+    };
+  } catch (error) {
+    console.error("[simulatePaymentSuccess] Error:", error);
+    return {
+      success: false,
+      error: "Error al procesar el pago simulado. Intenta nuevamente.",
+    };
   }
 }

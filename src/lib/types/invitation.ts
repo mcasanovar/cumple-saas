@@ -30,6 +30,10 @@ export interface ThemeConfig {
     body: string;
   };
   introScene?: IntroSceneConfig;
+  defaultMessages?: {
+    invitationMessage: string;
+    closingMessage: string;
+  };
 }
 
 export interface IntroSceneConfig {
