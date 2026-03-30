@@ -122,11 +122,12 @@ export function IntroPrincessBackground() {
           alt=""
           className="opacity-70"
           style={{
-            width: isMobile ? "500px" : "500px",
-            height: "auto",
-            transform: isMobile ? "translateY(-55%)" : "translateY(-40%)",
+            width: isMobile ? "500px" : "70vw",
+            height: isMobile ? "auto" : "70vh",
+            transform: isMobile ? "translateY(-55%)" : "translateY(-15%)",
             maskImage: "radial-gradient(ellipse 70% 60% at center, rgba(0,0,0,1) 0%, rgba(0,0,0,0.6) 50%, rgba(0,0,0,0) 100%)",
             WebkitMaskImage: "radial-gradient(ellipse 70% 60% at center, rgba(0,0,0,1) 0%, rgba(0,0,0,0.6) 50%, rgba(0,0,0,0) 100%)",
+            objectFit: isMobile ? "unset" : "contain",
           }}
         />
       </div>
@@ -138,9 +139,9 @@ export function IntroPrincessBackground() {
           alt=""
           className="opacity-75"
           style={{
-            width: "250px",
+            width: isMobile ? "120px" : "250px",
             height: "auto",
-            transform: "translateY(-30%)",
+            // transform: "translateY(-10%)",
             filter: "drop-shadow(0 10px 30px rgba(255, 20, 147, 0.3))",
             mixBlendMode: "multiply",
           }}

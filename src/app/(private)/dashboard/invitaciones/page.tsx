@@ -1,6 +1,6 @@
 import { auth } from "@clerk/nextjs/server";
 import prisma from "@/lib/prisma";
-import { InvitationsListView, type DashboardInvitation } from "./components/InvitationsListView";
+import { InvitationsListView, type DashboardInvitation } from "@/components/features/dashboard/InvitationsListView";
 
 export default async function InvitacionesPage() {
   const { userId: clerkId } = await auth();

@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-import { EVENT_ICONS } from "../../../constants";
+import { EVENT_ICON_LIST } from "../../../constants";
+import { IconRenderer } from "@/components/shared/icon-renderer/IconRenderer";
 
 export type IconSelectorProps = {
   selectedIcon: string;
@@ -20,7 +20,7 @@ export function IconSelector({ selectedIcon, onIconSelect, isOpen, onToggle }: I
         onClick={onToggle}
         className="flex h-12 w-12 items-center justify-center rounded-xl border-2 border-gray-300 bg-white text-2xl transition hover:border-purple-400 hover:bg-purple-50"
       >
-        {selectedIcon || "🎉"}
+        <IconRenderer icon={selectedIcon} className="text-2xl" />
       </button>
 
       <AnimatePresence>
@@ -44,19 +44,18 @@ export function IconSelector({ selectedIcon, onIconSelect, isOpen, onToggle }: I
                 Selecciona un icono
               </div>
               <div className="grid max-h-64 grid-cols-8 gap-2 overflow-y-auto">
-                {EVENT_ICONS.map((icon) => (
+                {EVENT_ICON_LIST.map((icon, index) => (
                   <button
-                    key={icon}
+                    key={`${icon}-${index}`}
                     type="button"
                     onClick={() => {
                       onIconSelect(icon);
                       onToggle();
                     }}
-                    className={`flex h-10 w-10 items-center justify-center rounded-lg text-xl transition hover:bg-purple-100 hover:scale-110 ${
-                      selectedIcon === icon ? "bg-purple-100 ring-2 ring-purple-500" : "bg-gray-50"
-                    }`}
+                    className={`flex h-10 w-10 items-center justify-center rounded-lg text-xl transition hover:bg-purple-100 hover:scale-110 ${selectedIcon === icon ? "bg-purple-100 ring-2 ring-purple-500" : "bg-gray-50"
+                      }`}
                   >
-                    {icon}
+                    <IconRenderer icon={icon} className="text-xl" />
                   </button>
                 ))}
               </div>

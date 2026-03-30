@@ -3,8 +3,8 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 
-import { useDeleteInvitation } from "../hooks/useDeleteInvitation";
-import { DeleteConfirmationModal } from "./delete-confirmation-modal/DeleteConfirmationModal";
+import { useDeleteInvitation } from "@/app/(private)/dashboard/invitaciones/hooks/useDeleteInvitation";
+import { DeleteConfirmationModal } from "./components/DeleteConfirmationModal";
 
 export type DashboardInvitation = {
   id: string;
@@ -23,14 +23,10 @@ type InvitationsListViewProps = {
 };
 
 const themeColors: Record<string, string> = {
-  Princesa: "bg-pink-100 text-pink-800",
-  princesa: "bg-pink-100 text-pink-800",
-  Safari: "bg-green-100 text-green-800",
-  safari: "bg-green-100 text-green-800",
-  Unicornio: "bg-purple-100 text-purple-800",
-  dinosaurios: "bg-orange-100 text-orange-800",
-  Espacial: "bg-blue-100 text-blue-800",
-  "k-pop": "bg-indigo-100 text-indigo-800",
+  ["princess-dreams"]: "bg-pink-100 text-pink-800",
+  ["safari-adventure"]: "bg-yellow-100 text-yellow-800",
+  ["dino-party"]: "bg-green-700 text-white-800",
+  ["k-pop"]: "bg-indigo-100 text-indigo-800",
 };
 
 export function InvitationsListView({ initialInvitations }: InvitationsListViewProps) {
@@ -212,6 +208,7 @@ export function InvitationsListView({ initialInvitations }: InvitationsListViewP
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                           </svg>
+                          Ver
                         </Link>
                       </>
                     ) : (

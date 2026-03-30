@@ -47,11 +47,64 @@ export const ALLOWED_IMAGE_FORMATS = [".jpeg", ".jpg", ".png"] as const;
 export const ALLOWED_MIME_TYPES = ["image/jpeg", "image/png"] as const;
 export const ACCEPTED_IMAGE_TYPES = ".jpeg,.jpg,.png";
 
-export const EVENT_ICONS = [
-  "🎭", "🎪", "🎨", "🎵", "🎤", "🎸", "🎹", "🥁", "🎺", "🎷",
-  "🎯", "🎲", "🎳", "🎮", "🕹️", "🎰", "🧩", "🎭", "🎪", "🎨",
-  "🍕", "🍔", "🍟", "🌭", "🥤", "🧃", "🍬", "🍭", "🧁", "🍰",
-  "🎂", "🎈", "🎉", "🎊", "🎁", "🎀", "🏆", "🥇", "👑", "⭐",
-  "🌟", "✨", "💫", "🎆", "🎇", "🎃", "🎄", "🎅", "🤡", "🦸",
-  "🦹", "🧸", "🎠", "🎡", "🎢", "🎪", "🎭", "🎨", "🎪", "🎭"
+export const EVENT_ICON_SETS = [
+  {
+    label: "Celebración",
+    prefix: "pi",
+    icons: [
+      "PiCakeBold", "PiConfettiBold", "PiBalloonBold", "PiGiftBold",
+      "PiSparkleBold", "PiCrownBold", "PiBalloonLight", "PiFireBold", "PiBalloonDuotone", "LuPartyPopper"
+    ],
+  },
+  {
+    label: "Música",
+    prefix: "fa",
+    icons: [
+      "FaGuitar", "FaDrum", "FaMicrophone", "FaMusic", "FaHeadphones",
+      "FaCompactDisc", "FaRecordVinyl", "FaHeadphonesAlt", "PiMusicNotesBold"
+    ],
+  },
+  {
+    label: "Juegos",
+    prefix: "gi",
+    icons: [
+      "GiGamepad", "GiConsoleController", "GiDiceTwentyFacesOne", "GiPerspectiveDiceSixFacesRandom",
+      "GiCardRandom", "GiBowlingStrike", "GiBasketballBall", "GiSoccerBall", "GiTennisRacket",
+      "GiCardboardBox"
+    ],
+  },
+  {
+    label: "Comida",
+    prefix: "tb",
+    icons: [
+      "TbBurger", "TbPizza", "TbIceCream", "TbCake", "TbCoffee", "TbCup", "TbBottle",
+      "TbBread", "TbSoup", "TbMeat"
+    ],
+  },
+  {
+    label: "Arte y hobbies",
+    prefix: "lu",
+    icons: [
+      "LuPalette", "LuPenLine", "LuScissors", "LuBrush",
+      "LuShapes", "LuSparkles", "LuStar", "LuSunMedium"
+    ],
+  },
+  {
+    label: "Bebé y Bautizo",
+    prefix: "pi",
+    icons: [
+      "PiBabyBold", "PiHandsPrayingBold", "PiCrossBold", "PiBirdBold",
+      "FaChild", "FaBaby", "GiAngelWings"
+    ],
+  },
+  {
+    label: "Matrimonio",
+    prefix: "pi",
+    icons: [
+      "PiHeartBold", "PiChurchBold", "PiWineBold", "PiChampagneBold",
+      "GiEngagementRing", "LuChurch"
+    ],
+  },
 ] as const;
+
+export const EVENT_ICON_LIST = EVENT_ICON_SETS.flatMap((set) => set.icons);

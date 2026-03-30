@@ -3,7 +3,7 @@ import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
 import prisma from "@/lib/prisma";
 import { getRSVPsByInvitation } from "../../actions";
-import { RSVPListView } from "../../components/RSVPListView";
+import { RSVPListView } from "@/components/features/dashboard/RSVPListView";
 
 interface InvitadosPageProps {
   params: Promise<{ id: string }>;

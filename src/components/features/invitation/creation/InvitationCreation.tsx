@@ -26,6 +26,7 @@ export function InvitationCreation({ initialData }: InvitationCreationProps) {
     goToPreviousStep,
     canGoNext,
     canGoBack,
+    saveCurrentProgress,
     handlePurchase,
     handleOpenPreview,
     isProcessingPayment,
@@ -36,15 +37,13 @@ export function InvitationCreation({ initialData }: InvitationCreationProps) {
 
   const handleExit = useCallback(async () => {
     try {
-      if (currentStep !== "preview") {
-        await goToNextStep(); // This triggers the save for the current step
-      }
+      await saveCurrentProgress();
       router.push("/dashboard/invitaciones");
     } catch (err) {
       console.error("Error saving on exit:", err);
       router.push("/dashboard/invitaciones");
     }
-  }, [currentStep, goToNextStep, router]);
+  }, [router, saveCurrentProgress]);
 
   const currentStepNumber = CREATION_STEPS.findIndex(
     (step) => step.id === currentStep
@@ -60,20 +59,18 @@ export function InvitationCreation({ initialData }: InvitationCreationProps) {
               <div key={step.id} className="flex flex-1 items-center">
                 <div className="flex items-center">
                   <div
-                    className={`flex h-10 w-10 items-center justify-center rounded-full font-bold transition ${
-                      index <= currentStepNumber
+                    className={`flex h-10 w-10 items-center justify-center rounded-full font-bold transition ${index <= currentStepNumber
                         ? "bg-purple-500 text-white"
                         : "bg-gray-200 text-gray-500"
-                    }`}
+                      }`}
                   >
                     {step.number}
                   </div>
                   <span
-                    className={`ml-3 hidden font-medium sm:block ${
-                      index <= currentStepNumber
+                    className={`ml-3 hidden font-medium sm:block ${index <= currentStepNumber
                         ? "text-purple-600"
                         : "text-gray-500"
-                    }`}
+                      }`}
                   >
                     {step.label}
                   </span>
@@ -81,11 +78,10 @@ export function InvitationCreation({ initialData }: InvitationCreationProps) {
                 {index < CREATION_STEPS.length - 1 && (
                   <div className="mx-4 h-0.5 flex-1 bg-gray-200">
                     <div
-                      className={`h-full transition-all duration-500 ${
-                        index < currentStepNumber
+                      className={`h-full transition-all duration-500 ${index < currentStepNumber
                           ? "w-full bg-purple-500"
                           : "w-0"
-                      }`}
+                        }`}
                     />
                   </div>
                 )}
@@ -135,11 +131,10 @@ export function InvitationCreation({ initialData }: InvitationCreationProps) {
             <button
               onClick={goToPreviousStep}
               disabled={!canGoBack || isSaving}
-              className={`rounded-xl px-8 py-3 font-medium transition ${
-                canGoBack && !isSaving
+              className={`rounded-xl px-8 py-3 font-medium transition ${canGoBack && !isSaving
                   ? "bg-gray-200 text-gray-900 hover:bg-gray-300"
                   : "cursor-not-allowed bg-gray-100 text-gray-400"
-              }`}
+                }`}
             >
               ← Atrás
             </button>
@@ -157,11 +152,10 @@ export function InvitationCreation({ initialData }: InvitationCreationProps) {
               <button
                 onClick={goToNextStep}
                 disabled={!canGoNext || isSaving}
-                className={`flex items-center gap-2 rounded-xl px-8 py-3 font-medium transition ${
-                  canGoNext && !isSaving
+                className={`flex items-center gap-2 rounded-xl px-8 py-3 font-medium transition ${canGoNext && !isSaving
                     ? "bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg hover:shadow-xl hover:brightness-110"
                     : "cursor-not-allowed bg-gray-200 text-gray-400"
-                }`}
+                  }`}
               >
                 {isSaving ? (
                   <>

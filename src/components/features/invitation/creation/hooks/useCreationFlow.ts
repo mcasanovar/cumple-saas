@@ -3,7 +3,6 @@ import { useRouter } from "next/navigation";
 
 import type { CreationStep, CreationFormData, CreationFlowState, InvitationInitialData } from "../types";
 import { saveInvitationProgress } from "@/app/(private)/dashboard/invitaciones/nueva/actions";
-import type { BypassPaymentResult } from "@/app/(private)/dashboard/invitaciones/nueva/actions";
 
 export function useCreationFlow(initialData?: InvitationInitialData | null) {
   const router = useRouter();
@@ -80,6 +79,28 @@ export function useCreationFlow(initialData?: InvitationInitialData | null) {
     setCurrentStep(step);
   }, []);
 
+  const saveCurrentProgress = useCallback(async () => {
+    try {
+      setIsSaving(true);
+      const result = await saveInvitationProgress(
+        formData,
+        invitationId ?? undefined,
+        currentStep
+      );
+
+      if (result.success && result.invitationId) {
+        setInvitationId(result.invitationId);
+      } else {
+        console.error("Failed to save progress:", result.error);
+        alert("Ocurrió un error al guardar tu progreso. Por favor intenta de nuevo.");
+      }
+    } catch (error) {
+      console.error("Error saving current step:", error);
+    } finally {
+      setIsSaving(false);
+    }
+  }, [currentStep, formData, invitationId]);
+
   const isStepValid = useMemo(() => {
     switch (currentStep) {
       case "template":
@@ -133,45 +154,27 @@ export function useCreationFlow(initialData?: InvitationInitialData | null) {
       setIsProcessingPayment(true);
       setPaymentError(null);
 
-      // Detectar si estamos en desarrollo para usar bypass
-      const isDev = process.env.NODE_ENV === "development";
+      const paymentPayload = {
+        templateId: formData.templateId,
+        celebrantName: formData.celebrantName,
+        age: formData.age,
+      };
 
-      if (isDev) {
-        // Modo desarrollo: bypass de pago
-        const { simulatePaymentSuccess } = await import("@/app/(private)/dashboard/invitaciones/nueva/actions");
-        const result: BypassPaymentResult = await simulatePaymentSuccess(formData, invitationId ?? undefined);
+      const { createPaymentPreference } = await import("@/app/(private)/dashboard/invitaciones/nueva/actions");
+      const result = await createPaymentPreference(paymentPayload);
 
-        if (result.success && result.slug) {
-          // Redirigir a página de éxito con parámetros del bypass
-          window.location.href = `/dashboard/pago/exitoso?bypass=true&slug=${result.slug}&invitationId=${result.invitationId}`;
-        } else {
-          setPaymentError(result.error || "Error al procesar el pago simulado.");
-          setIsProcessingPayment(false);
-        }
+      if (result.success) {
+        window.location.href = result.checkoutUrl;
       } else {
-        // Modo producción: usar MercadoPago
-        const paymentPayload = {
-          templateId: formData.templateId,
-          celebrantName: formData.celebrantName,
-          age: formData.age,
-        };
-
-        const { createPaymentPreference } = await import("@/app/(private)/dashboard/invitaciones/nueva/actions");
-        const result = await createPaymentPreference(paymentPayload);
-
-        if (result.success) {
-          window.location.href = result.checkoutUrl;
-        } else {
-          setPaymentError(result.error);
-          setIsProcessingPayment(false);
-        }
+        setPaymentError(result.error);
+        setIsProcessingPayment(false);
       }
     } catch (err) {
       console.error("Error initiating purchase:", err);
       setPaymentError("Ocurrió un error inesperado al intentar pagar.");
       setIsProcessingPayment(false);
     }
-  }, [formData, isStepValid, invitationId]);
+  }, [formData, isStepValid]);
 
   return {
     currentStep,
@@ -180,6 +183,7 @@ export function useCreationFlow(initialData?: InvitationInitialData | null) {
     goToNextStep,
     goToPreviousStep,
     goToStep,
+    saveCurrentProgress,
     isStepValid,
     canGoNext,
     canGoBack,

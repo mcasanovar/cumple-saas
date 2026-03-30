@@ -10,7 +10,6 @@ function ExitosContent() {
   const [showConfetti, setShowConfetti] = useState(true);
   const [copied, setCopied] = useState(false);
 
-  const isBypass = searchParams.get("bypass") === "true";
   const invitationId = searchParams.get("invitationId");
   const payment_id = searchParams.get("payment_id");
   const external_reference = searchParams.get("external_reference");
@@ -50,12 +49,6 @@ function ExitosContent() {
           </div>
 
           <h1 className="text-3xl font-bold text-gray-900">¡Pago exitoso!</h1>
-
-          {isBypass && (
-            <div className="mt-2 inline-flex items-center gap-1 rounded-full bg-amber-100 px-3 py-1 text-xs font-medium text-amber-700">
-              <span>🧪</span> Modo de prueba (bypass)
-            </div>
-          )}
 
           <p className="mt-3 text-gray-600">
             {shareableUrl

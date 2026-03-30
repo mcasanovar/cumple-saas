@@ -11,6 +11,7 @@ import { LandingDinoBackground } from "../LandingDinoBackground/LandingDinoBackg
 import { LandingKPopBackground } from "../LandingKPopBackground";
 import { LandingPrincessBackground } from "../LandingPrincessBackground";
 import { IntroPetalConfetti } from "../../../intro/components/IntroPetalConfetti/IntroPetalConfetti";
+import { IconRenderer } from "@/components/shared/icon-renderer/IconRenderer";
 
 import type { LandingViewProps } from "./LandingView.types";
 
@@ -367,9 +368,11 @@ export function LandingView({
                 whileHover={{ y: -6 }}
                 transition={{ duration: 0.35, ease: easeOutQuint }}
               >
-                <span className="text-4xl" style={{ color: feature.color }}>
-                  {feature.icon}
-                </span>
+                <IconRenderer
+                  icon={feature.icon}
+                  className="text-4xl"
+                  style={{ color: feature.color }}
+                />
                 <h3 className="text-xl font-semibold" style={{ fontFamily: typography.heading, color: isDinoTheme ? "#2D3D2D" : isKPopTheme ? "#9333ea" : "#1f1a48" }}>
                   {feature.title}
                 </h3>

@@ -4,9 +4,10 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 import type { CreationFormData } from "../../types";
-import { EVENT_ICONS } from "../../constants";
+import { EVENT_ICON_LIST } from "../../constants";
 import { IconSelector } from "./components/IconSelector";
 import MapView from "@/components/shared/map-view/MapView";
+import { IconRenderer } from "@/components/shared/icon-renderer/IconRenderer";
 
 export type EventInfoStepProps = {
   formData: Partial<CreationFormData>;
@@ -15,7 +16,7 @@ export type EventInfoStepProps = {
 
 export function EventInfoStep({ formData, onUpdate }: EventInfoStepProps) {
   const [newItem, setNewItem] = useState("");
-  const [selectedIcon, setSelectedIcon] = useState<string>(EVENT_ICONS[0]);
+  const [selectedIcon, setSelectedIcon] = useState<string>(EVENT_ICON_LIST[0] ?? "🎉");
   const [iconSelectorOpen, setIconSelectorOpen] = useState(false);
 
   const handleAddItem = () => {
@@ -200,7 +201,7 @@ export function EventInfoStep({ formData, onUpdate }: EventInfoStepProps) {
                     transition={{ delay: index * 0.05 }}
                   >
                     <div className="flex items-center gap-3">
-                      <span className="text-xl">{item.icon}</span>
+                      <IconRenderer icon={item.icon} className="text-xl" />
                       <span className="text-gray-900">{item.description}</span>
                     </div>
                     <button
