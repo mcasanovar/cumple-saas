@@ -19,26 +19,27 @@ model User {
 }
 
 model Invitation {
-  id            String    @id @default(uuid())
-  slug          String?   @unique
-  templateId    String
-  celebrantName String
-  celebrantAge  Int
-  eventDate     DateTime
-  eventTime     String
-  venueName     String
-  celebrantImages Json?     // Cloudinary URLs for the gallery
-  venueImage      String?   // Cloudinary URL for the venue
-  config        Json
-  isPaid        Boolean   @default(false)
-  status        String    @default("draft")
-  userId        String
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  currentStep   String?
-  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  purchase      Purchase?
-  rsvps         RSVP[]
+  id              String    @id @default(uuid())
+  slug            String?   @unique
+  templateId      String
+  celebrantName   String
+  celebrantAge    Int
+  eventDate       DateTime
+  eventTime       String
+  venueName       String
+  config          Json
+  isPaid          Boolean   @default(false)
+  status          String    @default("draft")
+  userId          String
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  currentStep     String?
+  celebrantImages Json?
+  venueImage      String?
+  isDelete        Boolean?  @default(false)
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  purchase        Purchase?
+  rsvps           RSVP[]
 
   @@index([userId])
   @@index([eventDate])

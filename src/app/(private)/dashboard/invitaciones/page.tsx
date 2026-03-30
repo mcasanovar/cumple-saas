@@ -9,12 +9,13 @@ export default async function InvitacionesPage() {
     return null;
   }
 
-  // Fetch real invitations for the user
+  // Fetch real invitations for the user (excluding soft-deleted)
   const dbInvitations = await prisma.invitation.findMany({
     where: {
       user: {
         clerkId: clerkId
-      }
+      },
+      isDelete: false
     },
     include: {
       _count: {
