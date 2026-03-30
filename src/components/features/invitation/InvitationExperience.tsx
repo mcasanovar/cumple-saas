@@ -45,7 +45,7 @@ export function InvitationExperience({
   }, [phase]);
 
   return (
-    <div className="relative min-h-screen overflow-hidden">
+    <div className={`relative ${isPreview ? 'h-full' : 'min-h-screen'} overflow-hidden`}>
       <DecorativeBackground theme={theme} phase={phase} />
 
       <InvitationIntro
@@ -81,6 +81,7 @@ export function InvitationExperience({
           invitation={invitation}
           theme={theme}
           isActive={phase === "landing"}
+          isPreview={isPreview}
         />
       </motion.main>
     </div>

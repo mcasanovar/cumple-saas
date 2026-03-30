@@ -32,7 +32,8 @@ export function IntroKPopView({
   themeToken,
   isPreview,
 }: IntroKPopViewProps) {
-  const isMobile = useIsMobile();
+  const isMobileResult = useIsMobile();
+  const isMobile = isMobileResult || isPreview;
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {

@@ -33,7 +33,8 @@ export function IntroDinoView({
   themeToken,
   isPreview,
 }: IntroDinoViewProps) {
-  const isMobile = useIsMobile();
+  const isMobileResult = useIsMobile();
+  const isMobile = isMobileResult || isPreview;
   const subtitleParts = introCopy.celebrantSubtitle.split("{celebrantName}");
   const subtitlePrefix = subtitleParts[0] || "";
   const subtitleSuffix = subtitleParts[1] || "";

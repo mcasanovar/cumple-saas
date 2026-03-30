@@ -16,12 +16,12 @@ export type PreviewStepProps = {
   error?: string | null;
 };
 
-export function PreviewStep({ 
-  formData, 
-  onConfirm, 
+export function PreviewStep({
+  formData,
+  onConfirm,
   onOpenPreview,
-  isProcessing, 
-  error 
+  isProcessing,
+  error
 }: PreviewStepProps) {
   const [mounted, setMounted] = useState(false);
   const selectedTemplate = AVAILABLE_TEMPLATES.find(
@@ -67,15 +67,41 @@ export function PreviewStep({
               <div className="relative mx-auto h-[700px] w-[340px] overflow-hidden rounded-[3rem] border-[8px] border-gray-900 bg-gray-900 shadow-2xl ring-1 ring-gray-800">
                 {/* Speaker/Camera notch */}
                 <div className="absolute left-1/2 top-0 z-50 h-6 w-32 -translate-x-1/2 rounded-b-2xl bg-gray-900" />
-                
+
                 {/* Preview Iframe-like container */}
-                <div className="h-full w-full overflow-y-auto bg-white">
-                  <div className="pointer-events-none origin-top h-full">
-                    {/* Forzamos el renderizado de la landing en el preview (saltando la intro para ver rápido) */}
-                    <InvitationExperience invitation={renderConfig} />
+                <div className="h-full w-full overflow-hidden bg-white">
+                  <div className="relative h-full w-full">
+                    {/* The content with blur */}
+                    <div className="h-full w-full blur-[12px] pointer-events-none">
+                      <InvitationExperience
+                        invitation={renderConfig}
+                        isPreview={true}
+                      />
+                    </div>
+
+                    {/* Central Preview Button Overlay */}
+                    <div className="absolute inset-0 z-30 flex items-center justify-center bg-black/5 backdrop-blur-[2px]">
+                      <motion.button
+                        onClick={onOpenPreview}
+                        className="group flex flex-col items-center gap-4 rounded-3xl bg-white/95 p-8 shadow-2xl transition-all hover:scale-105 hover:bg-white active:scale-95"
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ delay: 0.5 }}
+                      >
+                        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-purple-600 text-white shadow-lg transition-transform group-hover:rotate-12">
+                          <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                          </svg>
+                        </div>
+                        <span className="text-xl font-black uppercase tracking-widest text-gray-900">
+                          Ver Preview
+                        </span>
+                      </motion.button>
+                    </div>
                   </div>
                 </div>
-                
+
                 {/* Gloss overlay */}
                 <div className="pointer-events-none absolute inset-0 z-40 rounded-[2.5rem] bg-gradient-to-tr from-white/5 to-white/10" />
               </div>
@@ -101,7 +127,7 @@ export function PreviewStep({
                 <h3 className="text-2xl font-bold text-gray-900">
                   Resumen de tu invitación
                 </h3>
-                
+
                 <div className="mt-8 divide-y divide-gray-100">
                   <div className="py-4">
                     <span className="text-sm font-semibold text-gray-400 uppercase tracking-widest">Plantilla</span>
@@ -140,7 +166,7 @@ export function PreviewStep({
                       <span className="text-gray-600">Invitación Digital Premium</span>
                       <span className="font-bold text-gray-900">${PRICE_CLP.toLocaleString("es-CL")}</span>
                     </div>
-                    
+
                     <div className="border-t border-purple-200 pt-3">
                       <div className="flex justify-between text-xl font-bold">
                         <span className="text-gray-900">Total</span>
@@ -160,11 +186,10 @@ export function PreviewStep({
                   <button
                     onClick={onConfirm}
                     disabled={isProcessing}
-                    className={`mt-6 flex w-full items-center justify-center rounded-xl py-4 text-lg font-bold text-white shadow-lg transition ${
-                      isProcessing
-                        ? "cursor-not-allowed bg-purple-400"
-                        : "bg-gradient-to-r from-purple-500 to-pink-500 hover:shadow-xl hover:brightness-110"
-                    }`}
+                    className={`mt-6 flex w-full items-center justify-center rounded-xl py-4 text-lg font-bold text-white shadow-lg transition ${isProcessing
+                      ? "cursor-not-allowed bg-purple-400"
+                      : "bg-gradient-to-r from-purple-500 to-pink-500 hover:shadow-xl hover:brightness-110"
+                      }`}
                   >
                     {isProcessing ? (
                       <>

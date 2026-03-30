@@ -9,10 +9,21 @@ type InvitationLandingProps = {
   invitation: InvitationRenderConfig;
   theme: ThemeConfig;
   isActive?: boolean;
+  isPreview?: boolean;
 };
 
-export function InvitationLanding({ invitation, theme }: InvitationLandingProps) {
+export function InvitationLanding({
+  invitation,
+  theme,
+  isPreview = false
+}: InvitationLandingProps) {
   const content = useLandingContent(invitation, theme);
 
-  return <LandingView {...content} invitationId={invitation.invitationId} />;
+  return (
+    <LandingView
+      {...content}
+      invitationId={invitation.invitationId}
+      isPreview={isPreview}
+    />
+  );
 }

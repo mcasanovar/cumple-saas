@@ -31,7 +31,8 @@ export function IntroPrincessView({
   themeToken,
   isPreview,
 }: IntroPrincessViewProps) {
-  const isMobile = useIsMobile();
+  const isMobileResult = useIsMobile();
+  const isMobile = isMobileResult || isPreview;
 
   const subtitleParts = introCopy.celebrantSubtitle.split("{celebrantName}");
   const subtitlePrefix = subtitleParts[0] || "";

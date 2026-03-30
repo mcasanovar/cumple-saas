@@ -47,6 +47,7 @@ export function LandingView({
   typography,
   themeToken,
   venue,
+  isPreview = false,
 }: LandingViewProps) {
   const { isDinoTheme, isPrincessTheme, isKPopTheme } = useThemeDetection(themeToken);
 
@@ -79,7 +80,7 @@ export function LandingView({
           </motion.span>
 
           <motion.h1
-            className="flex flex-col gap-2 text-balance text-[clamp(2.8rem,6vw,4.2rem)] font-black leading-[1.05]"
+            className="flex flex-col gap-4 text-balance text-[clamp(2.8rem,6vw,4.2rem)] font-black leading-[1.05]"
             style={{
               fontFamily: typography.heading,
               color: isKPopTheme ? "#f363b4" : "#262147"

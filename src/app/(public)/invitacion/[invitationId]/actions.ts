@@ -49,7 +49,7 @@ export async function submitRSVP(
       };
     }
 
-    // Check for duplicate RSVPs with same email (optional business logic)
+    // Check for duplicate RSVPs with same email
     if (email) {
       const existingRSVP = await prisma.rSVP.findFirst({
         where: {
@@ -61,7 +61,7 @@ export async function submitRSVP(
       if (existingRSVP) {
         return {
           status: "error",
-          message: "Ya existe una confirmación con este correo electrónico para esta invitación."
+          message: "Ya existe una confirmación con este correo electrónico para esta invitación.",
         };
       }
     }

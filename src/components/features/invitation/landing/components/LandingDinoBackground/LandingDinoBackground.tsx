@@ -1,12 +1,45 @@
 "use client";
 
 import { useIsMobile } from "@/hooks/useIsMobile";
+import { motion } from "framer-motion";
 
 export function LandingDinoBackground() {
   const isMobile = useIsMobile();
 
+  const CautionStripe = ({ className, rotate, delay = 0 }: { className: string; rotate: string; delay?: number }) => (
+    <motion.div
+      className={`absolute z-0 h-8 sm:h-12 w-[180%] sm:w-[150%] bg-[#FFD700] shadow-xl ${className}`}
+      style={{ rotate }}
+      initial={{ opacity: 0, scale: 1.1 }}
+      whileInView={{ opacity: 1, scale: 1 }}
+      viewport={{ once: true }}
+      transition={{ duration: 1.2, delay, ease: [0.16, 1, 0.3, 1] }}
+    >
+      <div className="flex h-full items-center justify-start overflow-hidden border-y-[1px] sm:border-y-2 border-black/10">
+        <div className="flex whitespace-nowrap">
+          {Array.from({ length: 15 }).map((_, i) => (
+            <span
+              key={i}
+              className="px-4 sm:px-6 text-[10px] sm:text-sm font-black uppercase tracking-widest text-black/80"
+              style={{ fontFamily: "Arial, sans-serif" }}
+            >
+              CAUTION • PELIGRO
+            </span>
+          ))}
+        </div>
+      </div>
+    </motion.div>
+  );
+
   return (
     <div className="pointer-events-none absolute inset-0 overflow-hidden">
+      {/* Cintas en las esquinas */}
+      <CautionStripe className="-left-[40%] sm:-left-[25%] top-[1%] sm:-top-[5%]" rotate="-15deg" delay={0.2} />
+      <CautionStripe className="-right-[40%] sm:-right-[25%] -top-[2%] sm:-top-[5%]" rotate="15deg" delay={0.4} />
+      <CautionStripe className="-left-[40%] sm:-left-[25%] bottom-[15%] sm:bottom-[75%]" rotate="10deg" delay={0.6} />
+      <CautionStripe className="-left-[40%] sm:-left-[25%] bottom-[15%] sm:bottom-[10%]" rotate="12deg" delay={0.6} />
+      <CautionStripe className="-right-[40%] sm:-right-[25%] bottom-[30%] sm:bottom-[25%]" rotate="-10deg" delay={0.8} />
+
       {/* Hojas tropicales - Esquina superior izquierda */}
       <svg
         className="absolute -left-4 top-12 opacity-50"
