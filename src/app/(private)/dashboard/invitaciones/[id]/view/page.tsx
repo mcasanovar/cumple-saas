@@ -37,66 +37,73 @@ export default async function InvitationViewPage({ params }: InvitationViewPageP
 
   // Parse config data
   const config = invitation.config as any;
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || (typeof window !== "undefined"
+    ? `${window.location.protocol}//${window.location.host}`
+    : "");
   const shareableUrl = invitation.id ? `${baseUrl}/invitacion/${invitation.id}` : null;
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 pb-10">
       {/* Header */}
-      <header className="border-b bg-white px-6 py-4">
+      <header className="sticky top-0 z-10 border-b bg-white/80 px-4 py-3 backdrop-blur-md sm:px-6 sm:py-4">
         <div className="mx-auto flex max-w-6xl items-center justify-between">
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 sm:gap-4">
             <Link
               href="/dashboard/invitaciones"
-              className="flex items-center gap-2 text-gray-600 transition hover:text-gray-900"
+              className="flex items-center gap-1 text-sm font-medium text-gray-600 transition hover:text-gray-900 sm:gap-2 sm:text-base"
             >
-              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg className="h-4 w-4 sm:h-5 sm:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
               </svg>
-              Volver
+              <span className="hidden sm:inline">Volver</span>
             </Link>
-            <h1 className="text-xl font-bold text-gray-900">Detalles de tu invitación</h1>
+            <h1 className="text-base font-bold text-gray-900 sm:text-xl">Detalles</h1>
           </div>
 
           {invitation.isPaid && (
-            <div className="flex items-center gap-2 rounded-full bg-green-100 px-3 py-1.5 text-sm font-medium text-green-700">
-              <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+            <div className="flex items-center gap-1 rounded-full bg-green-100 px-2.5 py-1 text-xs font-semibold text-green-700 sm:gap-2 sm:px-3 sm:py-1.5 sm:text-sm">
+              <svg className="h-3.5 w-3.5 sm:h-4 sm:w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
               </svg>
-              Pagado
+              PAGADO
             </div>
           )}
         </div>
       </header>
 
-      <main className="mx-auto max-w-6xl p-6">
+      <main className="mx-auto max-w-6xl p-4 sm:p-6">
         {/* Shareable Link Section */}
         {shareableUrl && (
-          <div className="mb-8 rounded-2xl border-2 border-purple-200 bg-gradient-to-br from-purple-50 to-pink-50 p-6 shadow-sm">
-            <div className="flex items-start gap-4">
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-purple-500 text-white shadow-lg">
-                <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <div className="mb-6 rounded-2xl border-2 border-purple-200 bg-gradient-to-br from-purple-50 to-pink-50 p-4 shadow-sm sm:mb-8 sm:p-6">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:gap-6">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-purple-500 text-white shadow-lg sm:h-14 sm:w-14">
+                <svg className="h-6 w-6 sm:h-7 sm:w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
                 </svg>
               </div>
-              <div className="flex-1">
-                <h2 className="text-lg font-bold text-gray-900">Link para compartir</h2>
-                <p className="text-sm text-gray-600">
-                  Comparte este link con tus invitados para que vean la invitación
-                </p>
-                <div className="mt-3 flex items-center gap-2">
+              <div className="flex-1 space-y-3">
+                <div>
+                  <h2 className="text-lg font-bold text-gray-900 sm:text-xl">Link para compartir</h2>
+                  <p className="text-xs text-gray-600 sm:text-sm">
+                    Comparte este link con tus invitados para que vean la invitación
+                  </p>
+                </div>
+                <div className="flex flex-col gap-2 sm:flex-row">
                   <input
                     type="text"
                     value={shareableUrl}
                     readOnly
-                    className="flex-1 rounded-xl border border-purple-200 bg-white px-4 py-3 text-sm font-mono text-gray-700 focus:outline-none"
+                    className="flex-1 rounded-xl border border-purple-200 bg-white px-4 py-3 text-xs font-mono text-gray-700 shadow-inner focus:outline-none sm:text-sm"
                   />
                   <Link
                     href={shareableUrl}
                     target="_blank"
-                    className="rounded-xl bg-purple-600 px-6 py-3 font-semibold text-white transition hover:bg-purple-700"
+                    className="flex items-center justify-center gap-2 rounded-xl bg-purple-600 px-6 py-3 text-sm font-bold text-white transition-all hover:bg-purple-700 active:scale-95"
                   >
-                    Ver invitación
+                    <span>Ver invitación</span>
+                    <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                    </svg>
                   </Link>
                 </div>
               </div>
@@ -169,15 +176,15 @@ export default async function InvitationViewPage({ params }: InvitationViewPageP
                   <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-100 text-lg">🖼️</span>
                   Galería de fotos
                 </h3>
-                <div className="grid grid-cols-3 gap-4">
+                <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4">
                   {invitation.celebrantImages
                     .filter((img): img is string => typeof img === "string")
                     .map((img, i) => (
-                      <div key={i} className="aspect-square overflow-hidden rounded-xl bg-gray-100">
+                      <div key={i} className="aspect-square overflow-hidden rounded-xl bg-gray-100 ring-1 ring-gray-200">
                         <img
                           src={img}
                           alt={`Foto ${i + 1}`}
-                          className="h-full w-full object-cover"
+                          className="h-full w-full object-cover transition-transform hover:scale-105"
                         />
                       </div>
                     ))}

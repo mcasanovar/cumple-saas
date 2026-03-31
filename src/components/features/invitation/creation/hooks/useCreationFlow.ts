@@ -161,7 +161,7 @@ export function useCreationFlow(initialData?: InvitationInitialData | null) {
       };
 
       const { createPaymentPreference } = await import("@/app/(private)/dashboard/invitaciones/nueva/actions");
-      const result = await createPaymentPreference(paymentPayload);
+      const result = await createPaymentPreference(paymentPayload, invitationId ?? undefined);
 
       if (result.success) {
         window.location.href = result.checkoutUrl;

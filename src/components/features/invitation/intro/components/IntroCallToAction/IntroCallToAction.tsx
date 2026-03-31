@@ -385,7 +385,7 @@ export function IntroCallToAction({ className, label, onComplete, fontFamily, is
         {confettiActive && burstOrigin ? (
           <motion.div
             key="envelope-confetti"
-            className="pointer-events-none fixed inset-0 z-40"
+            className={`pointer-events-none ${isPreview ? 'absolute' : 'fixed'} inset-0 z-40`}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -446,7 +446,7 @@ export function IntroCallToAction({ className, label, onComplete, fontFamily, is
         {fadeActive ? (
           <motion.div
             key="whiteout"
-            className="pointer-events-none fixed inset-0 z-50 bg-white"
+            className={`pointer-events-none ${isPreview ? 'absolute' : 'fixed'} inset-0 z-50 bg-white`}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}

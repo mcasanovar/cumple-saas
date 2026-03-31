@@ -45,7 +45,7 @@ export function InvitationExperience({
   }, [phase]);
 
   return (
-    <div className={`relative ${isPreview ? 'h-full' : 'min-h-screen'} overflow-hidden`}>
+    <div className={`relative ${isPreview ? 'h-full w-full' : 'h-screen w-full'} overflow-hidden overscroll-none touch-none`}>
       <DecorativeBackground theme={theme} phase={phase} />
 
       <InvitationIntro

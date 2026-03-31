@@ -12,7 +12,8 @@ import type { CreationFormData } from "@/components/features/invitation/creation
 import { PRICE_CLP, ALLOWED_IMAGE_FORMATS, ALLOWED_MIME_TYPES, AVAILABLE_TEMPLATES } from "@/components/features/invitation/creation/constants";
 
 export async function createPaymentPreference(
-  formData: Partial<CreationFormData>
+  formData: Partial<CreationFormData>,
+  existingInvitationId?: string
 ): Promise<CreatePreferenceResult> {
   try {
     const { userId: clerkId, sessionClaims } = await auth();
@@ -27,10 +28,12 @@ export async function createPaymentPreference(
     const template = AVAILABLE_TEMPLATES.find((t) => t.id === formData.templateId);
     const templateName = template?.name ?? "Invitación Digital";
 
-    // ID único para rastrear la compra (se vinculará a Supabase en el futuro)
-    const invitationId = uuidv4();
+    // Usar el ID de invitación existente o generar uno nuevo si es necesario
+    const invitationId = existingInvitationId || uuidv4();
 
     const preference = new Preference(mercadopagoClient);
+
+    const notificationUrl = `${baseUrl}/api/webhook/mercadopago`;
 
     const preferenceBody = {
       items: [
@@ -47,12 +50,13 @@ export async function createPaymentPreference(
         email: userEmail,
       },
       back_urls: {
-        success: `${baseUrl}/dashboard/pago/exitoso`,
-        pending: `${baseUrl}/dashboard/pago/pendiente`,
-        failure: `${baseUrl}/dashboard/pago/fallido`,
+        success: `${baseUrl}/dashboard/pago/exitoso?invitationId=${invitationId}`,
+        pending: `${baseUrl}/dashboard/pago/pendiente?invitationId=${invitationId}`,
+        failure: `${baseUrl}/dashboard/pago/fallido?invitationId=${invitationId}`,
       },
       // MercadoPago bloquea `auto_return` estricto en el ambiente localhost.
       ...(baseUrl.includes("localhost") ? {} : { auto_return: "approved" }),
+      notification_url: baseUrl.includes("localhost") ? undefined : notificationUrl,
       external_reference: invitationId,
       metadata: {
         invitation_id: invitationId,
@@ -132,6 +136,37 @@ export async function uploadImageAction(formData: FormData) {
   } catch (error) {
     console.error("Cloudinary upload error:", error);
     return { success: false, error: "Error al subir la imagen a Cloudinary." };
+  }
+}
+
+export async function publishInvitationAction(invitationId: string) {
+  try {
+    const { userId: clerkId } = await auth();
+    if (!clerkId) throw new Error("Unauthorized");
+
+    // Verificar que la invitación pertenezca al usuario
+    const dbUser = await prisma.user.findUnique({
+      where: { clerkId },
+    });
+
+    if (!dbUser) throw new Error("User not found");
+
+    const invitation = await prisma.invitation.findUnique({
+      where: { id: invitationId, userId: dbUser.id },
+    });
+
+    if (!invitation) throw new Error("Invitation not found");
+
+    // Actualizar estado a published
+    await prisma.invitation.update({
+      where: { id: invitationId },
+      data: { status: "published" },
+    });
+
+    return { success: true };
+  } catch (error) {
+    console.error("Error publishing invitation:", error);
+    return { success: false, error: "No se pudo publicar la invitación." };
   }
 }
 

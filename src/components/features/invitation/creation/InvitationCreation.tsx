@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -35,6 +35,11 @@ export function InvitationCreation({ initialData }: InvitationCreationProps) {
     invitationId,
   } = useCreationFlow(initialData);
 
+  // Scroll to top on step change
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [currentStep]);
+
   const handleExit = useCallback(async () => {
     try {
       await saveCurrentProgress();
@@ -60,16 +65,16 @@ export function InvitationCreation({ initialData }: InvitationCreationProps) {
                 <div className="flex items-center">
                   <div
                     className={`flex h-10 w-10 items-center justify-center rounded-full font-bold transition ${index <= currentStepNumber
-                        ? "bg-purple-500 text-white"
-                        : "bg-gray-200 text-gray-500"
+                      ? "bg-purple-500 text-white"
+                      : "bg-gray-200 text-gray-500"
                       }`}
                   >
                     {step.number}
                   </div>
                   <span
                     className={`ml-3 hidden font-medium sm:block ${index <= currentStepNumber
-                        ? "text-purple-600"
-                        : "text-gray-500"
+                      ? "text-purple-600"
+                      : "text-gray-500"
                       }`}
                   >
                     {step.label}
@@ -79,8 +84,8 @@ export function InvitationCreation({ initialData }: InvitationCreationProps) {
                   <div className="mx-4 h-0.5 flex-1 bg-gray-200">
                     <div
                       className={`h-full transition-all duration-500 ${index < currentStepNumber
-                          ? "w-full bg-purple-500"
-                          : "w-0"
+                        ? "w-full bg-purple-500"
+                        : "w-0"
                         }`}
                     />
                   </div>
@@ -122,39 +127,39 @@ export function InvitationCreation({ initialData }: InvitationCreationProps) {
         </AnimatePresence>
 
         <motion.div
-          className="mt-12 flex justify-between"
+          className="mt-12 flex flex-col gap-4 sm:flex-row sm:justify-between"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3 }}
         >
-          <div className="flex gap-4">
+          <div className="flex order-2 sm:order-1 gap-3 sm:gap-4">
             <button
               onClick={goToPreviousStep}
               disabled={!canGoBack || isSaving}
-              className={`rounded-xl px-8 py-3 font-medium transition ${canGoBack && !isSaving
-                  ? "bg-gray-200 text-gray-900 hover:bg-gray-300"
-                  : "cursor-not-allowed bg-gray-100 text-gray-400"
+              className={`flex-1 sm:flex-none rounded-xl px-6 sm:px-8 py-3.5 sm:py-3 text-sm sm:text-base font-bold transition-all active:scale-95 ${canGoBack && !isSaving
+                ? "bg-white border-2 border-gray-200 text-gray-700 hover:bg-gray-50"
+                : "cursor-not-allowed bg-gray-100 text-gray-400"
                 }`}
             >
               ← Atrás
             </button>
-          </div>
 
-          <div className="flex gap-4">
             <button
               onClick={handleExit}
-              className="rounded-xl bg-white border border-gray-300 px-8 py-3 font-medium text-gray-700 transition hover:bg-gray-50 hover:shadow-sm"
+              className="flex-1 sm:flex-none rounded-xl bg-white border-2 border-gray-200 px-6 sm:px-8 py-3.5 sm:py-3 text-sm sm:text-base font-bold text-gray-600 transition-all hover:bg-red-50 hover:border-red-100 hover:text-red-600 active:scale-95"
             >
               Salir
             </button>
+          </div>
 
+          <div className="flex order-1 sm:order-2 w-full sm:w-auto">
             {currentStep !== "preview" && (
               <button
                 onClick={goToNextStep}
                 disabled={!canGoNext || isSaving}
-                className={`flex items-center gap-2 rounded-xl px-8 py-3 font-medium transition ${canGoNext && !isSaving
-                    ? "bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg hover:shadow-xl hover:brightness-110"
-                    : "cursor-not-allowed bg-gray-200 text-gray-400"
+                className={`flex w-full sm:w-auto items-center justify-center gap-2 rounded-xl px-10 sm:px-12 py-4 sm:py-3 text-base font-black uppercase tracking-wider transition-all active:scale-95 shadow-lg ${canGoNext && !isSaving
+                  ? "bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-purple-500/20 hover:shadow-xl hover:brightness-110"
+                  : "cursor-not-allowed bg-gray-200 text-gray-400"
                   }`}
               >
                 {isSaving ? (
@@ -163,7 +168,7 @@ export function InvitationCreation({ initialData }: InvitationCreationProps) {
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
-                    Guardando...
+                    <span>Guardando...</span>
                   </>
                 ) : (
                   <>Continuar →</>
