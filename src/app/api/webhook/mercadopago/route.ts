@@ -44,6 +44,9 @@ export async function POST(req: NextRequest) {
 
     // Actualizamos el registro de Purchase y el estado de la Invitación según el estado del pago
     if (status === "approved") {
+      const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+      const productUrl = `${baseUrl}/invitacion/${invitation.id}`;
+
       await prisma.$transaction([
         // Upsert de la compra
         prisma.purchase.upsert({
@@ -62,16 +65,17 @@ export async function POST(req: NextRequest) {
             amount: amount || 0,
           },
         }),
-        // Activar la invitación
+        // Activar la invitación y guardar la URL productiva
         prisma.invitation.update({
           where: { id: invitation.id },
           data: {
             isPaid: true,
             status: "published",
+            url_ext_invitation: productUrl,
           },
         }),
       ]);
-      console.log(`[MP Webhook] Invitation ${invitation.id} successfully activated via webhook.`);
+      console.log(`[MP Webhook] Invitation ${invitation.id} successfully activated and URL saved via webhook.`);
     } else if (status === "rejected" || status === "cancelled" || status === "refunded" || status === "charged_back") {
       // Caso de fallo
       await prisma.purchase.upsert({

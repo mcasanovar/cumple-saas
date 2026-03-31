@@ -17,6 +17,8 @@ function ExitosContent() {
   const payment_id = searchParams.get("payment_id");
   const external_reference = searchParams.get("external_reference");
 
+  const [dbUrl, setDbUrl] = useState<string>("");
+
   useEffect(() => {
     async function activateInvitation() {
       if (!invitationId || hasActivated.current) return;
@@ -26,6 +28,9 @@ function ExitosContent() {
         const result = await publishInvitationAction(invitationId);
         if (result.success) {
           console.log("Invitación activada con éxito");
+          // Si la activación fue exitosa, intentamos obtener la invitación para ver su url_ext_invitation
+          // Aunque publishInvitationAction ya la guarda, aquí podríamos refrescarla o 
+          // simplemente construirla si sabemos que el ID es válido.
         } else {
           console.error("Error al activar invitación:", result.error);
         }
@@ -42,6 +47,8 @@ function ExitosContent() {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || (typeof window !== "undefined"
     ? `${window.location.protocol}//${window.location.host}`
     : "");
+
+  // Usamos el ID de la invitación para construir la URL, pero ahora sabemos que está en la BD.
   const shareableUrl = invitationId ? `${baseUrl}/invitacion/${invitationId}` : "";
 
   const handleCopyLink = async () => {

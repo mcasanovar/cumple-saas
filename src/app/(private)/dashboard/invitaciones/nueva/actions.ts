@@ -174,10 +174,16 @@ export async function publishInvitationAction(invitationId: string) {
 
     if (!invitation) throw new Error("Invitation not found");
 
-    // Actualizar estado a published
+    // Actualizar estado a published y guardar URL productiva
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+    const productUrl = `${baseUrl}/invitacion/${invitationId}`;
+
     await prisma.invitation.update({
       where: { id: invitationId },
-      data: { status: "published" },
+      data: {
+        status: "published",
+        url_ext_invitation: productUrl
+      },
     });
 
     return { success: true };

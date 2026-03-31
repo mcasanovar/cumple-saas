@@ -37,10 +37,10 @@ export default async function InvitationViewPage({ params }: InvitationViewPageP
 
   // Parse config data
   const config = invitation.config as any;
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || (typeof window !== "undefined"
-    ? `${window.location.protocol}//${window.location.host}`
-    : "");
-  const shareableUrl = invitation.id ? `${baseUrl}/invitacion/${invitation.id}` : null;
+
+  // Usar la URL guardada en la base de datos o construir una por defecto si no existe
+  const shareableUrl = invitation.url_ext_invitation ||
+    (invitation.id ? `${process.env.NEXT_PUBLIC_BASE_URL || ""}/invitacion/${invitation.id}` : null);
 
   return (
     <div className="min-h-screen bg-gray-50 pb-10">
