@@ -15,6 +15,13 @@ export async function createPaymentPreference(
   formData: Partial<CreationFormData>
 ): Promise<CreatePreferenceResult> {
   try {
+    const { userId: clerkId, sessionClaims } = await auth();
+    if (!clerkId) {
+      return { success: false, error: "No autorizado. Inicia sesión nuevamente." };
+    }
+
+    const userEmail = (sessionClaims as any)?.email || "";
+
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
 
     const template = AVAILABLE_TEMPLATES.find((t) => t.id === formData.templateId);
@@ -36,6 +43,9 @@ export async function createPaymentPreference(
           currency_id: "CLP",
         },
       ],
+      payer: {
+        email: userEmail,
+      },
       back_urls: {
         success: `${baseUrl}/dashboard/pago/exitoso`,
         pending: `${baseUrl}/dashboard/pago/pendiente`,
@@ -55,11 +65,18 @@ export async function createPaymentPreference(
       body: preferenceBody as any,
     });
 
-    // Determinar URL según ambiente usando variable de entorno
-    const isSandbox = process.env.MERCADOPAGO_ENV === "sandbox" || process.env.NODE_ENV === "development";
-    const checkoutUrl = isSandbox ? response.sandbox_init_point : response.init_point;
+    console.log("[createPaymentPreference] MP Response ID:", response.id);
+    console.log("[createPaymentPreference] MP Init Point:", response.init_point);
+    console.log("[createPaymentPreference] MP Sandbox Init Point:", response.sandbox_init_point);
+
+    // Mercado Pago recomienda usar init_point siempre; el modo (sandbox/real) 
+    // se determina automáticamente por el Access Token configurado.
+    // El uso manual de sandbox_init_point a veces causa loops de redirección 
+    // si la sesión del usuario en MP no coincide con el tipo de cuenta.
+    const checkoutUrl = response.init_point;
 
     if (!checkoutUrl) {
+      console.error("[createPaymentPreference] No init_point found in MP response");
       return { success: false, error: "No se pudo obtener la URL de pago." };
     }
 
