@@ -164,7 +164,11 @@ export function useCreationFlow(initialData?: InvitationInitialData | null) {
       const result = await createPaymentPreference(paymentPayload, invitationId ?? undefined);
 
       if (result.success) {
-        window.location.href = result.checkoutUrl;
+        // Abrir Mercado Pago en una pestaña nueva
+        window.open(result.checkoutUrl, "_blank");
+
+        // Redirigir la pestaña actual a la página de procesamiento
+        router.push(`/dashboard/pago/procesando?invitationId=${result.invitationId}`);
       } else {
         setPaymentError(result.error);
         setIsProcessingPayment(false);

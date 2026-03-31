@@ -1,6 +1,13 @@
-import Link from "next/link";
+"use client";
 
-export default function PagoFallidoPage() {
+import { Suspense } from "react";
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+
+function FallidoContent() {
+  const searchParams = useSearchParams();
+  const invitationId = searchParams.get("invitationId");
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-red-50 via-rose-50 to-pink-50 p-6">
       <div className="w-full max-w-lg rounded-3xl bg-white p-10 text-center shadow-xl">
@@ -27,7 +34,7 @@ export default function PagoFallidoPage() {
 
         <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
           <Link
-            href="/dashboard/invitaciones/nueva"
+            href={invitationId ? `/dashboard/invitaciones/nueva?id=${invitationId}` : "/dashboard/invitaciones/nueva"}
             className="rounded-xl bg-[#E63946] px-8 py-3 font-semibold text-white transition hover:bg-[#D62839]"
           >
             Reintentar pago
@@ -41,5 +48,13 @@ export default function PagoFallidoPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function PagoFallidoPage() {
+  return (
+    <Suspense fallback={<div>Cargando...</div>}>
+      <FallidoContent />
+    </Suspense>
   );
 }

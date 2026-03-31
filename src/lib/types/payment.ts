@@ -1,7 +1,7 @@
 export type PaymentStatus = "pending" | "approved" | "rejected" | "cancelled";
 
 export type CreatePreferenceResult =
-  | { success: true; checkoutUrl: string; preferenceId: string }
+  | { success: true; checkoutUrl: string; preferenceId: string; invitationId: string }
   | { success: false; error: string };
 
 export type PaymentCallbackParams = {

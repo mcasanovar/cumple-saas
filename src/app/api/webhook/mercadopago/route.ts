@@ -38,11 +38,11 @@ export async function POST(req: NextRequest) {
     });
 
     if (!invitation) {
-      console.error(`[MP Webhook] Invitation not found: ${externalReference}`);
+      console.error(`[MP Webhook] Invitation not found: ${externalReference} / ${externalReference}`);
       return NextResponse.json({ error: "Invitation not found" }, { status: 404 });
     }
 
-    // Actualizamos el registro de Purchase y el estado de la Invitación si el pago está aprobado
+    // Actualizamos el registro de Purchase y el estado de la Invitación según el estado del pago
     if (status === "approved") {
       await prisma.$transaction([
         // Upsert de la compra
@@ -72,24 +72,44 @@ export async function POST(req: NextRequest) {
         }),
       ]);
       console.log(`[MP Webhook] Invitation ${invitation.id} successfully activated via webhook.`);
-    } else {
-      // Si el pago no está aprobado (ej: pending, rejected), actualizamos solo el estado de la compra
+    } else if (status === "rejected" || status === "cancelled" || status === "refunded" || status === "charged_back") {
+      // Caso de fallo
       await prisma.purchase.upsert({
         where: { invitationId: invitation.id },
         create: {
           invitationId: invitation.id,
           externalReference: externalReference,
           paymentId: paymentId,
-          status: status || "pending",
+          status: "rejected",
           amount: amount || 0,
           currency: "CLP",
         },
         update: {
           paymentId: paymentId,
-          status: status || "pending",
+          status: "rejected",
+          amount: amount || 0,
         },
       });
-      console.log(`[MP Webhook] Purchase status updated to ${status} for invitation ${invitation.id}`);
+      console.log(`[MP Webhook] Purchase status updated to rejected for invitation ${invitation.id}`);
+    } else {
+      // Caso pendiente o en proceso
+      await prisma.purchase.upsert({
+        where: { invitationId: invitation.id },
+        create: {
+          invitationId: invitation.id,
+          externalReference: externalReference,
+          paymentId: paymentId,
+          status: "pending",
+          amount: amount || 0,
+          currency: "CLP",
+        },
+        update: {
+          paymentId: paymentId,
+          status: "pending",
+          amount: amount || 0,
+        },
+      });
+      console.log(`[MP Webhook] Purchase status updated to pending for invitation ${invitation.id}`);
     }
 
     return NextResponse.json({ success: true }, { status: 200 });

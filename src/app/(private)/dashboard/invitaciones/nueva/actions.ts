@@ -88,6 +88,7 @@ export async function createPaymentPreference(
       success: true,
       checkoutUrl,
       preferenceId: response.id ?? "",
+      invitationId,
     };
   } catch (err) {
     console.error("[createPaymentPreference] Error:", err);

@@ -416,7 +416,7 @@ export function LandingView({
           viewport={{ once: true, amount: 0.2 }}
           transition={{ ease: easeOutQuint, duration: 1 }}
         >
-          <RSVPForm invitationId={invitationId} typography={typography} themeToken={themeToken} />
+          <RSVPForm invitationId={invitationId} typography={typography} themeToken={themeToken} isPreview={isPreview} />
         </motion.section>
       </section>
     </div>

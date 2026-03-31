@@ -15,6 +15,7 @@ type RSVPFormProps = {
     body: string;
   };
   themeToken?: ThemeToken;
+  isPreview?: boolean;
 };
 
 function Confetti() {
@@ -55,7 +56,7 @@ function Confetti() {
   );
 }
 
-export function RSVPForm({ invitationId, typography, themeToken }: RSVPFormProps) {
+export function RSVPForm({ invitationId, typography, themeToken, isPreview = false }: RSVPFormProps) {
   const { isDinoTheme, isKPopTheme, isPrincessTheme } = useThemeDetection(themeToken);
   const [willAttend, setWillAttend] = useState<boolean | null>(null);
   const [guestCount, setGuestCount] = useState<number>(1);
@@ -82,6 +83,7 @@ export function RSVPForm({ invitationId, typography, themeToken }: RSVPFormProps
   }, [state.status, willAttend]);
 
   const handleAttendanceChange = (value: boolean) => {
+    if (isPreview) return;
     setWillAttend(value);
     if (!value) {
       setGuestCount(1);
@@ -165,7 +167,8 @@ export function RSVPForm({ invitationId, typography, themeToken }: RSVPFormProps
 
   return (
     <motion.form
-      action={formAction}
+      action={isPreview ? undefined : formAction}
+      onSubmit={isPreview ? (e) => e.preventDefault() : undefined}
       className="relative overflow-hidden rounded-[32px] border border-white/60 bg-white/90 p-8 shadow-[0_24px_80px_rgba(15,11,29,0.12)] backdrop-blur-2xl"
       initial={{ opacity: 0, y: 32 }}
       animate={{ opacity: 1, y: 0 }}
@@ -278,7 +281,8 @@ export function RSVPForm({ invitationId, typography, themeToken }: RSVPFormProps
                   name="guestCount"
                   value={guestCount}
                   onChange={(e) => handleGuestCountChange(Number(e.target.value))}
-                  className="rounded-2xl border border-white/70 bg-white/90 px-4 py-3 text-base text-slate-800 shadow-inner shadow-white/40 outline-none transition focus:border-slate-300 focus:shadow-lg"
+                  disabled={isPreview}
+                  className="rounded-2xl border border-white/70 bg-white/90 px-4 py-3 text-base text-slate-800 shadow-inner shadow-white/40 outline-none transition focus:border-slate-300 focus:shadow-lg disabled:opacity-70"
                   required
                 >
                   {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => (
@@ -299,8 +303,9 @@ export function RSVPForm({ invitationId, typography, themeToken }: RSVPFormProps
                     type="text"
                     value={name}
                     onChange={(e) => handleGuestNameChange(index, e.target.value)}
+                    disabled={isPreview}
                     placeholder={`Nombre de la persona ${index + 1}`}
-                    className="w-full rounded-2xl border border-white/70 bg-white/90 px-4 py-3 text-base text-slate-800 shadow-inner shadow-white/40 outline-none transition focus:border-slate-300 focus:shadow-lg"
+                    className="w-full rounded-2xl border border-white/70 bg-white/90 px-4 py-3 text-base text-slate-800 shadow-inner shadow-white/40 outline-none transition focus:border-slate-300 focus:shadow-lg disabled:opacity-70"
                     required
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
@@ -316,8 +321,9 @@ export function RSVPForm({ invitationId, typography, themeToken }: RSVPFormProps
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
+                  disabled={isPreview}
                   placeholder="tu@email.com"
-                  className="rounded-2xl border border-white/70 bg-white/90 px-4 py-3 text-base text-slate-800 shadow-inner shadow-white/40 outline-none transition focus:border-slate-300 focus:shadow-lg"
+                  className="rounded-2xl border border-white/70 bg-white/90 px-4 py-3 text-base text-slate-800 shadow-inner shadow-white/40 outline-none transition focus:border-slate-300 focus:shadow-lg disabled:opacity-70"
                   required
                 />
               </label>
@@ -341,8 +347,8 @@ export function RSVPForm({ invitationId, typography, themeToken }: RSVPFormProps
 
         {willAttend !== null && (
           <motion.button
-            type="submit"
-            disabled={isPending}
+            type={isPreview ? "button" : "submit"}
+            disabled={isPending || isPreview}
             className="w-full rounded-full px-8 py-4 text-lg font-bold text-white transition hover:-translate-y-0.5 disabled:opacity-50"
             style={{
               background: isDinoTheme
@@ -365,7 +371,7 @@ export function RSVPForm({ invitationId, typography, themeToken }: RSVPFormProps
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
           >
-            {isPending ? "Enviando..." : "Enviar confirmación"}
+            {isPending ? "Enviando..." : isPreview ? "Confirmación deshabilitada en preview" : "Enviar confirmación"}
           </motion.button>
         )}
       </div>
