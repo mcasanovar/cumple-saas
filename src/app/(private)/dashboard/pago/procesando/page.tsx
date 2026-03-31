@@ -25,27 +25,23 @@ function ProcessingContent() {
     const checkStatus = async () => {
       try {
         const response = await fetch(`/api/payments/${invitationId}/status`);
-        const data = await response.json();
+        const data = await response.json() as { status: string; hasPaymentId: boolean };
 
-        console.log("STATUS DB", { response, data });
-
-        if (data.status === "approved") {
-          router.push(`/dashboard/pago/exitoso?invitationId=${invitationId}`);
-          clearInterval(pollInterval);
-        } else if (data.status === "pending" || data.status === "in_process") {
-          // Keep polling, but maybe show a message if it takes too long
-          // The user requested to redirect to pending if it comes as pending from MP
-          // But usually, we want to stay here while it's "in_process"
-          // If the webhook actually settles on "pending" (e.g. cash payment), then we redirect.
-          // For now, let's stick to the user's logic if the status is explicitly "pending"
-          if (data.status === "pending") {
+        // Solo redirigimos si el Webhook ya procesó la respuesta (tiene paymentId)
+        // o si el estado es algo definitivo que no sea el 'pending' inicial.
+        if (data.hasPaymentId) {
+          if (data.status === "approved") {
+            router.push(`/dashboard/pago/exitoso?invitationId=${invitationId}`);
+            clearInterval(pollInterval);
+          } else if (data.status === "pending") {
             router.push(`/dashboard/pago/pendiente?invitationId=${invitationId}`);
             clearInterval(pollInterval);
+          } else if (data.status === "rejected" || data.status === "cancelled") {
+            router.push(`/dashboard/pago/fallido?invitationId=${invitationId}`);
+            clearInterval(pollInterval);
           }
-        } else if (data.status === "rejected" || data.status === "cancelled") {
-          router.push(`/dashboard/pago/fallido?invitationId=${invitationId}`);
-          clearInterval(pollInterval);
         }
+        // Si no tiene paymentId, seguimos en 'procesando' (es el estado inicial del reintento)
       } catch (error) {
         console.error("Error polling payment status:", error);
       }

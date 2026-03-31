@@ -16,15 +16,18 @@ export async function GET(
       where: { invitationId },
       select: {
         status: true,
+        paymentId: true,
       },
     });
 
     if (!purchase) {
-      // Si no hay purchase aún, es que MP no ha enviado el webhook o no se ha iniciado el proceso en DB
       return NextResponse.json({ status: "not_found" });
     }
 
-    return NextResponse.json({ status: purchase.status });
+    return NextResponse.json({
+      status: purchase.status,
+      hasPaymentId: !!purchase.paymentId
+    });
   } catch (error) {
     console.error("[Payment Status API] Error:", error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });

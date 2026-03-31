@@ -84,6 +84,22 @@ export async function createPaymentPreference(
       return { success: false, error: "No se pudo obtener la URL de pago." };
     }
 
+    // Resetear o crear el registro de compra en estado 'pending' para este nuevo intento
+    await prisma.purchase.upsert({
+      where: { invitationId },
+      create: {
+        invitationId,
+        externalReference: invitationId,
+        status: "pending",
+        amount: PRICE_CLP,
+        currency: "CLP",
+      },
+      update: {
+        status: "pending",
+        paymentId: null, // Limpiar el ID de pago anterior si existe
+      },
+    });
+
     return {
       success: true,
       checkoutUrl,
