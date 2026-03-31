@@ -90,27 +90,27 @@ export function IntroPrincessBackground() {
       </svg>
 
       {/* Blanca Nieves */}
-      <div className={`absolute ${isMobile ? 'left-[0%]' : 'left-[18%]'} ${isMobile ? 'top-[60%]' : 'top-[50%]'} bottom-20 z-20`}>
+      <div className={`absolute ${isMobile ? 'left-[0%]' : 'left-[18%]'} ${isMobile ? 'top-[65%]' : 'top-[50%]'} bottom-20 z-0`}>
         <img
           src="/blanca-nieves.png"
           alt="Blanca Nieves"
           style={{
-            opacity: '0.5',
-            width: isMobile ? "130px" : "200px",
-            height: isMobile ? "130px" : "200px",
+            opacity: '0.4',
+            width: isMobile ? "100px" : "200px",
+            height: isMobile ? "100px" : "200px",
           }}
         />
       </div>
 
       {/* Frozen */}
-      <div className={`absolute ${isMobile ? 'right-[0%]' : 'right-[22%]'} ${isMobile ? 'top-[40%]' : 'top-[20%]'} bottom-20 z-20`}>
+      <div className={`absolute ${isMobile ? 'right-[0%]' : 'right-[22%]'} ${isMobile ? 'top-[45%]' : 'top-[20%]'} bottom-20 z-0`}>
         <img
           src="/elsa-frozen.png"
           alt="Frozen Elsa"
           style={{
-            opacity: '0.3',
-            width: isMobile ? "150px" : "220px",
-            height: isMobile ? "150px" : "220px",
+            opacity: '0.2',
+            width: isMobile ? "120px" : "220px",
+            height: isMobile ? "120px" : "220px",
           }}
         />
       </div>
@@ -133,16 +133,15 @@ export function IntroPrincessBackground() {
       </div>
 
       {/* Princesa - capa media encima del castillo */}
-      <div className="absolute inset-0 z-10 flex items-center justify-center">
+      <div className="absolute inset-0 z-0 flex items-center justify-center">
         <img
           src="/princess-2.png"
           alt=""
-          className="opacity-75"
+          className="opacity-40"
           style={{
-            width: isMobile ? "120px" : "250px",
+            width: isMobile ? "100px" : "250px",
             height: "auto",
-            // transform: "translateY(-10%)",
-            filter: "drop-shadow(0 10px 30px rgba(255, 20, 147, 0.3))",
+            filter: "drop-shadow(0 10px 30px rgba(255, 20, 147, 0.2))",
             mixBlendMode: "multiply",
           }}
         />

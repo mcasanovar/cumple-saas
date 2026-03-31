@@ -53,7 +53,7 @@ export function IntroKPopView({
   return (
     <motion.section
       key="invitation-intro-kpop"
-      className="relative flex max-h-screen flex-col items-center overflow-hidden px-4 sm:px-10 justify-center pt-0 w-full"
+      className="relative flex h-[100dvh] flex-col items-center overflow-hidden px-4 sm:px-10 justify-between py-16 sm:py-20 w-full"
       initial="hidden"
       animate="visible"
       exit="exit"
@@ -123,11 +123,11 @@ export function IntroKPopView({
 
       {/* Top section with text content */}
       <motion.div
-        className="relative z-20 flex h-screen w-full max-w-[min(560px,92vw)] flex-col items-center justify-start mt-6 lg:mt-40 gap-8 lg:gap-12"
+        className="relative z-20 flex w-full max-w-[min(560px,92vw)] flex-col items-center justify-start gap-4 sm:gap-8 mt-4 sm:mt-8"
         variants={frameVariants}
       >
         <motion.div
-          className="flex w-full items-center justify-center"
+          className="flex w-full items-center justify-center scale-90 sm:scale-100"
           initial={{ opacity: 0, y: -24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, ease: easeOutQuart, delay: 0.2 }}
@@ -136,7 +136,7 @@ export function IntroKPopView({
         </motion.div>
 
         <motion.p
-          className="text-xs lg:text-xl uppercase text-center tracking-[0.45em] text-[#f363b4]"
+          className="text-[10px] sm:text-lg uppercase text-center tracking-[0.45em] text-[#f363b4]"
           style={{ fontFamily: typography.body }}
           custom={0}
           variants={headingVariants}
@@ -145,7 +145,7 @@ export function IntroKPopView({
         </motion.p>
 
         <motion.h1
-          className="text-center md:text-5xl font-black uppercase bg-[#b98ece] bg-clip-text drop-shadow-sm sm:text-3xl tracking-[0.2em] text-transparent"
+          className="text-center text-xl sm:text-5xl font-black uppercase bg-[#b98ece] bg-clip-text drop-shadow-sm tracking-[0.2em] text-transparent"
           custom={1}
           variants={headingVariants}
         >
@@ -153,14 +153,13 @@ export function IntroKPopView({
         </motion.h1>
 
         <motion.h2
-          className="text-center text-6xl font-black bg-[#f363b4] bg-clip-text uppercase tracking-tight sm:text-8xl -mt-4"
+          className="text-center text-3xl sm:text-8xl font-black bg-[#f363b4] bg-clip-text uppercase tracking-tight -mt-2 sm:-mt-4"
           custom={2}
           variants={headingVariants}
         >
           {subtitlePrefix}
           <span
-            style={{ fontSize: isMobile ? "1.5em" : "1em" }}
-            className="text-transparent bg-[#f363b4] bg-clip-text"
+            className="text-transparent bg-[#f363b4] bg-clip-text text-3xl sm:text-8xl"
           >
             {celebrantName}
           </span>
@@ -168,7 +167,7 @@ export function IntroKPopView({
         </motion.h2>
 
         <motion.p
-          className="max-w-[85%] text-center md:text-xl text-base text-[#b98ece] font-bold -mt-4"
+          className="max-w-[85%] text-center text-sm sm:text-xl text-[#b98ece] font-bold -mt-2 sm:-mt-4 leading-relaxed"
           style={{ fontFamily: typography.body }}
           custom={4}
           variants={headingVariants}
@@ -179,12 +178,12 @@ export function IntroKPopView({
 
       {/* Bottom section with details and button */}
       <motion.div
-        className="relative z-20 flex w-full h-screen max-w-[min(560px,92vw)] flex-col items-center justify-between mb-10 lg:mb-[5vh] gap-10"
+        className="relative z-20 flex w-full max-w-[min(560px,92vw)] flex-col items-center justify-end gap-6 sm:gap-10 mb-4 sm:mb-8"
         variants={frameVariants}
       >
         {/* Date and Time section for K-pop theme */}
         <motion.div
-          className="grid w-full grid-cols-[auto_minmax(0,1fr)_auto] items-start gap-5 px-2 -mt-6"
+          className="grid w-full grid-cols-[auto_minmax(0,1fr)_auto] items-start gap-5 px-2"
           custom={5}
           variants={headingVariants}
         >
@@ -197,7 +196,7 @@ export function IntroKPopView({
           />
           <motion.span
             aria-hidden
-            className="block h-12 w-[2px] rounded-full"
+            className="block h-10 sm:h-12 w-[2px] rounded-full self-center"
             style={{
               background: "linear-gradient(180deg, #f15bb5 0%, #4361ee 100%)",
             }}

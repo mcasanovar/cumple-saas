@@ -30,12 +30,12 @@ export function IntroDetailColumn({ data, align, typography, isPrincessTheme, is
       transition={{ duration: 0.6, ease: easeOutQuart, delay: 0.55 }}
       style={{ textAlign: align, fontFamily: typography?.body }}
     >
-      <span className={isPrincessTheme ? "text-sm font-semibold uppercase tracking-[0.3em]" : isKPopTheme ? "text-sm font-bold uppercase tracking-[0.3em]" : "text-sm font-semibold uppercase tracking-[0.3em] text-amber-900/80"} style={{ color: textColor }}>
+      <span className={isPrincessTheme ? "text-[10px] sm:text-sm font-semibold uppercase tracking-[0.3em]" : isKPopTheme ? "text-[10px] sm:text-sm font-bold uppercase tracking-[0.3em]" : "text-[10px] sm:text-sm font-semibold uppercase tracking-[0.3em] text-amber-900/80"} style={{ color: textColor }}>
         {data.title}
       </span>
-      <span className={isPrincessTheme ? "text-2xl font-extrabold uppercase" : isKPopTheme ? "text-2xl font-black uppercase" : "text-2xl font-extrabold uppercase text-slate-900"} style={{ fontFamily: typography?.heading, color: textSecondaryColor }}>{data.subtitle}</span>
+      <span className={isPrincessTheme ? "text-lg sm:text-2xl font-extrabold uppercase" : isKPopTheme ? "text-lg sm:text-2xl font-black uppercase" : "text-lg sm:text-2xl font-extrabold uppercase text-slate-900"} style={{ fontFamily: typography?.heading, color: textSecondaryColor }}>{data.subtitle}</span>
       {data.helper ? (
-        <span className={isPrincessTheme ? "text-xs uppercase tracking-[0.25em]" : isKPopTheme ? "text-xs font-bold uppercase tracking-[0.25em]" : "text-xs uppercase tracking-[0.25em] text-slate-500"} style={{ color: textColor }}>{data.helper}</span>
+        <span className={isPrincessTheme ? "text-[8px] sm:text-xs uppercase tracking-[0.25em]" : isKPopTheme ? "text-[8px] sm:text-xs font-bold uppercase tracking-[0.25em]" : "text-[8px] sm:text-xs uppercase tracking-[0.25em] text-slate-500"} style={{ color: textColor }}>{data.helper}</span>
       ) : null}
     </motion.div>
   );

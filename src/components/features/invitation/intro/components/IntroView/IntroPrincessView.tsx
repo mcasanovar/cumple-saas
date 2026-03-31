@@ -40,7 +40,7 @@ export function IntroPrincessView({
 
   return (
     <motion.section
-      className="relative flex max-h-screen flex-col items-center overflow-hidden px-4 sm:px-10 justify-center pt-0 w-full"
+      className="relative flex h-[100dvh] flex-col items-center overflow-hidden px-4 sm:px-10 justify-between py-16 sm:py-20 w-full"
       initial="hidden"
       animate="visible"
       exit="exit"
@@ -49,11 +49,11 @@ export function IntroPrincessView({
       <IntroPetalConfetti />
 
       <motion.div
-        className="relative z-20 flex h-screen w-full max-w-[min(560px,92vw)] flex-col items-center justify-start my-20 gap-12"
+        className="relative z-20 flex w-full max-w-[min(560px,92vw)] flex-col items-center justify-start gap-4 sm:gap-8 mt-4 sm:mt-8"
         variants={frameVariants}
       >
         <motion.h1
-          className="text-center text-3xl font-black uppercase drop-shadow-sm sm:text-3xl tracking-normal"
+          className="text-center text-xl sm:text-3xl font-black uppercase drop-shadow-sm tracking-normal"
           style={{
             fontFamily: typography.heading,
             color: "#9278b9",
@@ -65,7 +65,7 @@ export function IntroPrincessView({
         </motion.h1>
 
         <motion.h2
-          className="text-center text-4xl font-black uppercase tracking-tight sm:text-7xl -mt-4"
+          className="text-center text-3xl sm:text-7xl font-black uppercase tracking-tight -mt-1 sm:-mt-4"
           style={{
             fontFamily: typography.heading,
             color: "#6c5491",
@@ -74,11 +74,11 @@ export function IntroPrincessView({
           variants={headingVariants}
         >
           {subtitlePrefix && <span>{subtitlePrefix.toUpperCase()} </span>}
-          <span style={{ fontSize: isMobile ? "1.5em" : "1em" }}>{celebrantName.toUpperCase()}</span>
+          <span className="text-3xl sm:text-7xl">{celebrantName.toUpperCase()}</span>
           {subtitleSuffix && <span> {subtitleSuffix.toUpperCase()}</span>}
         </motion.h2>
         <motion.p
-          className="max-w-[85%] text-center text-base text-slate-600 -mt-4"
+          className="max-w-[85%] text-center text-xs sm:text-xl text-slate-600 -mt-1 sm:-mt-4 leading-relaxed"
           style={{ fontFamily: typography.body }}
           custom={4}
           variants={headingVariants}
@@ -87,11 +87,11 @@ export function IntroPrincessView({
         </motion.p>
       </motion.div>
       <motion.div
-        className="relative z-20 flex w-full h-screen max-w-[min(560px,92vw)] flex-col items-center justify-end mb-[10vh] gap-10"
+        className="relative z-20 flex w-full max-w-[min(560px,92vw)] flex-col items-center justify-end gap-6 sm:gap-10 mb-4 sm:mb-8"
         variants={frameVariants}
       >
         <motion.div
-          className="grid w-full grid-cols-[auto_minmax(0,1fr)_auto] items-start gap-5 px-2 -mt-6"
+          className="grid w-full grid-cols-[auto_minmax(0,1fr)_auto] items-start gap-3 sm:gap-5 px-2"
           custom={3}
           variants={headingVariants}
         >
@@ -103,7 +103,7 @@ export function IntroPrincessView({
           />
           <motion.span
             aria-hidden
-            className="block h-12 w-[2px] rounded-full bg-amber-700/20"
+            className="block h-10 sm:h-12 w-[2px] rounded-full bg-amber-700/20 self-center"
             initial={{ scaleY: 0 }}
             animate={{ scaleY: 1 }}
             transition={{ duration: 0.6, delay: 0.55, ease: easeOutQuart }}

@@ -10,7 +10,7 @@ export function IntroKPopBackground() {
     <div className="pointer-events-none absolute inset-0 overflow-hidden">
       {/* K-pop character image */}
       <motion.div
-        className="absolute inset-x-0 bottom-0 flex items-end justify-center z-0"
+        className="absolute inset-x-0 bottom-0 flex items-end justify-center z-10"
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 1.2, delay: 0.3, ease: [0.34, 1.56, 0.64, 1] }}
@@ -19,7 +19,7 @@ export function IntroKPopBackground() {
           <img
             src="/k-pop.png"
             alt="K-pop character"
-            className="h-[32vh] md:h-[600px] w-auto object-contain opacity-80 md:opacity-90"
+            className="h-[30dvh] md:h-[500px] w-auto object-contain opacity-70 md:opacity-90"
           />
         </div>
       </motion.div>

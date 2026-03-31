@@ -39,24 +39,24 @@ export function IntroCrackedBackground() {
       <img
         src="/t-rex.svg"
         alt=""
-        className="absolute bottom-24 -translate-x-1/2 opacity-30"
+        className="absolute bottom-24 -translate-x-1/2 opacity-20 sm:opacity-30"
         style={{ left: isMobile ? 'calc(50% - 10px)' : 'calc(50% - 190px)' }}
-        width="280"
-        height="280"
+        width={isMobile ? "200" : "280"}
+        height={isMobile ? "200" : "280"}
       />
 
       {/* T-Rex */}
       <img
         src="/dinousar-1.svg"
         alt="Dinosaurio 1"
-        className="absolute left-12 top-1/4 opacity-60"
+        className="absolute left-4 sm:left-12 top-1/4 opacity-40 sm:opacity-60 scale-75 sm:scale-100"
         width="190"
         height="190"
       />
 
       {/* Hojas tropicales - Inferior izquierda */}
       <svg
-        className="absolute left-0 bottom-12 opacity-70"
+        className="absolute left-0 bottom-4 sm:bottom-12 opacity-50 sm:opacity-70 scale-75 sm:scale-100"
         width="200"
         height="160"
         viewBox="0 0 200 160"
@@ -78,14 +78,14 @@ export function IntroCrackedBackground() {
       <img
         src="/dinousar-2.svg"
         alt=""
-        className="absolute right-8 top-1/2 opacity-20"
-        width={isMobile ? '120' : '200'}
-        height={isMobile ? '120' : '200'}
+        className="absolute right-4 sm:right-8 top-1/2 -translate-y-1/2 opacity-15 sm:opacity-20"
+        width={isMobile ? '100' : '200'}
+        height={isMobile ? '100' : '200'}
       />
 
       {/* Hojas tropicales - Inferior derecha */}
       <svg
-        className="absolute -right-4 bottom-8 opacity-70"
+        className="absolute -right-4 bottom-4 sm:bottom-8 opacity-50 sm:opacity-70 scale-75 sm:scale-100"
         width="180"
         height="200"
         viewBox="0 0 180 200"
