@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server'
 import { updateSession } from '@/utils/supabase/middleware'
 
 const isProtectedRoute = createRouteMatcher(['/dashboard(.*)'])
-const isPublicRoute = createRouteMatcher(['/', '/sign-in(.*)', '/sign-up(.*)', '/invitacion/(.*)'])
+// const isPublicRoute = createRouteMatcher(['/', '/sign-in(.*)', '/sign-up(.*)', '/invitacion/(.*)'])
 
 export default clerkMiddleware(async (auth, req) => {
   try {
