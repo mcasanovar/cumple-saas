@@ -20,18 +20,37 @@ export async function syncUserWithDb() {
     // Upsert user in our database
     console.log(`Syncing user: ${clerkId} (${email})`);
 
-    const dbUser = await prisma.user.upsert({
+    // Intentar encontrar al usuario por clerkId primero
+    let dbUser = await prisma.user.findUnique({
       where: { clerkId },
-      update: {
-        email,
-        name,
-      },
-      create: {
-        clerkId,
-        email,
-        name,
-      },
     });
+
+    if (dbUser) {
+      // Actualizar si existe
+      dbUser = await prisma.user.update({
+        where: { clerkId },
+        data: { email, name },
+      });
+    } else {
+      // Si no existe por clerkId, buscar por email para evitar P2002
+      const existingUserByEmail = email
+        ? await prisma.user.findUnique({ where: { email } })
+        : null;
+
+      if (existingUserByEmail) {
+        // Vincular clerkId al usuario existente por email
+        console.log(`Linking existing user ${existingUserByEmail.id} with new clerkId ${clerkId}`);
+        dbUser = await prisma.user.update({
+          where: { id: existingUserByEmail.id },
+          data: { clerkId, name },
+        });
+      } else {
+        // Crear nuevo usuario si no existe de ninguna forma
+        dbUser = await prisma.user.create({
+          data: { clerkId, email, name },
+        });
+      }
+    }
 
     console.log(`User synced successfully: ${dbUser.id}`);
     return dbUser;
