@@ -36,10 +36,8 @@ export function useCreationFlow(initialData?: InvitationInitialData | null) {
   }, [formData]);
 
   const handleOpenPreview = useCallback(() => {
-    // Para el preview completo en pestaña nueva, usamos localStorage
-    // Nota: Las imágenes cargadas por el usuario podrían no persistir si son Files
-    // en una recarga directa de la nueva pestaña, pero el flujo continuo funcionará.
-    window.open("/invitacion/preview", "_blank");
+    // Para el preview completo en la misma pestaña para evitar bloqueos de Safari
+    window.location.href = "/invitacion/preview";
   }, []);
 
   const goToNextStep = useCallback(async () => {
@@ -150,6 +148,10 @@ export function useCreationFlow(initialData?: InvitationInitialData | null) {
 
   const handlePurchase = useCallback(async () => {
     if (!isStepValid) return;
+
+    // Pre-abrir la ventana para evitar bloqueo de pop-ups en Safari
+    const paymentWindow = window.open("about:blank", "_blank");
+
     try {
       setIsProcessingPayment(true);
       setPaymentError(null);
@@ -163,22 +165,28 @@ export function useCreationFlow(initialData?: InvitationInitialData | null) {
       const { createPaymentPreference } = await import("@/app/(private)/dashboard/invitaciones/nueva/actions");
       const result = await createPaymentPreference(paymentPayload, invitationId ?? undefined);
 
-      if (result.success) {
-        // Abrir Mercado Pago en una pestaña nueva
-        window.open(result.checkoutUrl, "_blank");
+      if (result.success && paymentWindow) {
+        // Redirigir la ventana ya abierta a Mercado Pago
+        paymentWindow.location.href = result.checkoutUrl;
 
         // Redirigir la pestaña actual a la página de procesamiento
         router.push(`/dashboard/pago/procesando?invitationId=${result.invitationId}`);
       } else {
-        setPaymentError(result.error);
+        paymentWindow?.close();
+        if (!result.success) {
+          setPaymentError(result.error);
+        } else {
+          setPaymentError("No se pudo abrir la ventana de pago. Por favor, intenta de nuevo.");
+        }
         setIsProcessingPayment(false);
       }
     } catch (err) {
+      paymentWindow?.close();
       console.error("Error initiating purchase:", err);
       setPaymentError("Ocurrió un error inesperado al intentar pagar.");
       setIsProcessingPayment(false);
     }
-  }, [formData, isStepValid]);
+  }, [formData, isStepValid, invitationId, router]);
 
   return {
     currentStep,

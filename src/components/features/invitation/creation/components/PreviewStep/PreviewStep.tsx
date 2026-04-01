@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { mapFormDataToRenderConfig } from "@/lib/templates/preview-utils";
 import { InvitationExperience } from "@/components/features/invitation/InvitationExperience";
 import { PRICE_CLP, AVAILABLE_TEMPLATES } from "../../constants";
+import { formatDateLong } from "@/utils/date";
 import type { CreationFormData } from "../../types";
 
 export type PreviewStepProps = {
@@ -151,7 +152,7 @@ export function PreviewStep({
                       {formData.venueName} — {formData.venueAddress}
                     </p>
                     <p className="text-gray-600">
-                      {formData.eventDate} a las {formData.eventTime}
+                      {formatDateLong(formData.eventDate)} a las {formData.eventTime}
                     </p>
                   </div>
                 </div>
