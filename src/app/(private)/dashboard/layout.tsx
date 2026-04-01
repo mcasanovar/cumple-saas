@@ -66,7 +66,9 @@ export default function DashboardLayout({
         {/* Mobile header */}
         <header className="sticky top-0 z-30 border-b border-gray-200 bg-white md:hidden">
           <div className="flex items-center justify-between p-4">
-            <Logo />
+            <Link href="/">
+              <Logo />
+            </Link>
             <UserButton
               appearance={{
                 elements: {
