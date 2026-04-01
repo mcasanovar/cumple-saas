@@ -8,7 +8,7 @@ import prisma from "@/lib/prisma";
 export async function syncUserWithDb() {
   try {
     const user = await currentUser();
-    
+
     if (!user) {
       return null;
     }
@@ -18,6 +18,8 @@ export async function syncUserWithDb() {
     const name = `${user.firstName || ""} ${user.lastName || ""}`.trim() || null;
 
     // Upsert user in our database
+    console.log(`Syncing user: ${clerkId} (${email})`);
+
     const dbUser = await prisma.user.upsert({
       where: { clerkId },
       update: {
@@ -31,9 +33,14 @@ export async function syncUserWithDb() {
       },
     });
 
+    console.log(`User synced successfully: ${dbUser.id}`);
     return dbUser;
   } catch (error) {
     console.error("Error syncing user with database:", error);
+    if (error instanceof Error) {
+      console.error("Error details:", error.message);
+      console.error("Stack trace:", error.stack);
+    }
     return null;
   }
 }
