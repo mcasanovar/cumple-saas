@@ -1,6 +1,8 @@
 import { redirect } from "next/navigation";
 import { syncUserWithDb } from "@/lib/auth-sync";
 
+export const dynamic = "force-dynamic";
+
 type PrivateLayoutProps = {
   children: React.ReactNode;
 };
