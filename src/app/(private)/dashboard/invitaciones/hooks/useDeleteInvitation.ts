@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useTransition } from "react";
+import { useState, useCallback, useTransition, useEffect } from "react";
 import { useActionState } from "react";
 import { deleteInvitation, type DeleteInvitationState } from "@/app/(private)/dashboard/invitaciones/actions";
 
@@ -30,7 +30,18 @@ export function useDeleteInvitation(): UseDeleteInvitationReturn {
     { status: "idle" }
   );
 
+  // Estado local para la UI que podemos resetear
+  const [uiState, setUiState] = useState<DeleteInvitationState>({ status: "idle" });
+
+  // Sincronizar el estado de la acción con la UI
+  useEffect(() => {
+    if (state.status !== "idle") {
+      setUiState(state);
+    }
+  }, [state]);
+
   const openModal = useCallback((invitation: DeleteInvitationData) => {
+    setUiState({ status: "idle" }); // Resetear estado al abrir
     setSelectedInvitation(invitation);
     setIsModalOpen(true);
   }, []);
@@ -38,6 +49,7 @@ export function useDeleteInvitation(): UseDeleteInvitationReturn {
   const closeModal = useCallback(() => {
     setIsModalOpen(false);
     setSelectedInvitation(null);
+    setUiState({ status: "idle" }); // Resetear estado al cerrar
   }, []);
 
   const handleDelete = useCallback(() => {
@@ -49,19 +61,22 @@ export function useDeleteInvitation(): UseDeleteInvitationReturn {
     startTransition(() => {
       formAction(formData);
     });
-  }, [selectedInvitation, formAction, startTransition]);
+  }, [selectedInvitation, formAction]);
 
   // Auto-close modal on success
-  if (state.status === "success" && isModalOpen) {
-    setTimeout(() => {
-      closeModal();
-    }, 1500);
-  }
+  useEffect(() => {
+    if (uiState.status === "success" && isModalOpen) {
+      const timer = setTimeout(() => {
+        closeModal();
+      }, 1500);
+      return () => clearTimeout(timer);
+    }
+  }, [uiState.status, isModalOpen, closeModal]);
 
   return {
     isModalOpen,
     selectedInvitation,
-    state,
+    state: uiState,
     isPending,
     openModal,
     closeModal,
