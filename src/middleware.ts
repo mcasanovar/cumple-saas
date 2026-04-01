@@ -1,20 +1,29 @@
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server'
+import { NextResponse } from 'next/server'
 import { updateSession } from '@/utils/supabase/middleware'
 
 const isProtectedRoute = createRouteMatcher(['/dashboard(.*)'])
 const isPublicRoute = createRouteMatcher(['/', '/sign-in(.*)', '/sign-up(.*)', '/invitacion/(.*)'])
 
 export default clerkMiddleware(async (auth, req) => {
-  const { userId } = await auth()
+  try {
+    const { userId } = await auth()
 
-  // Si el usuario está autenticado y está en una ruta pública (como la landing), redirigir al dashboard
-  if (userId && isPublicRoute(req) && req.nextUrl.pathname === '/') {
-    const dashboardUrl = new URL('/dashboard/invitaciones', req.url)
-    return Response.redirect(dashboardUrl)
+    // Si el usuario está autenticado y está en la raíz, redirigir al dashboard
+    if (userId && req.nextUrl.pathname === '/') {
+      const dashboardUrl = new URL('/dashboard/invitaciones', req.url)
+      return NextResponse.redirect(dashboardUrl)
+    }
+
+    if (isProtectedRoute(req)) {
+      await auth.protect()
+    }
+
+    return await updateSession(req)
+  } catch (error) {
+    console.error('Middleware error:', error)
+    return await updateSession(req)
   }
-
-  if (isProtectedRoute(req)) await auth.protect()
-  return await updateSession(req)
 })
 
 export const config = {
