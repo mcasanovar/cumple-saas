@@ -17,6 +17,12 @@ export async function getInvitationById(
     if (invitation && invitation.config) {
       const config = invitation.config as Partial<UserInvitationData>;
 
+      // Validar que tengamos un templateId válido antes de proceder
+      if (!invitation.templateId && !config.templateId) {
+        console.warn(`[getInvitationById] Invitation ${invitationId} has no templateId`);
+        return undefined;
+      }
+
       return {
         id: invitation.id,
         userId: invitation.userId,
@@ -98,7 +104,13 @@ export async function getInvitationBySlug(
 export async function getAllInvitationIds(): Promise<Array<{ invitationId: string }>> {
   // 1. Try to fetch from Prisma
   try {
+    // Solo generar rutas estáticas para invitaciones pagadas y publicadas
     const invitations = await prisma.invitation.findMany({
+      where: {
+        isPaid: true,
+        status: "published",
+        templateId: { not: "" }
+      },
       select: { id: true },
     });
 
@@ -107,11 +119,16 @@ export async function getAllInvitationIds(): Promise<Array<{ invitationId: strin
         invitationId: inv.id,
       }));
     }
+
+    // Si no hay invitaciones que cumplan el criterio, devolvemos un array vacío
+    // para no intentar prerenderizar borradores
+    return [];
   } catch (error) {
     console.error("Error fetching all invitation IDs from Prisma:", error);
   }
 
-  // 2. Fallback to mock data
+  // 2. Fallback to mock data (solo si Prisma falla y estamos en desarrollo/demo)
+  // En producción real, probablemente querríamos que esto fuera solo Prisma
   return userInvitations.map((inv) => ({
     invitationId: inv.id,
   }));
