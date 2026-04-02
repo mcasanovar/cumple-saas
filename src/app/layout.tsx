@@ -28,7 +28,7 @@ const kalam = Kalam({
 export const metadata: Metadata = {
   metadataBase: new URL("https://cumplesaas.example"),
   title: {
-    default: "nvitame | Invitaciones digitales premium",
+    default: "CumpleSaaS | Invitaciones digitales premium",
     template: "%s | CumpleSaaS",
   },
   description:
