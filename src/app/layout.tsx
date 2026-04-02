@@ -26,10 +26,10 @@ const kalam = Kalam({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://nvitame.com"),
+  metadataBase: new URL("https://cumplesaas.example"),
   title: {
-    default: "nvitame | Invitaciones digitales premium con animaciones",
-    template: "%s | nvitame",
+    default: "nvitame | Invitaciones digitales premium",
+    template: "%s | CumpleSaaS",
   },
   description:
     "Experiencias digitales mágicas para cumpleaños infantiles. Personaliza invitaciones con transiciones inmersivas y RSVP integrado.",
