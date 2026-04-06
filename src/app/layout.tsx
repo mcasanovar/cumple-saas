@@ -26,10 +26,10 @@ const kalam = Kalam({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://cumplesaas.example"),
+  metadataBase: new URL("https://nvitame.com"),
   title: {
-    default: "CumpleSaaS | Invitaciones digitales premium",
-    template: "%s | CumpleSaaS",
+    default: "nvitame | Invitaciones digitales premium",
+    template: "%s | nvitame",
   },
   description:
     "Experiencias digitales mágicas para cumpleaños infantiles. Personaliza invitaciones con transiciones inmersivas y RSVP integrado.",
@@ -42,7 +42,7 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
-      <html lang="en">
+      <html lang="es">
         <body className={`${baloo.variable} ${greatVibes.variable} ${kalam.variable} antialiased`}>
           {children}
         </body>
