@@ -8,6 +8,7 @@ import type {
   ThemeToken,
   EventFeature,
 } from "@/lib/types/invitation";
+import { getDateComponents } from "@/utils/date";
 
 const FALLBACK_SCENE: IntroSceneConfig = {
   backgroundGradient:
@@ -86,20 +87,12 @@ export function useLandingContent(invitation: InvitationConfig, theme: ThemeConf
 
     const scene = theme.introScene ?? FALLBACK_SCENE;
 
-    const eventDate = countdown?.targetDateISO ? new Date(countdown.targetDateISO) : null;
-    const isValidDate = eventDate && !Number.isNaN(eventDate.getTime());
+    const dateComponents = getDateComponents(countdown?.targetDateISO || event.date);
 
-    const weekdayFormatter = isValidDate ? new Intl.DateTimeFormat("es-ES", { weekday: "long" }) : null;
-    const monthFormatter = isValidDate ? new Intl.DateTimeFormat("es-ES", { month: "short" }) : null;
-
-    const weekdayLabel = weekdayFormatter
-      ? weekdayFormatter.format(eventDate!).replace(/\.$/, "").toUpperCase()
-      : event.date.split(",")[0]?.trim().toUpperCase() ?? "";
-    const dayNumber = isValidDate ? eventDate!.getDate().toString().padStart(2, "0") : "";
-    const monthLabel = monthFormatter
-      ? monthFormatter.format(eventDate!).replace(/\.$/, "").toUpperCase()
-      : "";
-    const yearLabel = isValidDate ? eventDate!.getFullYear().toString() : "";
+    const weekdayLabel = dateComponents?.weekday ?? "";
+    const dayNumber = dateComponents?.day ?? "";
+    const monthLabel = dateComponents?.monthShort ?? "";
+    const yearLabel = dateComponents?.year ?? "";
 
     const heroTopLine = hero.headline.includes(event.celebrantName)
       ? hero.headline.replace(event.celebrantName, "").trim() || hero.headline

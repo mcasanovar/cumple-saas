@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
+import { formatDateLong } from "@/utils/date";
 import prisma from "@/lib/prisma";
 import type { RSVPActionState } from "@/lib/types/invitation";
 import { resend } from "@/lib/resend";
@@ -111,12 +112,7 @@ export async function submitRSVP(
     // 2. Correo al Invitado (si proporcionó email)
     if (email) {
       try {
-        const eventDateStr = invitation.eventDate.toLocaleDateString('es-CL', {
-          weekday: 'long',
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric'
-        });
+        const eventDateStr = formatDateLong(invitation.eventDate);
 
         await resend.emails.send({
           from: "nvitame.com <hola@nvitame.com>",
