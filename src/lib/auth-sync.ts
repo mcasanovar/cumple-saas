@@ -1,5 +1,7 @@
 import { currentUser } from "@clerk/nextjs/server";
 import prisma from "@/lib/prisma";
+import { resend } from "./resend";
+import WelcomeEmail from "@/emails/WelcomeEmail";
 
 /**
  * Synchronizes the current Clerk user with our PostgreSQL database.
@@ -15,7 +17,7 @@ export async function syncUserWithDb() {
 
     const clerkId = user.id;
     const email = user.emailAddresses[0]?.emailAddress;
-    const name = `${user.firstName || ""} ${user.lastName || ""}`.trim() || null;
+    const name = `${user.firstName || ""} ${user.lastName || ""}`.trim() || user.username || null;
 
     // Upsert user in our database
     console.log(`Syncing user: ${clerkId} (${email})`);
@@ -49,6 +51,21 @@ export async function syncUserWithDb() {
         dbUser = await prisma.user.create({
           data: { clerkId, email, name },
         });
+
+        // ENVIAR CORREO DE BIENVENIDA SOLO CUANDO SE CREA
+        if (email) {
+          try {
+            await resend.emails.send({
+              from: "nvitame.com <hola@nvitame.com>",
+              to: email,
+              subject: "¡Bienvenido a nvitame! 🎂",
+              react: WelcomeEmail({ userName: name || undefined }),
+            });
+            console.log(`Welcome email sent to ${email}`);
+          } catch (mailError) {
+            console.error("Error sending welcome email:", mailError);
+          }
+        }
       }
     }
 

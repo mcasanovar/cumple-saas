@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { Payment } from "mercadopago";
 import { mercadopagoClient } from "@/lib/mercadopago";
 import prisma from "@/lib/prisma";
+import { resend } from "@/lib/resend";
+import PaymentConfirmationEmail from "@/emails/PaymentConfirmationEmail";
 
 export async function POST(req: NextRequest) {
   try {
@@ -32,13 +34,14 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Missing external_reference" }, { status: 400 });
     }
 
-    // Buscamos la invitación
+    // Buscamos la invitación e incluimos al usuario para el envío del correo
     const invitation = await prisma.invitation.findUnique({
       where: { id: externalReference },
+      include: { user: true },
     });
 
     if (!invitation) {
-      console.error(`[MP Webhook] Invitation not found: ${externalReference} / ${externalReference}`);
+      console.error(`[MP Webhook] Invitation not found: ${externalReference}`);
       return NextResponse.json({ error: "Invitation not found" }, { status: 404 });
     }
 
@@ -75,7 +78,27 @@ export async function POST(req: NextRequest) {
           },
         }),
       ]);
-      console.log(`[MP Webhook] Invitation ${invitation.id} successfully activated and URL saved via webhook.`);
+      console.log(`[MP Webhook] Invitation ${invitation.id} successfully activated.`);
+
+      // ENVIAR CORREO DE CONFIRMACIÓN DE PAGO
+      if (invitation.user?.email) {
+        try {
+          await resend.emails.send({
+            from: "nvitame.com <hola@nvitame.com>",
+            to: invitation.user.email,
+            subject: "¡Pago Confirmado! Tu invitación está lista 🎂",
+            react: PaymentConfirmationEmail({
+              userName: invitation.user.name || "Cliente",
+              invitationId: invitation.id,
+              amount: amount || 5990,
+              celebrantName: invitation.celebrantName,
+            }),
+          });
+          console.log(`Payment confirmation email sent to ${invitation.user.email}`);
+        } catch (mailError) {
+          console.error("Error sending payment confirmation email:", mailError);
+        }
+      }
     } else if (status === "rejected" || status === "cancelled" || status === "refunded" || status === "charged_back") {
       // Caso de fallo
       await prisma.purchase.upsert({
