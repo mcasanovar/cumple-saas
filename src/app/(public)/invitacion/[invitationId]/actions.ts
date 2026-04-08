@@ -4,6 +4,9 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import prisma from "@/lib/prisma";
 import type { RSVPActionState } from "@/lib/types/invitation";
+import { resend } from "@/lib/resend";
+import RSVPToHostEmail from "@/emails/RSVPToHostEmail";
+import RSVPToGuestEmail from "@/emails/RSVPToGuestEmail";
 
 const rsvpSchema = z.object({
   invitationId: z.string().min(1, "ID de invitación requerido"),
@@ -38,6 +41,7 @@ export async function submitRSVP(
     // Verify if invitation exists in DB
     const invitation = await prisma.invitation.findUnique({
       where: { id: invitationId },
+      include: { user: true },
     });
 
     if (!invitation) {
@@ -67,16 +71,71 @@ export async function submitRSVP(
     }
 
     // Save to DB
+    const guestName = guestNames?.[0] || "Invitado";
     await prisma.rSVP.create({
       data: {
         invitationId,
-        name: guestNames?.[0] || "Invitado", // Usar el primer nombre del array o "Invitado" como fallback
+        name: guestName,
         email: email || null,
         willAttend,
         guestCount,
         guestNames: guestNames || [],
       },
     });
+
+    // ENVIAR CORREOS
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+    const invitationUrl = `${baseUrl}/invitacion/${invitationId}`;
+
+    // 1. Correo al Host (dueño de la invitación)
+    if (invitation.user?.email) {
+      try {
+        await resend.emails.send({
+          from: "nvitame.com <hola@nvitame.com>",
+          to: invitation.user.email,
+          subject: `${guestName} ha respondido a tu invitación`,
+          react: RSVPToHostEmail({
+            hostName: invitation.user.name || "Host",
+            guestName: guestName,
+            willAttend: willAttend,
+            guestCount: guestCount,
+            guestNames: guestNames,
+            celebrantName: invitation.celebrantName,
+          }),
+        });
+      } catch (error) {
+        console.error("Error sending RSVP email to host:", error);
+      }
+    }
+
+    // 2. Correo al Invitado (si proporcionó email)
+    if (email) {
+      try {
+        const eventDateStr = invitation.eventDate.toLocaleDateString('es-CL', {
+          weekday: 'long',
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric'
+        });
+
+        await resend.emails.send({
+          from: "nvitame.com <hola@nvitame.com>",
+          to: email,
+          subject: `Confirmación: Cumpleaños de ${invitation.celebrantName}`,
+          react: RSVPToGuestEmail({
+            guestName: guestName,
+            willAttend: willAttend,
+            celebrantName: invitation.celebrantName,
+            eventDate: eventDateStr,
+            eventTime: invitation.eventTime,
+            venueName: invitation.venueName,
+            invitationUrl: invitationUrl,
+          }),
+        });
+      } catch (error) {
+        console.error("Error sending RSVP email to guest:", error);
+      }
+    }
 
     revalidatePath(`/invitacion/${invitationId}`);
 
