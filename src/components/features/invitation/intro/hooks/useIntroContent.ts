@@ -6,7 +6,7 @@ import type {
   InvitationIntroCopy,
   ThemeConfig,
 } from "@/lib/types/invitation";
-
+import { formatDateLong } from "@/utils/date";
 import { FALLBACK_INTRO_SCENE } from "../constants";
 
 export type IntroDetail = {
@@ -42,15 +42,7 @@ export function useIntroContent(invitation: InvitationRenderConfig, theme: Theme
 
     const scene = theme.introScene ?? FALLBACK_INTRO_SCENE;
 
-    const formatDateToDDMMYYYY = (dateStr: string): string => {
-      const date = new Date(dateStr);
-      const day = String(date.getDate()).padStart(2, '0');
-      const month = String(date.getMonth() + 1).padStart(2, '0');
-      const year = date.getFullYear();
-      return `${day}-${month}-${year}`;
-    };
-
-    const formattedDate = formatDateToDDMMYYYY(invitation.event.date);
+    const formattedDate = formatDateLong(invitation.event.date);
 
     const detailLeft: IntroDetail =
       rawIntroCopy.detailLeft ?? {
