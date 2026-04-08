@@ -40,12 +40,6 @@ export function IntroKPopView({
     setIsMounted(true);
   }, []);
 
-  console.log({
-    introCopy,
-    detailLeft,
-    detailRight,
-  });
-
   const subtitleParts = introCopy.celebrantSubtitle.split("{celebrantName}");
   const subtitlePrefix = subtitleParts[0] || "";
   const subtitleSuffix = subtitleParts[1] || "";

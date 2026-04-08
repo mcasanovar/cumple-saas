@@ -1,6 +1,7 @@
 import { auth } from "@clerk/nextjs/server";
 import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
+import { formatDateLong } from "@/utils/date";
 import prisma from "@/lib/prisma";
 
 interface InvitationViewPageProps {
@@ -146,12 +147,7 @@ export default async function InvitationViewPage({ params }: InvitationViewPageP
                 <div>
                   <p className="text-sm font-medium text-gray-500">Fecha</p>
                   <p className="font-semibold text-gray-900">
-                    {invitation.eventDate.toLocaleDateString("es-ES", {
-                      weekday: "long",
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
-                    })}
+                    {formatDateLong(invitation.eventDate)}
                   </p>
                 </div>
                 <div>

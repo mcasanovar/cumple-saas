@@ -41,8 +41,6 @@ export function ImagesStep({ formData, onUpdate }: ImagesStepProps) {
 
       const result = await uploadImageAction(uploadData);
 
-      console.log('result', result)
-
       if (result.success && result.url) {
         if (type === "venue") {
           onUpdate({ venueImage: result.url });
@@ -108,8 +106,6 @@ export function ImagesStep({ formData, onUpdate }: ImagesStepProps) {
             {[0, 1, 2].map((index) => {
               const isUploading = uploadingSlots[`celebrant-${index}`];
               const imageUrl = formData.celebrantImages?.[index];
-
-              console.log('Image', imageUrl)
 
               return (
                 <div key={index}>
