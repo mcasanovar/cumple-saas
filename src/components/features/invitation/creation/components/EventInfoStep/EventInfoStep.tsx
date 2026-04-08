@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-import type { CreationFormData } from "../../types";
+import type { CreationFormData, ValidationError } from "../../types";
 import { EVENT_ICON_LIST } from "../../constants";
 import { IconSelector } from "./components/IconSelector";
 import MapView from "@/components/shared/map-view/MapView";
@@ -12,12 +12,15 @@ import { IconRenderer } from "@/components/shared/icon-renderer/IconRenderer";
 export type EventInfoStepProps = {
   formData: Partial<CreationFormData>;
   onUpdate: (data: Partial<CreationFormData>) => void;
+  errors?: ValidationError[];
 };
 
-export function EventInfoStep({ formData, onUpdate }: EventInfoStepProps) {
+export function EventInfoStep({ formData, onUpdate, errors = [] }: EventInfoStepProps) {
   const [newItem, setNewItem] = useState("");
   const [selectedIcon, setSelectedIcon] = useState<string>(EVENT_ICON_LIST[0] ?? "🎉");
   const [iconSelectorOpen, setIconSelectorOpen] = useState(false);
+
+  const getFieldError = (field: string) => errors.find((e) => e.field === field);
 
   const handleAddItem = () => {
     if (newItem.trim()) {
@@ -66,83 +69,120 @@ export function EventInfoStep({ formData, onUpdate }: EventInfoStepProps) {
       >
         <div className="grid gap-4 sm:gap-6 sm:grid-cols-2">
           <div className="space-y-1.5">
-            <label
-              htmlFor="eventDate"
-              className="block text-sm font-semibold text-gray-700 ml-1"
-            >
-              📅 Fecha del evento
-            </label>
+            <div className="flex justify-between items-center px-1">
+              <label
+                htmlFor="eventDate"
+                className="block text-sm font-semibold text-gray-700"
+              >
+                📅 Fecha del evento
+              </label>
+              {getFieldError("eventDate") && (
+                <span className="text-[10px] font-bold text-pink-500 uppercase">Requerido</span>
+              )}
+            </div>
             <input
               type="date"
               id="eventDate"
               min={new Date().toISOString().split("T")[0]}
               value={formData.eventDate || ""}
               onChange={(e) => onUpdate({ eventDate: e.target.value })}
-              className="w-full rounded-2xl border border-gray-300 bg-white px-4 py-3.5 text-gray-900 outline-none transition focus:border-purple-500 focus:ring-4 focus:ring-purple-500/10"
+              className={`w-full rounded-2xl border bg-white px-4 py-3.5 text-gray-900 outline-none transition focus:ring-4 ${getFieldError("eventDate")
+                ? "border-pink-300 focus:border-pink-500 focus:ring-pink-500/10"
+                : "border-gray-300 focus:border-purple-500 focus:ring-purple-500/10"
+                }`}
             />
           </div>
 
           <div className="space-y-1.5">
-            <label
-              htmlFor="eventTime"
-              className="block text-sm font-semibold text-gray-700 ml-1"
-            >
-              ⏰ Hora del evento
-            </label>
+            <div className="flex justify-between items-center px-1">
+              <label
+                htmlFor="eventTime"
+                className="block text-sm font-semibold text-gray-700"
+              >
+                ⏰ Hora del evento
+              </label>
+              {getFieldError("eventTime") && (
+                <span className="text-[10px] font-bold text-pink-500 uppercase">Requerido</span>
+              )}
+            </div>
             <input
               type="time"
               id="eventTime"
               value={formData.eventTime || ""}
               onChange={(e) => onUpdate({ eventTime: e.target.value })}
-              className="w-full rounded-2xl border border-gray-300 bg-white px-4 py-3.5 text-gray-900 outline-none transition focus:border-purple-500 focus:ring-4 focus:ring-purple-500/10"
+              className={`w-full rounded-2xl border bg-white px-4 py-3.5 text-gray-900 outline-none transition focus:ring-4 ${getFieldError("eventTime")
+                ? "border-pink-300 focus:border-pink-500 focus:ring-pink-500/10"
+                : "border-gray-300 focus:border-purple-500 focus:ring-purple-500/10"
+                }`}
             />
           </div>
         </div>
 
         <div className="grid gap-4 sm:gap-6 sm:grid-cols-2">
           <div className="space-y-1.5">
-            <label
-              htmlFor="venueName"
-              className="block text-sm font-semibold text-gray-700 ml-1"
-            >
-              📍 Nombre del lugar
-            </label>
+            <div className="flex justify-between items-center px-1">
+              <label
+                htmlFor="venueName"
+                className="block text-sm font-semibold text-gray-700"
+              >
+                📍 Nombre del lugar
+              </label>
+              {getFieldError("venueName") && (
+                <span className="text-[10px] font-bold text-pink-500 uppercase">Requerido</span>
+              )}
+            </div>
             <input
               type="text"
               id="venueName"
               value={formData.venueName || ""}
               onChange={(e) => onUpdate({ venueName: e.target.value })}
               placeholder="Ej: Salón Fiesta Mágica"
-              className="w-full rounded-2xl border border-gray-300 bg-white px-4 py-3.5 text-gray-900 outline-none transition focus:border-purple-500 focus:ring-4 focus:ring-purple-500/10"
+              className={`w-full rounded-2xl border bg-white px-4 py-3.5 text-gray-900 outline-none transition focus:ring-4 ${getFieldError("venueName")
+                ? "border-pink-300 focus:border-pink-500 focus:ring-pink-500/10"
+                : "border-gray-300 focus:border-purple-500 focus:ring-purple-500/10"
+                }`}
             />
           </div>
 
           <div className="space-y-1.5">
-            <label
-              htmlFor="venueAddress"
-              className="block text-sm font-semibold text-gray-700 ml-1"
-            >
-              🏠 Dirección del evento
-            </label>
+            <div className="flex justify-between items-center px-1">
+              <label
+                htmlFor="venueAddress"
+                className="block text-sm font-semibold text-gray-700"
+              >
+                🏠 Dirección del evento
+              </label>
+              {getFieldError("venueAddress") && (
+                <span className="text-[10px] font-bold text-pink-500 uppercase">Requerido</span>
+              )}
+            </div>
             <input
               type="text"
               id="venueAddress"
               value={formData.venueAddress || ""}
               onChange={(e) => onUpdate({ venueAddress: e.target.value })}
               placeholder="Ej: Av. Providencia 1234"
-              className="w-full rounded-2xl border border-gray-300 bg-white px-4 py-3.5 text-gray-900 outline-none transition focus:border-purple-500 focus:ring-4 focus:ring-purple-500/10"
+              className={`w-full rounded-2xl border bg-white px-4 py-3.5 text-gray-900 outline-none transition focus:ring-4 ${getFieldError("venueAddress")
+                ? "border-pink-300 focus:border-pink-500 focus:ring-pink-500/10"
+                : "border-gray-300 focus:border-purple-500 focus:ring-purple-500/10"
+                }`}
             />
           </div>
         </div>
 
         <div className="space-y-2">
-          <label
-            htmlFor="map-view"
-            className="block text-sm font-semibold text-gray-700 ml-1"
-          >
-            🗺️ Ubicación en el mapa
-          </label>
-          <div className="overflow-hidden rounded-2xl border-2 border-gray-200 bg-white shadow-sm">
+          <div className="flex justify-between items-center px-1">
+            <label
+              htmlFor="map-view"
+              className="block text-sm font-semibold text-gray-700"
+            >
+              🗺️ Ubicación en el mapa
+            </label>
+            {getFieldError("coordinates") && (
+              <span className="text-[10px] font-bold text-pink-500 uppercase">Requerido</span>
+            )}
+          </div>
+          <div className={`overflow-hidden rounded-2xl border-2 bg-white shadow-sm ${getFieldError("coordinates") ? "border-pink-300" : "border-gray-200"}`}>
             <MapView
               initialAddress={formData.venueAddress || ""}
               initialCoordinates={formData.coordinates}
@@ -159,11 +199,16 @@ export function EventInfoStep({ formData, onUpdate }: EventInfoStepProps) {
           </p>
         </div>
 
-        <div className="rounded-2xl bg-white p-5 sm:p-6 border border-gray-100 shadow-sm space-y-4">
+        <div className={`rounded-2xl bg-white p-5 sm:p-6 border shadow-sm space-y-4 ${getFieldError("eventIncludes") ? "border-pink-200" : "border-gray-100"}`}>
           <div>
-            <label className="block text-sm font-bold text-gray-800">
-              🎁 ¿Qué incluirá el evento?
-            </label>
+            <div className="flex justify-between items-center">
+              <label className="block text-sm font-bold text-gray-800">
+                🎁 ¿Qué incluirá el evento?
+              </label>
+              {getFieldError("eventIncludes") && (
+                <span className="text-[10px] font-bold text-pink-500 uppercase">Falta detalle</span>
+              )}
+            </div>
             <p className="mt-1 text-xs text-gray-500">
               Agrega detalles como Show, Coctel, etc.
             </p>
