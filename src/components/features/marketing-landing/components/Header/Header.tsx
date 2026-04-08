@@ -23,7 +23,7 @@ export function Header() {
           <Show when="signed-out">
             <SignInButton mode="modal">
               <button className="rounded-full bg-[#E63946] px-6 py-2.5 text-sm font-semibold text-white shadow-lg transition hover:-translate-y-0.5 hover:bg-[#D62839]">
-                Crear cuenta
+                Entrar
               </button>
             </SignInButton>
           </Show>
