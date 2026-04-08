@@ -42,7 +42,7 @@ export function Footer() {
                 <Show when="signed-out">
                   <SignInButton mode="modal" forceRedirectUrl="/dashboard/invitaciones">
                     <button className="transition hover:text-white">
-                      Crear cuenta
+                      Entrar
                     </button>
                   </SignInButton>
                 </Show>
