@@ -4,20 +4,23 @@ import { useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 import { uploadImageAction } from "@/app/(private)/dashboard/invitaciones/nueva/actions";
-import type { CreationFormData } from "../../types";
+import type { CreationFormData, ValidationError } from "../../types";
 import { ALLOWED_IMAGE_FORMATS, ALLOWED_MIME_TYPES } from "../../constants";
 
 export type ImagesStepProps = {
   formData: Partial<CreationFormData>;
   onUpdate: (data: Partial<CreationFormData>) => void;
+  errors?: ValidationError[];
 };
 
-export function ImagesStep({ formData, onUpdate }: ImagesStepProps) {
+export function ImagesStep({ formData, onUpdate, errors = [] }: ImagesStepProps) {
   const celebrantRefs = [useRef<HTMLInputElement>(null), useRef<HTMLInputElement>(null), useRef<HTMLInputElement>(null)];
   const venueRef = useRef<HTMLInputElement>(null);
 
   const [uploadingSlots, setUploadingSlots] = useState<{ [key: string]: boolean }>({});
   const [error, setError] = useState<string | null>(null);
+
+  const getFieldError = (field: string) => errors.find((e) => e.field === field);
 
   const handleUpload = async (file: File, type: "celebrant" | "venue", index?: number) => {
     const slotKey = type === "venue" ? "venue" : `celebrant-${index}`;
@@ -99,13 +102,21 @@ export function ImagesStep({ formData, onUpdate }: ImagesStepProps) {
         transition={{ delay: 0.2, duration: 0.5 }}
       >
         <div>
-          <h2 className="text-lg font-semibold text-gray-900">
-            Fotos del niño/a (3 requeridas solo en formato jpeg, jpg o png)
-          </h2>
+          <div className="flex justify-between items-center">
+            <h2 className="text-lg font-semibold text-gray-900">
+              Fotos del niño/a (3 requeridas solo en formato jpeg, jpg o png)
+            </h2>
+            {getFieldError("celebrantImages") && (
+              <span className="text-[10px] font-bold text-pink-500 uppercase bg-pink-50 px-2 py-0.5 rounded-full border border-pink-100">
+                {getFieldError("celebrantImages")?.message}
+              </span>
+            )}
+          </div>
           <div className="mt-4 grid gap-4 sm:grid-cols-3">
             {[0, 1, 2].map((index) => {
               const isUploading = uploadingSlots[`celebrant-${index}`];
               const imageUrl = formData.celebrantImages?.[index];
+              const isMissing = getFieldError("celebrantImages") && !imageUrl;
 
               return (
                 <div key={index}>
@@ -124,7 +135,9 @@ export function ImagesStep({ formData, onUpdate }: ImagesStepProps) {
                     onClick={() => celebrantRefs[index].current?.click()}
                     className={`group relative h-48 w-full overflow-hidden rounded-xl border-2 border-dashed transition ${imageUrl
                       ? "border-green-500 bg-green-50"
-                      : "border-gray-300 bg-gray-50 hover:border-purple-400 hover:bg-purple-50"
+                      : isMissing
+                        ? "border-pink-300 bg-pink-50/50 hover:border-pink-400"
+                        : "border-gray-300 bg-gray-50 hover:border-purple-400 hover:bg-purple-50"
                       } ${isUploading ? "cursor-not-allowed opacity-70" : ""}`}
                   >
                     <AnimatePresence mode="wait">
@@ -189,9 +202,16 @@ export function ImagesStep({ formData, onUpdate }: ImagesStepProps) {
         </div>
 
         <div>
-          <h2 className="text-lg font-semibold text-gray-900">
-            Foto del lugar del evento (1 requerida)
-          </h2>
+          <div className="flex justify-between items-center">
+            <h2 className="text-lg font-semibold text-gray-900">
+              Foto del lugar del evento (1 requerida)
+            </h2>
+            {getFieldError("venueImage") && (
+              <span className="text-[10px] font-bold text-pink-500 uppercase bg-pink-50 px-2 py-0.5 rounded-full border border-pink-100">
+                Falta Foto
+              </span>
+            )}
+          </div>
           <div className="mt-4">
             <input
               ref={venueRef}
@@ -206,6 +226,7 @@ export function ImagesStep({ formData, onUpdate }: ImagesStepProps) {
             {(() => {
               const isUploading = uploadingSlots["venue"];
               const imageUrl = formData.venueImage;
+              const isMissing = getFieldError("venueImage") && !imageUrl;
 
               return (
                 <button
@@ -213,7 +234,9 @@ export function ImagesStep({ formData, onUpdate }: ImagesStepProps) {
                   onClick={() => venueRef.current?.click()}
                   className={`group relative h-64 w-full overflow-hidden rounded-xl border-2 border-dashed transition ${imageUrl
                     ? "border-green-500 bg-green-50"
-                    : "border-gray-300 bg-gray-50 hover:border-purple-400 hover:bg-purple-50"
+                    : isMissing
+                      ? "border-pink-300 bg-pink-50/50 hover:border-pink-400"
+                      : "border-gray-300 bg-gray-50 hover:border-purple-400 hover:bg-purple-50"
                     } ${isUploading ? "cursor-not-allowed opacity-70" : ""}`}
                 >
                   <AnimatePresence mode="wait">

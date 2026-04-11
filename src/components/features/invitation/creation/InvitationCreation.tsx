@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -10,21 +10,92 @@ import { TemplateStep } from "./components/TemplateStep";
 import { EventInfoStep } from "./components/EventInfoStep";
 import { ImagesStep } from "./components/ImagesStep";
 import { PreviewStep } from "./components/PreviewStep";
-import type { InvitationInitialData } from "./types";
+import type { InvitationInitialData, ValidationError } from "./types";
 
 type InvitationCreationProps = {
   initialData?: InvitationInitialData | null;
 };
 
+function ValidationModal({
+  isOpen,
+  onClose,
+  errors,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+  errors: ValidationError[];
+}) {
+  return (
+    <AnimatePresence>
+      {isOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={onClose}
+            className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+          />
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.9, y: 20 }}
+            className="relative w-full max-w-md overflow-hidden rounded-3xl bg-white shadow-2xl"
+          >
+            <div className="bg-gradient-to-r from-pink-500 to-purple-600 px-6 py-8 text-center text-white">
+              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-white/20 backdrop-blur-md">
+                <span className="text-3xl">✨</span>
+              </div>
+              <h3 className="text-2xl font-bold">Faltan por completar</h3>
+            </div>
+
+            <div className="max-h-[60vh] overflow-y-auto p-6">
+              <div className="space-y-3">
+                {errors.map((error, idx) => (
+                  <motion.div
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: idx * 0.1 }}
+                    key={idx}
+                    className="flex items-center gap-3 rounded-2xl bg-pink-50 p-4 border border-pink-100"
+                  >
+                    <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-pink-500 text-[10px] font-bold text-white">
+                      {idx + 1}
+                    </div>
+                    <span className="text-sm font-semibold text-pink-700">
+                      {error.message}
+                    </span>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+
+            <div className="p-6 pt-0">
+              <button
+                onClick={onClose}
+                className="w-full rounded-2xl bg-gray-900 py-4 text-center font-bold text-white transition-all hover:bg-gray-800 active:scale-[0.98]"
+              >
+                Entendido, voy a completar
+              </button>
+            </div>
+          </motion.div>
+        </div>
+      )}
+    </AnimatePresence>
+  );
+}
+
 export function InvitationCreation({ initialData }: InvitationCreationProps) {
   const router = useRouter();
+  const [showValidationModal, setShowValidationModal] = useState(false);
   const {
     currentStep,
     formData,
     updateFormData,
     goToNextStep,
     goToPreviousStep,
-    canGoNext,
+    isStepValid,
+    stepErrors,
     canGoBack,
     saveCurrentProgress,
     handlePurchase,
@@ -54,8 +125,21 @@ export function InvitationCreation({ initialData }: InvitationCreationProps) {
     (step) => step.id === currentStep
   );
 
+  const handleContinue = useCallback(async () => {
+    if (isStepValid) {
+      await goToNextStep();
+    } else {
+      setShowValidationModal(true);
+    }
+  }, [isStepValid, goToNextStep]);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50">
+      <ValidationModal
+        isOpen={showValidationModal}
+        onClose={() => setShowValidationModal(false)}
+        errors={stepErrors}
+      />
       {/* Stepper siempre visible para mejor guía */}
       <div className="sticky top-0 z-10 border-b border-gray-200 bg-white/80 backdrop-blur-sm">
         <div className="mx-auto max-w-4xl px-4 py-6">
@@ -106,13 +190,25 @@ export function InvitationCreation({ initialData }: InvitationCreationProps) {
             transition={{ duration: 0.3 }}
           >
             {currentStep === "template" && (
-              <TemplateStep formData={formData} onUpdate={updateFormData} />
+              <TemplateStep
+                formData={formData}
+                onUpdate={updateFormData}
+                errors={stepErrors}
+              />
             )}
             {currentStep === "event-info" && (
-              <EventInfoStep formData={formData} onUpdate={updateFormData} />
+              <EventInfoStep
+                formData={formData}
+                onUpdate={updateFormData}
+                errors={stepErrors}
+              />
             )}
             {currentStep === "images" && (
-              <ImagesStep formData={formData} onUpdate={updateFormData} />
+              <ImagesStep
+                formData={formData}
+                onUpdate={updateFormData}
+                errors={stepErrors}
+              />
             )}
             {currentStep === "preview" && (
               <PreviewStep
@@ -155,9 +251,9 @@ export function InvitationCreation({ initialData }: InvitationCreationProps) {
           <div className="flex order-1 sm:order-2 w-full sm:w-auto">
             {currentStep !== "preview" && (
               <button
-                onClick={goToNextStep}
-                disabled={!canGoNext || isSaving}
-                className={`flex w-full sm:w-auto items-center justify-center gap-2 rounded-xl px-10 sm:px-12 py-4 sm:py-3 text-base font-black uppercase tracking-wider transition-all active:scale-95 shadow-lg ${canGoNext && !isSaving
+                onClick={handleContinue}
+                disabled={isSaving}
+                className={`flex w-full sm:w-auto items-center justify-center gap-2 rounded-xl px-10 sm:px-12 py-4 sm:py-3 text-base font-black uppercase tracking-wider transition-all active:scale-95 shadow-lg ${!isSaving
                   ? "bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-purple-500/20 hover:shadow-xl hover:brightness-110"
                   : "cursor-not-allowed bg-gray-200 text-gray-400"
                   }`}

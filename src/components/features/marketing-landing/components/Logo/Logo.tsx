@@ -89,7 +89,7 @@ export function Logo({ className = "", showText = true }: LogoProps) {
       {showText && (
         <div className="flex flex-col">
           <span className="text-lg font-bold leading-none text-[#1A1A1A] md:text-2xl">
-            INVITAME
+            NVITAME
           </span>
           <span className="hidden text-[10px] font-medium uppercase tracking-wide text-[#E63946] sm:block md:text-xs">
             tu invitación animada personal

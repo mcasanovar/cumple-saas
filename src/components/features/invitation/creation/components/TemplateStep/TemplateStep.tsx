@@ -8,17 +8,20 @@ import { themes } from "@/config/themes";
 import type { ThemeToken } from "@/lib/types/invitation";
 
 import { AVAILABLE_TEMPLATES } from "../../constants";
-import type { CreationFormData } from "../../types";
+import type { CreationFormData, ValidationError } from "../../types";
 
 export type TemplateStepProps = {
   formData: Partial<CreationFormData>;
   onUpdate: (data: Partial<CreationFormData>) => void;
+  errors?: ValidationError[];
 };
 
-export function TemplateStep({ formData, onUpdate }: TemplateStepProps) {
+export function TemplateStep({ formData, onUpdate, errors = [] }: TemplateStepProps) {
   const handleTemplateSelect = (templateId: string) => {
     onUpdate({ templateId });
   };
+
+  const getFieldError = (field: string) => errors.find((e) => e.field === field);
 
   return (
     <div className="mx-auto w-full max-w-3xl space-y-8">
@@ -44,6 +47,7 @@ export function TemplateStep({ formData, onUpdate }: TemplateStepProps) {
         {AVAILABLE_TEMPLATES.map((template, index) => {
           const themeConfig = themes[template.theme as ThemeToken];
           const hasBackground = !!themeConfig;
+          const hasError = getFieldError("templateId") && !formData.templateId;
 
           return (
             <motion.button
@@ -51,7 +55,9 @@ export function TemplateStep({ formData, onUpdate }: TemplateStepProps) {
               onClick={() => handleTemplateSelect(template.id)}
               className={`group relative overflow-hidden rounded-2xl border-2 p-1 text-left transition-all ${formData.templateId === template.id
                 ? "border-purple-600 shadow-xl scale-[1.02]"
-                : "border-gray-200 bg-white hover:border-purple-300 hover:shadow-md"
+                : hasError
+                  ? "border-pink-300 bg-pink-50/30 hover:border-pink-400"
+                  : "border-gray-200 bg-white hover:border-purple-300 hover:shadow-md"
                 }`}
               style={
                 hasBackground
@@ -143,29 +149,42 @@ export function TemplateStep({ formData, onUpdate }: TemplateStepProps) {
           transition={{ duration: 0.4 }}
         >
           <div>
-            <label
-              htmlFor="celebrantName"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Nombre del niño/a
-            </label>
+            <div className="flex justify-between items-center">
+              <label
+                htmlFor="celebrantName"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Nombre del niño/a
+              </label>
+              {getFieldError("celebrantName") && (
+                <span className="text-[10px] font-bold text-pink-500 uppercase">Requerido</span>
+              )}
+            </div>
             <input
               type="text"
               id="celebrantName"
               value={formData.celebrantName || ""}
               onChange={(e) => onUpdate({ celebrantName: e.target.value })}
               placeholder="Ej: Sofía"
-              className="mt-2 w-full rounded-xl border border-gray-300 px-4 py-3 text-gray-900 outline-none transition focus:border-purple-500 focus:ring-2 focus:ring-purple-200"
+              className={`mt-2 w-full rounded-xl border px-4 py-3 text-gray-900 outline-none transition focus:ring-2 ${getFieldError("celebrantName")
+                ? "border-pink-300 bg-pink-50/30 focus:border-pink-500 focus:ring-pink-200"
+                : "border-gray-300 focus:border-purple-500 focus:ring-purple-200"
+                }`}
             />
           </div>
 
           <div>
-            <label
-              htmlFor="age"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Edad que cumplirá
-            </label>
+            <div className="flex justify-between items-center">
+              <label
+                htmlFor="age"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Edad que cumplirá
+              </label>
+              {getFieldError("age") && (
+                <span className="text-[10px] font-bold text-pink-500 uppercase">Requerido</span>
+              )}
+            </div>
             <input
               type="number"
               id="age"
@@ -174,24 +193,35 @@ export function TemplateStep({ formData, onUpdate }: TemplateStepProps) {
               value={formData.age || ""}
               onChange={(e) => onUpdate({ age: parseInt(e.target.value) || 0 })}
               placeholder="Ej: 5"
-              className="mt-2 w-full rounded-xl border border-gray-300 px-4 py-3 text-gray-900 outline-none transition focus:border-purple-500 focus:ring-2 focus:ring-purple-200"
+              className={`mt-2 w-full rounded-xl border px-4 py-3 text-gray-900 outline-none transition focus:ring-2 ${getFieldError("age")
+                ? "border-pink-300 bg-pink-50/30 focus:border-pink-500 focus:ring-pink-200"
+                : "border-gray-300 focus:border-purple-500 focus:ring-purple-200"
+                }`}
             />
           </div>
 
           <div>
-            <label
-              htmlFor="celebrantDescription"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Descripción corta del festejado/a
-            </label>
+            <div className="flex justify-between items-center">
+              <label
+                htmlFor="celebrantDescription"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Descripción corta del festejado/a
+              </label>
+              {getFieldError("celebrantDescription") && (
+                <span className="text-[10px] font-bold text-pink-500 uppercase">Requerido</span>
+              )}
+            </div>
             <input
               type="text"
               id="celebrantDescription"
               value={formData.celebrantDescription || ""}
               onChange={(e) => onUpdate({ celebrantDescription: e.target.value })}
               placeholder="Ej: Nuestra pequeña estrella, El explorador del espacio, etc."
-              className="mt-2 w-full rounded-xl border border-gray-300 px-4 py-3 text-gray-900 outline-none transition focus:border-purple-500 focus:ring-2 focus:ring-purple-200"
+              className={`mt-2 w-full rounded-xl border px-4 py-3 text-gray-900 outline-none transition focus:ring-2 ${getFieldError("celebrantDescription")
+                ? "border-pink-300 bg-pink-50/30 focus:border-pink-500 focus:ring-pink-200"
+                : "border-gray-300 focus:border-purple-500 focus:ring-purple-200"
+                }`}
             />
           </div>
         </motion.div>

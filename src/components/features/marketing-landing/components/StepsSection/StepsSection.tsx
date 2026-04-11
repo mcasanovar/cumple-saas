@@ -1,8 +1,11 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { Show, SignInButton } from "@clerk/nextjs";
+
+import { useNavigationStore } from "@/hooks/use-navigation-loader";
 
 const steps = [
   {
@@ -38,6 +41,14 @@ const steps = [
 ];
 
 export function StepsSection() {
+  const router = useRouter();
+  const startNavigation = useNavigationStore((state: any) => state.startNavigation);
+
+  const handleDashboardClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    startNavigation("/dashboard/invitaciones", router);
+  };
+
   return (
     <section className="bg-white px-6 py-20">
       <div className="mx-auto max-w-6xl">
@@ -115,6 +126,7 @@ export function StepsSection() {
           <Show when="signed-in">
             <Link
               href="/dashboard/invitaciones"
+              onClick={handleDashboardClick}
               className="inline-flex items-center gap-3 rounded-full bg-[#E63946] px-10 py-5 text-lg font-bold text-white shadow-lg transition hover:bg-[#D62839] hover:shadow-xl"
             >
               <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">

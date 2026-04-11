@@ -3,6 +3,7 @@ import { Baloo_2, Great_Vibes } from "next/font/google";
 import { Kalam } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 
+import { NavigationLoader } from "@/components/shared/NavigationLoader/NavigationLoader";
 import "./globals.css";
 
 const baloo = Baloo_2({
@@ -44,6 +45,7 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="es">
         <body className={`${baloo.variable} ${greatVibes.variable} ${kalam.variable} antialiased`}>
+          <NavigationLoader />
           {children}
         </body>
       </html>
