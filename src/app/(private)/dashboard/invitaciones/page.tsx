@@ -26,6 +26,7 @@ export default async function InvitacionesPage() {
           willAttend: true,
           guestCount: true,
           guestNames: true,
+          message: true,
           createdAt: true,
         }
       },
@@ -57,6 +58,7 @@ export default async function InvitacionesPage() {
     isPaid: inv.isPaid,
     rsvps: inv.rsvps.map(r => ({
       ...r,
+      message: r.message ?? "",
       createdAt: r.createdAt.toISOString(),
       guestNames: r.guestNames as string[] || [],
     })),
