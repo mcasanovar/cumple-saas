@@ -170,34 +170,67 @@ export function EventInfoStep({ formData, onUpdate, errors = [] }: EventInfoStep
           </div>
         </div>
 
-        <div className="space-y-2">
+        <div className="space-y-1.5">
           <div className="flex justify-between items-center px-1">
             <label
-              htmlFor="map-view"
               className="block text-sm font-semibold text-gray-700"
             >
-              🗺️ Ubicación en el mapa
+              🗺️ ¿Mostrar mapa interactivo?
             </label>
-            {getFieldError("coordinates") && (
-              <span className="text-[10px] font-bold text-pink-500 uppercase">Requerido</span>
-            )}
           </div>
-          <div className={`overflow-hidden rounded-2xl border-2 bg-white shadow-sm ${getFieldError("coordinates") ? "border-pink-300" : "border-gray-200"}`}>
-            <MapView
-              initialAddress={formData.venueAddress || ""}
-              initialCoordinates={formData.coordinates}
-              onLocationSelect={(coordinates, address) => {
-                onUpdate({
-                  coordinates: coordinates,
-                  venueAddress: address
-                });
-              }}
-            />
+          <div className="flex items-center h-[54px]">
+            <label className="relative inline-flex items-center cursor-pointer">
+              <input
+                type="checkbox"
+                checked={formData.showMap ?? true}
+                onChange={(e) => onUpdate({ showMap: e.target.checked })}
+                className="sr-only peer"
+              />
+              <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-600"></div>
+              <span className="ml-3 text-sm font-medium text-gray-700">
+                {formData.showMap ? "Sí, incluir mapa" : "No, solo el nombre y dirección"}
+              </span>
+            </label>
           </div>
-          <p className="px-1 text-[10px] sm:text-xs text-gray-500 italic">
-            * Mueve el marcador o busca la dirección para que tus invitados lleguen fácil.
-          </p>
         </div>
+
+        {formData.showMap && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            className="space-y-6"
+          >
+            <div className="space-y-2">
+              <div className="flex justify-between items-center px-1">
+                <label
+                  htmlFor="map-view"
+                  className="block text-sm font-semibold text-gray-700"
+                >
+                  🗺️ Ubicación en el mapa
+                </label>
+                {getFieldError("coordinates") && (
+                  <span className="text-[10px] font-bold text-pink-500 uppercase">Requerido</span>
+                )}
+              </div>
+              <div className={`overflow-hidden rounded-2xl border-2 bg-white shadow-sm ${getFieldError("coordinates") ? "border-pink-300" : "border-gray-200"}`}>
+                <MapView
+                  initialAddress={formData.venueAddress || ""}
+                  initialCoordinates={formData.coordinates}
+                  onLocationSelect={(coordinates, address) => {
+                    onUpdate({
+                      coordinates: coordinates,
+                      venueAddress: address
+                    });
+                  }}
+                />
+              </div>
+              <p className="px-1 text-[10px] sm:text-xs text-gray-500 italic">
+                * Mueve el marcador o busca la dirección para que tus invitados lleguen fácil.
+              </p>
+            </div>
+          </motion.div>
+        )}
 
         <div className={`rounded-2xl bg-white p-5 sm:p-6 border shadow-sm space-y-4 ${getFieldError("eventIncludes") ? "border-pink-200" : "border-gray-100"}`}>
           <div>

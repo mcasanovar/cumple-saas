@@ -24,6 +24,7 @@ interface RSVPToGuestEmailProps {
 }
 
 export const RSVPToGuestEmail = ({
+  guestName,
   willAttend,
   celebrantName,
   eventDate,
@@ -46,7 +47,7 @@ export const RSVPToGuestEmail = ({
           </Heading>
         </Section>
         <Section style={content}>
-          <Text style={paragraph}>Hola</Text>
+          <Text style={paragraph}>Hola {guestName},</Text>
 
           {willAttend ? (
             <>

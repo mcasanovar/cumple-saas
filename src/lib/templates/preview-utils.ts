@@ -49,6 +49,7 @@ export function mapFormDataToRenderConfig(
       time: formData.eventTime || "16:00",
       venueName: formData.venueName || "Salón de eventos",
       venueAddress: formData.venueAddress || "Calle Falsa 123",
+      showMap: formData.showMap ?? true,
       googleMapsUrl: "#",
       coordinates: formData.coordinates || undefined,
       venueImageUrl: typeof formData.venueImage === "string" ? formData.venueImage : "/vercel.svg",

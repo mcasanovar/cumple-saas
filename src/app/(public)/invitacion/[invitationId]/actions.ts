@@ -15,6 +15,7 @@ const rsvpSchema = z.object({
   willAttend: z.boolean(),
   guestCount: z.number().min(0, "El número de invitados no puede ser negativo").max(20, "Máximo 20 invitados permitidos"),
   guestNames: z.array(z.string().min(1, "El nombre del invitado no puede estar vacío").max(50, "El nombre del invitado es demasiado largo")).optional(),
+  message: z.string().max(500, "El mensaje es demasiado largo").optional(),
 });
 
 export async function submitRSVP(
@@ -27,6 +28,7 @@ export async function submitRSVP(
     willAttend: formData.get("willAttend") === "true",
     guestCount: parseInt(formData.get("guestCount") as string || "0"),
     guestNames: JSON.parse(formData.get("guestNames") as string || "[]"),
+    message: formData.get("message") as string || "",
   };
 
   const parsed = rsvpSchema.safeParse(rawData);
@@ -36,7 +38,12 @@ export async function submitRSVP(
     return { status: "error", message: firstError };
   }
 
-  const { invitationId, email, willAttend, guestCount, guestNames } = parsed.data;
+  const { invitationId, email, willAttend, guestCount, guestNames, message } = parsed.data;
+
+  // Validación adicional: si no asiste, el email es obligatorio
+  if (!willAttend && (!email || email.trim() === "")) {
+    return { status: "error", message: "El correo electrónico es obligatorio si no asistes." };
+  }
 
   try {
     // Verify if invitation exists in DB
@@ -81,6 +88,7 @@ export async function submitRSVP(
         willAttend,
         guestCount,
         guestNames: guestNames || [],
+        message: message || null,
       },
     });
 
@@ -101,6 +109,7 @@ export async function submitRSVP(
             willAttend: willAttend,
             guestCount: guestCount,
             guestNames: guestNames,
+            message: message,
             celebrantName: invitation.celebrantName,
           }),
         });
