@@ -55,6 +55,7 @@ model RSVP {
   guestCount   Int        @default(0)
   guestNames   Json?
   createdAt    DateTime   @default(now())
+  message      String?    @default("")
   invitation   Invitation @relation(fields: [invitationId], references: [id], onDelete: Cascade)
 
   @@index([invitationId])

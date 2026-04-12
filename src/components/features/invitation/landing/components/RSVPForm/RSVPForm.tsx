@@ -62,6 +62,7 @@ export function RSVPForm({ invitationId, typography, themeToken, isPreview = fal
   const [guestCount, setGuestCount] = useState<number>(1);
   const [guestNames, setGuestNames] = useState<string[]>([""]);
   const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
 
@@ -86,9 +87,10 @@ export function RSVPForm({ invitationId, typography, themeToken, isPreview = fal
     if (isPreview) return;
     setWillAttend(value);
     if (!value) {
-      setGuestCount(1);
+      setGuestCount(0);
       setGuestNames([""]);
       setEmail("");
+      setMessage("");
     }
   };
 
@@ -177,6 +179,7 @@ export function RSVPForm({ invitationId, typography, themeToken, isPreview = fal
       <input type="hidden" name="invitationId" value={invitationId} />
       <input type="hidden" name="willAttend" value={String(willAttend)} />
       <input type="hidden" name="guestNames" value={JSON.stringify(guestNames)} />
+      <input type="hidden" name="message" value={message} />
 
       <div className="pointer-events-none absolute -left-20 top-10 h-40 w-40 rounded-full bg-[#fddae4]/60 blur-3xl" />
       <div className="pointer-events-none absolute -right-24 bottom-6 h-44 w-44 rounded-full bg-[#e7defa]/50 blur-3xl" />
@@ -339,8 +342,46 @@ export function RSVPForm({ invitationId, typography, themeToken, isPreview = fal
               transition={{ duration: 0.4 }}
             >
               <p className="text-sm text-gray-500 text-center">
-                Lamentamos que no puedas acompañarnos. ¡Gracias por avisar!
+                Lamentamos que no puedas acompañarnos. Por favor, déjanos tus datos para saber quién eres.
               </p>
+
+              <label className="flex flex-col gap-2 text-sm font-medium text-slate-600">
+                Tu nombre
+                <input
+                  type="text"
+                  value={guestNames[0]}
+                  onChange={(e) => handleGuestNameChange(0, e.target.value)}
+                  disabled={isPreview}
+                  placeholder="Escribe tu nombre"
+                  className="rounded-2xl border border-white/70 bg-white/90 px-4 py-3 text-base text-slate-800 shadow-inner shadow-white/40 outline-none transition focus:border-slate-300 focus:shadow-lg disabled:opacity-70"
+                  required
+                />
+              </label>
+
+              <label className="flex flex-col gap-2 text-sm font-medium text-slate-600">
+                Correo electrónico
+                <input
+                  name="email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  disabled={isPreview}
+                  placeholder="tu@email.com"
+                  className="rounded-2xl border border-white/70 bg-white/90 px-4 py-3 text-base text-slate-800 shadow-inner shadow-white/40 outline-none transition focus:border-slate-300 focus:shadow-lg disabled:opacity-70"
+                  required
+                />
+              </label>
+
+              <label className="flex flex-col gap-2 text-sm font-medium text-slate-600">
+                ¿Algún motivo o mensaje? (Opcional)
+                <textarea
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  disabled={isPreview}
+                  placeholder="No podré asistir porque..."
+                  className="min-h-[100px] rounded-2xl border border-white/70 bg-white/90 px-4 py-3 text-base text-slate-800 shadow-inner shadow-white/40 outline-none transition focus:border-slate-300 focus:shadow-lg disabled:opacity-70 resize-none"
+                />
+              </label>
             </motion.div>
           )}
         </AnimatePresence>

@@ -118,6 +118,7 @@ export async function getRSVPsByInvitation(invitationId: string): Promise<Dashbo
     willAttend: rsvp.willAttend,
     guestCount: rsvp.guestCount,
     guestNames: Array.isArray(rsvp.guestNames) ? rsvp.guestNames as string[] : [],
+    message: rsvp.message,
     createdAt: rsvp.createdAt.toISOString(),
   }));
 }

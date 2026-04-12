@@ -5,5 +5,6 @@ export type DashboardRSVP = {
   willAttend: boolean;
   guestCount: number;
   guestNames: string[];
+  message: string | null;
   createdAt: string;
 };

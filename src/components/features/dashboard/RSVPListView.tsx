@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { formatDateLong } from "@/utils/date";
+import { calculateTotalGuests, calculateAllGuests, countDeclined } from "@/utils/rsvp";
 import type { DashboardRSVP } from "@/lib/types/rsvp";
 
 type RSVPListViewProps = {
@@ -10,11 +11,10 @@ type RSVPListViewProps = {
 };
 
 export function RSVPListView({ rsvps, invitationTitle }: RSVPListViewProps) {
-  const confirmedCount = rsvps.filter((r) => r.willAttend).length;
-  const declinedCount = rsvps.filter((r) => !r.willAttend).length;
-  const totalGuests = rsvps
-    .filter((r) => r.willAttend)
-    .reduce((acc, r) => acc + r.guestCount, 0);
+  const totalConfirmations = rsvps.length;
+  const totalAttendingGuests = calculateTotalGuests(rsvps);
+  const totalRegisteredGuests = calculateAllGuests(rsvps);
+  const declinedCount = countDeclined(rsvps);
 
   return (
     <div className="mx-auto max-w-7xl">
@@ -40,7 +40,7 @@ export function RSVPListView({ rsvps, invitationTitle }: RSVPListViewProps) {
             </div>
             <div>
               <p className="text-sm text-gray-600">Total confirmaciones</p>
-              <p className="text-2xl font-bold text-gray-900">{rsvps.length}</p>
+              <p className="text-2xl font-bold text-gray-900">{totalConfirmations}</p>
             </div>
           </div>
         </motion.div>
@@ -59,7 +59,7 @@ export function RSVPListView({ rsvps, invitationTitle }: RSVPListViewProps) {
             </div>
             <div>
               <p className="text-sm text-gray-600">Asistirán</p>
-              <p className="text-2xl font-bold text-gray-900">{confirmedCount}</p>
+              <p className="text-2xl font-bold text-gray-900">{totalAttendingGuests}</p>
             </div>
           </div>
         </motion.div>
@@ -78,7 +78,7 @@ export function RSVPListView({ rsvps, invitationTitle }: RSVPListViewProps) {
             </div>
             <div>
               <p className="text-sm text-gray-600">Total invitados</p>
-              <p className="text-2xl font-bold text-gray-900">{totalGuests}</p>
+              <p className="text-2xl font-bold text-gray-900">{totalRegisteredGuests}</p>
             </div>
           </div>
         </motion.div>
@@ -146,7 +146,7 @@ export function RSVPListView({ rsvps, invitationTitle }: RSVPListViewProps) {
                           </div>
                         )}
 
-                        {rsvp.guestNames && rsvp.guestNames.length > 0 && (
+                        {rsvp.guestNames && rsvp.guestNames.length > 0 && rsvp.willAttend && (
                           <div className="mt-3 rounded-lg bg-gray-50 p-3">
                             <p className="mb-2 text-xs font-medium text-gray-500">Nombres de invitados:</p>
                             <div className="flex flex-wrap gap-2">
@@ -158,6 +158,17 @@ export function RSVPListView({ rsvps, invitationTitle }: RSVPListViewProps) {
                                   {guestName}
                                 </span>
                               ))}
+                            </div>
+                          </div>
+                        )}
+
+                        {rsvp.message && (
+                          <div className="mt-3 rounded-lg bg-gray-50 p-3">
+                            <p className="mb-2 text-xs font-medium text-gray-500">Mensaje / Motivo:</p>
+                            <div className="flex flex-wrap gap-2">
+                              <span className="inline-flex items-center rounded-full bg-white px-3 py-1 text-sm text-gray-700 shadow-sm">
+                                {rsvp.message}
+                              </span>
                             </div>
                           </div>
                         )}

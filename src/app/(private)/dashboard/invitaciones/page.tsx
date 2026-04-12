@@ -18,6 +18,17 @@ export default async function InvitacionesPage() {
       isDelete: false
     },
     include: {
+      rsvps: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          willAttend: true,
+          guestCount: true,
+          guestNames: true,
+          createdAt: true,
+        }
+      },
       _count: {
         select: {
           rsvps: {
@@ -44,6 +55,11 @@ export default async function InvitacionesPage() {
     slug: inv.slug || "",
     createdAt: inv.createdAt.toISOString().split("T")[0],
     isPaid: inv.isPaid,
+    rsvps: inv.rsvps.map(r => ({
+      ...r,
+      createdAt: r.createdAt.toISOString(),
+      guestNames: r.guestNames as string[] || [],
+    })),
   }));
 
   return <InvitationsListView initialInvitations={invitations} />;

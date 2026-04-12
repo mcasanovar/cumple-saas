@@ -17,6 +17,7 @@ interface RSVPToHostEmailProps {
   willAttend: boolean;
   guestCount: number;
   guestNames?: string[];
+  message?: string;
   celebrantName: string;
 }
 
@@ -26,6 +27,7 @@ export const RSVPToHostEmail = ({
   willAttend,
   guestCount,
   guestNames,
+  message,
   celebrantName,
 }: RSVPToHostEmailProps) => (
   <Html>
@@ -64,6 +66,11 @@ export const RSVPToHostEmail = ({
                   </Text>
                 )}
               </>
+            )}
+            {!willAttend && message && (
+              <Text style={infoText}>
+                <strong>Motivo:</strong> {message}
+              </Text>
             )}
           </Section>
 
