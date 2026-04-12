@@ -6,6 +6,9 @@ import Link from "next/link";
 import { useDeleteInvitation } from "@/app/(private)/dashboard/invitaciones/hooks/useDeleteInvitation";
 import { DeleteConfirmationModal } from "./components/DeleteConfirmationModal";
 import { formatDateLong } from "@/utils/date";
+import { calculateTotalGuests } from "@/utils/rsvp";
+
+import type { DashboardRSVP } from "@/lib/types/rsvp";
 
 export type DashboardInvitation = {
   id: string;
@@ -17,6 +20,7 @@ export type DashboardInvitation = {
   slug: string;
   isPaid: boolean;
   createdAt: string;
+  rsvps?: DashboardRSVP[];
 };
 
 type InvitationsListViewProps = {
@@ -64,7 +68,7 @@ export function InvitationsListView({ initialInvitations }: InvitationsListViewP
       </div>
 
       {/* Stats */}
-      <div className="mb-8 grid gap-4 sm:grid-cols-3">
+      <div className="mb-8 grid gap-2 sm:grid-cols-3">
         <motion.div
           className="rounded-xl bg-white p-6 shadow-sm"
           initial={{ opacity: 0, y: 20 }}
@@ -78,7 +82,7 @@ export function InvitationsListView({ initialInvitations }: InvitationsListViewP
               </svg>
             </div>
             <div>
-              <p className="text-sm text-gray-600">Total</p>
+              <p className="text-sm text-gray-600">Total Invitaciones</p>
               <p className="text-2xl font-bold text-gray-900">{invitations.length}</p>
             </div>
           </div>
@@ -112,15 +116,15 @@ export function InvitationsListView({ initialInvitations }: InvitationsListViewP
           transition={{ duration: 0.4, delay: 0.2 }}
         >
           <div className="flex items-center gap-4">
-            <div className="rounded-lg bg-[#F77F00]/10 p-3">
-              <svg className="h-6 w-6 text-[#F77F00]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <div className="rounded-lg bg-blue-100 p-3">
+              <svg className="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
               </svg>
             </div>
             <div>
-              <p className="text-sm text-gray-600">Total invitados</p>
+              <p className="text-sm text-gray-600">Total Invitados</p>
               <p className="text-2xl font-bold text-gray-900">
-                {invitations.reduce((acc, inv) => acc + inv.guests, 0)}
+                {invitations.reduce((acc, inv) => acc + calculateTotalGuests(inv.rsvps || []), 0)}
               </p>
             </div>
           </div>
@@ -180,7 +184,7 @@ export function InvitationsListView({ initialInvitations }: InvitationsListViewP
                         <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                         </svg>
-                        {invitation.guests} invitados
+                        {calculateTotalGuests(invitation.rsvps || [])} invitados
                       </div>
                     </div>
                   </div>
@@ -223,7 +227,7 @@ export function InvitationsListView({ initialInvitations }: InvitationsListViewP
                       onClick={() => openModal({
                         invitationId: invitation.id,
                         title: invitation.title,
-                        guests: invitation.guests,
+                        guests: calculateTotalGuests(invitation.rsvps || []),
                       })}
                       className="inline-flex items-center gap-2 rounded-lg border border-red-300 px-4 py-2 text-sm font-medium text-red-700 transition hover:bg-red-50"
                     >
