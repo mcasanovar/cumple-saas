@@ -228,14 +228,16 @@ export function LandingView({
               />
             </div>
 
-            {venue.coordinates ? (
+            {venue.showMap && venue.coordinates &&
               <EventLocationMap
                 coordinates={venue.coordinates}
                 venueName={venue.name}
                 address={venue.address}
                 mapsUrl={venue.mapsUrl}
               />
-            ) : (
+            }
+
+            {venue.showMap && !venue.coordinates && (
               <div className="flex w-full flex-col items-center gap-3 rounded-[28px] border border-dashed border-[#e7defa] bg-white/90 p-8 text-[#6f6bb3]">
                 <span className="text-lg font-semibold" style={{ fontFamily: typography.heading }}>
                   ¡Mapa disponible pronto!

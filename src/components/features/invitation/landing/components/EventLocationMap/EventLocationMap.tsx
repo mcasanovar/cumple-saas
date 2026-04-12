@@ -1,6 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import { generateGoogleMapsUrl } from "@/utils/maps";
 
 // Dynamically import MapView to avoid SSR issues with Leaflet
 const MapView = dynamic(() => import("@/components/shared/map-view/MapView"), {
@@ -22,12 +23,14 @@ type EventLocationMapProps = {
   mapsUrl?: string;
 };
 
-export function EventLocationMap({ coordinates, venueName, address, mapsUrl }: EventLocationMapProps) {
+export function EventLocationMap({ coordinates, address, mapsUrl }: EventLocationMapProps) {
+  const generatedMapsUrl = generateGoogleMapsUrl(address);
+
   return (
     <div className="relative mx-auto w-full max-w-4xl overflow-hidden rounded-[28px] border border-white/80 bg-white/95 shadow-[0_18px_60px_rgba(93,75,255,0.18)]">
-      {mapsUrl ? (
+      {generatedMapsUrl ? (
         <a
-          href={mapsUrl}
+          href={generatedMapsUrl}
           target="_blank"
           rel="noreferrer"
           className="absolute left-4 top-4 z-10 rounded-full bg-white px-4 py-2 text-[0.72rem] font-bold uppercase tracking-[0.32em] text-[#5d4bff] shadow-[0_10px_25px_rgba(93,75,255,0.18)] transition hover:-translate-y-0.5"
@@ -36,12 +39,27 @@ export function EventLocationMap({ coordinates, venueName, address, mapsUrl }: E
         </a>
       ) : null}
 
-      {/* Leaflet Map */}
-      <MapView
-        initialAddress={address}
-        initialCoordinates={coordinates}
-        showSearch={false}
-      />
+      {/* Leaflet Map with click-to-open-maps overlay */}
+      <div className="relative group cursor-pointer">
+        {generatedMapsUrl && (
+          <a
+            href={generatedMapsUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="absolute inset-0 z-20 flex items-center justify-center bg-black/0 transition-colors hover:bg-black/5"
+            title="Abrir en Google Maps"
+          >
+            <div className="rounded-full bg-white/90 px-4 py-2 text-[0.65rem] font-bold uppercase tracking-[0.2em] text-[#5d4bff] opacity-0 shadow-lg transition-opacity group-hover:opacity-100">
+              Ver en Google Maps ↗
+            </div>
+          </a>
+        )}
+        <MapView
+          initialAddress={address}
+          initialCoordinates={coordinates}
+          showSearch={false}
+        />
+      </div>
 
       <div className="px-6 pb-6 pt-4 text-left text-xs text-[#6f6bb3]">
         <p className="font-semibold uppercase tracking-[0.28em]">Dirección</p>
