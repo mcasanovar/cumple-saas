@@ -1,12 +1,22 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { Show, SignInButton } from "@clerk/nextjs";
 
+import { useNavigationStore } from "@/hooks/use-navigation-loader";
 import { Logo } from "../Logo";
 
 export function Footer() {
+  const router = useRouter();
+  const startNavigation = useNavigationStore((state: any) => state.startNavigation);
+
+  const handleDashboardClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    startNavigation("/dashboard/invitaciones", router);
+  };
+
   return (
     <footer className="bg-[#1A1A1A] px-6 py-12 text-white md:py-16">
       <div className="mx-auto max-w-7xl">
@@ -47,7 +57,11 @@ export function Footer() {
                   </SignInButton>
                 </Show>
                 <Show when="signed-in">
-                  <Link href="/dashboard/invitaciones" className="transition hover:text-white">
+                  <Link
+                    href="/dashboard/invitaciones"
+                    onClick={handleDashboardClick}
+                    className="transition hover:text-white"
+                  >
                     Dashboard
                   </Link>
                 </Show>

@@ -1,10 +1,20 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { Show, SignInButton } from "@clerk/nextjs";
 
+import { useNavigationStore } from "@/hooks/use-navigation-loader";
+
 export function HeroSection() {
+  const router = useRouter();
+  const startNavigation = useNavigationStore((state: any) => state.startNavigation);
+
+  const handleDashboardClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    startNavigation("/dashboard/invitaciones", router);
+  };
   return (
     <section className="relative overflow-hidden px-6 pb-20 pt-32 md:pt-40">
       <div className="pointer-events-none absolute inset-0">
@@ -97,6 +107,7 @@ export function HeroSection() {
           <Show when="signed-in">
             <Link
               href="/dashboard/invitaciones"
+              onClick={handleDashboardClick}
               className="group inline-flex items-center gap-2 rounded-full bg-[#E63946] px-8 py-4 text-base font-semibold text-white shadow-[0_20px_60px_rgba(230,57,70,0.3)] transition hover:-translate-y-1 hover:bg-[#D62839] hover:shadow-[0_25px_70px_rgba(230,57,70,0.4)]"
             >
               <span className="text-xl">🎊</span>

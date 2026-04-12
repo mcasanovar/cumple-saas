@@ -1,3 +1,8 @@
+export type ValidationError = {
+  field: string;
+  message: string;
+};
+
 export type CreationStep = "template" | "event-info" | "images" | "preview";
 
 export type TemplateOption = {

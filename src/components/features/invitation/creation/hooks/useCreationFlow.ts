@@ -1,7 +1,7 @@
 import { useState, useCallback, useMemo, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
-import type { CreationStep, CreationFormData, CreationFlowState, InvitationInitialData } from "../types";
+import type { CreationStep, CreationFormData, CreationFlowState, InvitationInitialData, ValidationError } from "../types";
 import { saveInvitationProgress } from "@/app/(private)/dashboard/invitaciones/nueva/actions";
 
 export function useCreationFlow(initialData?: InvitationInitialData | null) {
@@ -99,41 +99,62 @@ export function useCreationFlow(initialData?: InvitationInitialData | null) {
     }
   }, [currentStep, formData, invitationId]);
 
-  const isStepValid = useMemo(() => {
+  const stepErrors = useMemo<ValidationError[]>(() => {
+    const errors: ValidationError[] = [];
     switch (currentStep) {
       case "template":
-        return !!(
-          formData.templateId &&
-          formData.celebrantName &&
-          formData.age &&
-          formData.age > 0 &&
-          formData.celebrantDescription
-        );
+        if (!formData.templateId) {
+          errors.push({ field: "templateId", message: "Selecciona una temática" });
+        }
+        if (!formData.celebrantName) {
+          errors.push({ field: "celebrantName", message: "Nombre del festejado" });
+        }
+        if (!formData.age || formData.age <= 0) {
+          errors.push({ field: "age", message: "Edad (mayor a 0)" });
+        }
+        if (!formData.celebrantDescription) {
+          errors.push({ field: "celebrantDescription", message: "Breve descripción" });
+        }
+        break;
       case "event-info":
-        // Validar fecha mayor o igual a hoy
         const isDateValid = !!formData.eventDate && new Date(formData.eventDate) >= new Date(new Date().setHours(0, 0, 0, 0));
-
-        return !!(
-          isDateValid &&
-          formData.eventTime &&
-          formData.venueName &&
-          formData.venueAddress &&
-          formData.coordinates &&
-          formData.eventIncludes &&
-          formData.eventIncludes.length > 0
-        );
+        if (!formData.eventDate) {
+          errors.push({ field: "eventDate", message: "Fecha del evento" });
+        } else if (!isDateValid) {
+          errors.push({ field: "eventDate", message: "La fecha debe ser hoy o a futuro" });
+        }
+        if (!formData.eventTime) {
+          errors.push({ field: "eventTime", message: "Hora del evento" });
+        }
+        if (!formData.venueName) {
+          errors.push({ field: "venueName", message: "Nombre del lugar" });
+        }
+        if (!formData.venueAddress) {
+          errors.push({ field: "venueAddress", message: "Dirección del lugar" });
+        }
+        if (!formData.coordinates) {
+          errors.push({ field: "coordinates", message: "Ubicación en el mapa" });
+        }
+        if (!formData.eventIncludes || formData.eventIncludes.length === 0) {
+          errors.push({ field: "eventIncludes", message: "Al menos un detalle (Qué incluye)" });
+        }
+        break;
       case "images":
-        return !!(
-          formData.celebrantImages &&
-          formData.celebrantImages.filter((img) => img !== null).length === 3 &&
-          formData.venueImage
-        );
-      case "preview":
-        return true;
-      default:
-        return false;
+        const imagesCount = formData.celebrantImages?.filter((img) => img !== null).length || 0;
+        if (imagesCount < 3) {
+          errors.push({ field: "celebrantImages", message: `Faltan ${3 - imagesCount} fotos del festejado` });
+        }
+        if (!formData.venueImage) {
+          errors.push({ field: "venueImage", message: "Foto del lugar (o referencial)" });
+        }
+        break;
     }
+    return errors;
   }, [currentStep, formData]);
+
+  const isStepValid = useMemo(() => {
+    return stepErrors.length === 0;
+  }, [stepErrors]);
 
   const canGoNext = useMemo(() => {
     return isStepValid && currentStep !== "preview";
@@ -197,6 +218,7 @@ export function useCreationFlow(initialData?: InvitationInitialData | null) {
     goToStep,
     saveCurrentProgress,
     isStepValid,
+    stepErrors,
     canGoNext,
     canGoBack,
     handlePurchase,
