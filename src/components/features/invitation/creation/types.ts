@@ -29,6 +29,7 @@ export type CreationFormData = {
   eventTime: string;
   venueName: string;
   venueAddress: string;
+  showMap: boolean;
   coordinates: {
     lat: number;
     lng: number;

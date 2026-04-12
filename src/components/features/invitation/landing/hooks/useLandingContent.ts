@@ -75,6 +75,7 @@ export type LandingContent = {
   venue: {
     name: string;
     address: string;
+    showMap: boolean;
     imageUrl?: string;
     coordinates?: InvitationConfig["event"]["coordinates"];
     mapsUrl?: string;
@@ -184,6 +185,7 @@ export function useLandingContent(invitation: InvitationConfig, theme: ThemeConf
       venue: {
         name: event.venueName,
         address: event.venueAddress,
+        showMap: event.showMap ?? true,
         imageUrl: event.venueImageUrl,
         coordinates: event.coordinates,
         mapsUrl: event.googleMapsUrl,

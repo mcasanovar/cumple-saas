@@ -119,6 +119,7 @@ export interface InvitationEventInfo {
   time: string;
   venueName: string;
   venueAddress: string;
+  showMap?: boolean;
   googleMapsUrl?: string;
   coordinates?: {
     lat: number;

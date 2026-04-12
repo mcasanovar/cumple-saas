@@ -25,6 +25,7 @@ export function mergeTemplateWithUserData(
       time: userData.time,
       venueName: userData.venueName,
       venueAddress: userData.venueAddress,
+      showMap: userData.showMap,
       googleMapsUrl: userData.googleMapsUrl,
       coordinates: userData.coordinates,
       venueImageUrl: userData.venueImage,
