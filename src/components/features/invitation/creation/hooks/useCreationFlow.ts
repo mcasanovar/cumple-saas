@@ -9,13 +9,17 @@ export function useCreationFlow(initialData?: InvitationInitialData | null) {
   const [currentStep, setCurrentStep] = useState<CreationStep>(initialData?.currentStep || "template");
   const [invitationId, setInvitationId] = useState<string | null>(initialData?.id || null);
   const [isSaving, setIsSaving] = useState(false);
-  const [formData, setFormData] = useState<Partial<CreationFormData>>(initialData?.formData || {
+  const [formData, setFormData] = useState<Partial<CreationFormData>>({
     eventIncludes: [],
     celebrantImages: [null, null, null],
     venueImage: null,
     celebrantDescription: "",
     venueName: "",
+    venueAddress: "",
+    showMap: true,
+    coordinates: null,
     customTexts: {},
+    ...initialData?.formData,
   });
 
   const updateFormData = useCallback(
@@ -132,8 +136,10 @@ export function useCreationFlow(initialData?: InvitationInitialData | null) {
         if (!formData.venueAddress) {
           errors.push({ field: "venueAddress", message: "Dirección del lugar" });
         }
-        if (!formData.coordinates) {
-          errors.push({ field: "coordinates", message: "Ubicación en el mapa" });
+        if (formData.showMap) {
+          if (!formData.coordinates) {
+            errors.push({ field: "coordinates", message: "Ubicación en el mapa" });
+          }
         }
         if (!formData.eventIncludes || formData.eventIncludes.length === 0) {
           errors.push({ field: "eventIncludes", message: "Al menos un detalle (Qué incluye)" });

@@ -221,7 +221,7 @@ export async function saveInvitationProgress(
       status: "draft",
       currentStep,
       userId: dbUser.id,
-      config: formData as any, // Persistence of all JSON-serializable data (including Cloudinary URLs)
+      config: formData as any,
     };
 
     if (invitationId) {

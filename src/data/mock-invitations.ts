@@ -16,6 +16,7 @@ export const userInvitations: UserInvitationData[] = [
     venueName: "Casa de ensueño",
     venueAddress: "La casa de ensueño 1234, Santiago",
     googleMapsUrl: "https://maps.google.com",
+    showMap: true,
     coordinates: {
       lat: -34.603684,
       lng: -58.381559,
@@ -70,6 +71,7 @@ export const userInvitations: UserInvitationData[] = [
     venueName: "Calle Cualquiera 123",
     venueAddress: "Cualquier lugar",
     googleMapsUrl: "https://maps.google.com",
+    showMap: true,
     coordinates: {
       lat: -33.4489,
       lng: -70.6693,
@@ -124,6 +126,7 @@ export const userInvitations: UserInvitationData[] = [
     venueName: "Salón de Fiestas Mágico",
     venueAddress: "Avenida de los Sueños 456",
     googleMapsUrl: "https://maps.google.com",
+    showMap: true,
     coordinates: {
       lat: -34.603684,
       lng: -58.381559,
@@ -178,6 +181,7 @@ export const userInvitations: UserInvitationData[] = [
     venueName: "Estudio de Danza Estrella",
     venueAddress: "Avenida Musical 789",
     googleMapsUrl: "https://maps.google.com",
+    showMap: true,
     coordinates: {
       lat: -34.603684,
       lng: -58.381559,
