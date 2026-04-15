@@ -11,7 +11,6 @@ import { AVAILABLE_TEMPLATES } from "@/components/features/invitation/creation/c
 import { userInvitations } from "@/data/mock-invitations";
 
 import { TemplatePreviewModal } from "./components/TemplatePreviewModal";
-
 export function TemplatesSection() {
   const [selectedTemplate, setSelectedTemplate] = useState<UserInvitationData | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -118,10 +117,12 @@ export function TemplatesSection() {
                     </motion.div>
 
                     <div className="space-y-2">
-                      <div className="text-sm font-bold uppercase tracking-widest text-[#1A1A1A] opacity-60">
+                      <div
+                        className={`text-sm font-bold uppercase tracking-widest ${template.theme === 'avengers' ? 'text-white' : 'text-[#1A1A1A]'} opacity-60`}
+                      >
                         {template.theme}
                       </div>
-                      <h3 className="text-2xl font-black text-[#1A1A1A] drop-shadow-sm">
+                      <h3 className={`text-2xl font-black ${template.theme === 'avengers' ? 'text-white' : 'text-[#1A1A1A]'} drop-shadow-sm`}>
                         {template.name}
                       </h3>
                     </div>

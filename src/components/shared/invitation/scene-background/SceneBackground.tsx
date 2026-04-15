@@ -213,24 +213,33 @@ function SceneBackgroundComponent({
   confettiPalette = DEFAULT_CONFETTI_PALETTE,
   textureUrl = DEFAULT_TEXTURE,
   showConfettiDots = true,
+  showBaseBackground = true,
+  showOverlay = true,
+  showTexture = true,
   showDecorations = true,
   showBalloonClusters = true,
   showAmbientBalloons = true,
 }: SceneBackgroundProps) {
   return (
     <div className="pointer-events-none absolute inset-0 overflow-hidden">
-      <div className="absolute inset-0" style={{ background: scene.backgroundGradient }} />
-      <motion.div
-        className="absolute inset-0"
-        style={{ background: scene.overlayGradient }}
-        initial={{ opacity: 0, scale: 1.02 }}
-        animate={{ opacity: scene.textureOpacity, scale: 1 }}
-        transition={{ duration: 3, ease: easeOutQuint }}
-      />
-      <div
-        className="absolute inset-0 opacity-25 mix-blend-screen"
-        style={{ backgroundImage: `url('${textureUrl}')` }}
-      />
+      {showBaseBackground && (
+        <div className="absolute inset-0" style={{ background: scene.backgroundGradient }} />
+      )}
+      {showOverlay && (
+        <motion.div
+          className="absolute inset-0"
+          style={{ background: scene.overlayGradient }}
+          initial={{ opacity: 0, scale: 1.02 }}
+          animate={{ opacity: scene.textureOpacity, scale: 1 }}
+          transition={{ duration: 3, ease: easeOutQuint }}
+        />
+      )}
+      {showTexture && (
+        <div
+          className="absolute inset-0 opacity-25 mix-blend-screen"
+          style={{ backgroundImage: `url('${textureUrl}')` }}
+        />
+      )}
       {showConfettiDots ? <ConfettiDots palette={confettiPalette} /> : null}
       {showDecorations ? <DecorationsLayer scene={scene} /> : null}
       {showBalloonClusters ? <BalloonClustersLayer scene={scene} /> : null}

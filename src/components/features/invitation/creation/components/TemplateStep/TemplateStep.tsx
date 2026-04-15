@@ -105,10 +105,10 @@ export function TemplateStep({ formData, onUpdate, errors = [] }: TemplateStepPr
               >
                 <div className="text-5xl drop-shadow-sm">{template.emoji}</div>
                 <div className="flex-1">
-                  <h3 className="text-xl font-bold text-gray-900 drop-shadow-sm">
+                  <h3 className={`text-xl font-bold ${template.theme === 'avengers' ? 'text-white' : 'text-gray-900'} drop-shadow-sm`}>
                     {template.name}
                   </h3>
-                  <p className="mt-1 text-sm font-medium text-gray-700">
+                  <p className={`mt-1 text-sm font-medium ${template.theme === 'avengers' ? 'text-gray-200' : 'text-gray-700'}`}>
                     {template.description}
                   </p>
                 </div>
