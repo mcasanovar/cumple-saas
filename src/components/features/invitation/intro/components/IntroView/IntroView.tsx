@@ -10,6 +10,7 @@ import { IntroPrincessView } from "./IntroPrincessView";
 import { IntroDinoView } from "./IntroDinoView";
 import { IntroKPopView } from "./IntroKPopView";
 import { IntroSafariView } from "./IntroSafariView";
+import { IntroAvengersView } from "./IntroAvengersView";
 
 export type IntroViewProps = IntroContent & {
   onRevealLanding: () => void;
@@ -32,7 +33,7 @@ export function IntroView({
   themeToken,
   isPreview,
 }: IntroViewProps) {
-  const { isDinoTheme, isPrincessTheme, isKPopTheme, isSafariTheme } =
+  const { isDinoTheme, isPrincessTheme, isKPopTheme, isSafariTheme, isAvengersTheme } =
     useThemeDetection(themeToken);
   const [isMounted, setIsMounted] = useState(false);
 
@@ -103,6 +104,25 @@ export function IntroView({
     return (
       <AnimatePresence mode="wait">
         <IntroSafariView
+          introCopy={introCopy}
+          celebrantName={celebrantName}
+          scene={scene}
+          detailLeft={detailLeft}
+          detailRight={detailRight}
+          typography={typography}
+          onRevealLanding={onRevealLanding}
+          isTransitioning={isTransitioning}
+          themeToken={themeToken}
+          isPreview={isPreview}
+        />
+      </AnimatePresence>
+    );
+  }
+
+  if (isAvengersTheme) {
+    return (
+      <AnimatePresence mode="wait">
+        <IntroAvengersView
           introCopy={introCopy}
           celebrantName={celebrantName}
           scene={scene}

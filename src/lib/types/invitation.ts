@@ -5,7 +5,9 @@ export type ThemeToken =
   | "ositos"
   | "cielo"
   | "bosque"
-  | "k-pop";
+  | "k-pop"
+  | "avengers"
+  | "avengers-hero";
 
 export interface ThemeConfig {
   name: string;

@@ -221,4 +221,57 @@ export const userInvitations: UserInvitationData[] = [
     createdAt: "2026-03-15T14:00:00Z",
     updatedAt: "2026-03-15T14:00:00Z",
   },
+  {
+    id: "c3d4e5f6-g7h8-9012-cdef-g34567890123",
+    userId: "user_demo_005",
+    templateId: "avengers-hero",
+    slug: "lucas-avengers-8",
+    metaTitle: "Lucas cumple 8 años | Avengers Hero",
+    metaDescription: "¡Héroes unidos! Únete a la misión especial de Lucas para celebrar su cumpleaños número 8.",
+    celebrantName: "Lucas",
+    age: 8,
+    date: "Sábado 12 de Abril, 2026",
+    time: "17:00 hrs",
+    venueName: "Base de Operaciones (Salón Hero)",
+    venueAddress: "Calle de la Justicia 456, Santiago",
+    googleMapsUrl: "https://maps.google.com",
+    showMap: true,
+    coordinates: {
+      lat: -33.4489,
+      lng: -70.6693,
+    },
+    celebrantDescription: "Un pequeño gran héroe con un corazón valiente. ¡Este año la misión es celebrar!",
+    gallery: [
+      {
+        id: "img-1",
+        caption: "Lucas listo para la acción",
+        imageUrl: "/emi1.jpeg",
+      },
+      {
+        id: "img-2",
+        caption: "Misión especial",
+        imageUrl: "/emi2.jpeg",
+      },
+      {
+        id: "img-3",
+        caption: "Entrenamiento de héroes",
+        imageUrl: "/emi3.jpeg",
+      },
+    ],
+    targetDateISO: "2026-04-12T17:00:00-03:00",
+    introOverrides: {
+      detailLeft: {
+        title: "Sábado",
+        subtitle: "12 ABRIL",
+        helper: "Misión: Fiesta",
+      },
+      detailRight: {
+        title: "5 PM",
+        subtitle: "Base Hero",
+        helper: "Justicia 456",
+      },
+    },
+    createdAt: "2026-04-01T09:00:00Z",
+    updatedAt: "2026-04-01T09:00:00Z",
+  },
 ];

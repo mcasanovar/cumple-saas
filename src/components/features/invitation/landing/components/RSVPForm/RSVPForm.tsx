@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import type { ThemeToken, RSVPActionState } from "@/lib/types/invitation";
 import { useThemeDetection } from "@/hooks/useThemeDetection";
 import { submitRSVP } from "@/app/(public)/invitacion/[invitationId]/actions";
+import { normalizeAvengersText } from "@/lib/utils/normalizeText";
 import { CTAButton } from "@/components/shared/cta-button/CTAButton";
 
 type RSVPFormProps = {
@@ -57,7 +58,7 @@ function Confetti() {
 }
 
 export function RSVPForm({ invitationId, typography, themeToken, isPreview = false }: RSVPFormProps) {
-  const { isDinoTheme, isKPopTheme, isPrincessTheme } = useThemeDetection(themeToken);
+  const { isDinoTheme, isKPopTheme, isPrincessTheme, isAvengersTheme } = useThemeDetection(themeToken);
   const [willAttend, setWillAttend] = useState<boolean | null>(null);
   const [guestCount, setGuestCount] = useState<number>(1);
   const [guestNames, setGuestNames] = useState<string[]>([""]);
@@ -116,7 +117,7 @@ export function RSVPForm({ invitationId, typography, themeToken, isPreview = fal
           transition={{ duration: 0.5 }}
         >
           <motion.div
-            className="mx-4 max-w-md rounded-[32px] bg-white p-12 text-center shadow-2xl"
+            className={`mx-4 max-w-md rounded-[32px] ${isAvengersTheme ? "bg-[#1a1a1a] border border-white/10 shadow-black/50" : "bg-white"} p-12 text-center shadow-2xl`}
             initial={{ scale: 0.8, opacity: 0, y: -50 }}
             animate={{ scale: 1, opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
@@ -131,15 +132,17 @@ export function RSVPForm({ invitationId, typography, themeToken, isPreview = fal
             </motion.div>
             <h3
               className="mb-4 text-3xl font-bold text-[#262147]"
-              style={{ fontFamily: typography.heading }}
+              style={{ fontFamily: typography.heading, color: isAvengersTheme ? "#ffffff" : undefined }}
             >
-              {state.status === "success" ? state.message : willAttend
-                ? "¡Gracias por confirmar!"
-                : "Lamentamos no tenerte con nosotros"}
+              {state.status === "success"
+                ? (isAvengersTheme ? normalizeAvengersText(state.message, true) : state.message)
+                : willAttend
+                  ? (isAvengersTheme ? normalizeAvengersText("¡Gracias por confirmar!", true) : "¡Gracias por confirmar!")
+                  : (isAvengersTheme ? normalizeAvengersText("Lamentamos no tenerte con nosotros", true) : "Lamentamos no tenerte con nosotros")}
             </h3>
             <p
               className="text-lg text-[#6f6bb3] mb-6"
-              style={{ fontFamily: typography.body }}
+              style={{ fontFamily: typography.body, color: isAvengersTheme ? "#9b9b9b" : undefined }}
             >
               {willAttend
                 ? "Te esperamos con muchas ganas"
@@ -171,7 +174,7 @@ export function RSVPForm({ invitationId, typography, themeToken, isPreview = fal
     <motion.form
       action={isPreview ? undefined : formAction}
       onSubmit={isPreview ? (e) => e.preventDefault() : undefined}
-      className="relative overflow-hidden rounded-[32px] border border-white/60 bg-white/90 p-8 shadow-[0_24px_80px_rgba(15,11,29,0.12)] backdrop-blur-2xl"
+      className={`relative overflow-hidden rounded-[32px] border ${isAvengersTheme ? "border-white/10 bg-black/80 shadow-[0_24px_80px_rgba(0,0,0,0.5)]" : "border-white/60 bg-white/90 shadow-[0_24px_80px_rgba(15,11,29,0.12)]"} p-8 backdrop-blur-2xl`}
       initial={{ opacity: 0, y: 32 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
@@ -188,13 +191,13 @@ export function RSVPForm({ invitationId, typography, themeToken, isPreview = fal
         <div className="text-center">
           <h3
             className="mb-2 text-3xl font-bold"
-            style={{ fontFamily: typography.heading, color: isDinoTheme ? "#2D3D2D" : isKPopTheme ? "#9333ea" : isPrincessTheme ? "#FF1493" : "#262147" }}
+            style={{ fontFamily: typography.heading, color: isDinoTheme ? "#2D3D2D" : isKPopTheme ? "#9333ea" : isPrincessTheme ? "#FF1493" : isAvengersTheme ? "#ffffff" : "#262147" }}
           >
-            Confirma tu asistencia
+            {isAvengersTheme ? normalizeAvengersText("Confirma tu asistencia", true) : "Confirma tu asistencia"}
           </h3>
           <p
             className="text-base"
-            style={{ fontFamily: typography.body, color: isDinoTheme ? "#5A8A5D" : isKPopTheme ? "#E91E63" : isPrincessTheme ? "#FF69B4" : "#6f6bb3" }}
+            style={{ fontFamily: typography.body, color: isDinoTheme ? "#5A8A5D" : isKPopTheme ? "#E91E63" : isPrincessTheme ? "#FF69B4" : isAvengersTheme ? "#9b9b9b" : "#6f6bb3" }}
           >
             ¿Podrás acompañarnos?
           </p>
@@ -219,9 +222,11 @@ export function RSVPForm({ invitationId, typography, themeToken, isPreview = fal
                     ? "linear-gradient(135deg, rgba(233, 30, 99, 0.95) 0%, rgba(147, 51, 234, 0.95) 100%)"
                     : isPrincessTheme
                       ? "linear-gradient(135deg, rgba(255, 20, 147, 0.95) 0%, rgba(255, 105, 180, 0.95) 52%, rgba(255, 182, 217, 0.92) 100%)"
-                      : "linear-gradient(135deg, rgba(255,112,161,0.95) 0%, rgba(255,149,89,0.92) 52%, rgba(255,213,102,0.88) 100%)"
+                      : isAvengersTheme
+                        ? "linear-gradient(135deg, #ff7a00 0%, #ffd54f 100%)"
+                        : "linear-gradient(135deg, rgba(255,112,161,0.95) 0%, rgba(255,149,89,0.92) 52%, rgba(255,213,102,0.88) 100%)"
                 : "rgba(255, 255, 255, 0.8)",
-              color: willAttend === true ? "#ffffff" : "#6f6bb3",
+              color: willAttend === true ? (isAvengersTheme ? "#000000" : "#ffffff") : "#6f6bb3",
               boxShadow: willAttend === true
                 ? isDinoTheme
                   ? "0 22px 48px rgba(74, 115, 80, 0.4)"
@@ -229,13 +234,15 @@ export function RSVPForm({ invitationId, typography, themeToken, isPreview = fal
                     ? "0 22px 45px rgba(218, 112, 214, 0.3)"
                     : isPrincessTheme
                       ? "0 22px 45px rgba(255, 20, 147, 0.35)"
-                      : "0 22px 45px rgba(244,63,94,0.25)"
+                      : isAvengersTheme
+                        ? "0 10px 20px rgba(255, 122, 0, 0.4)"
+                        : "0 22px 45px rgba(244,63,94,0.25)"
                 : "none",
             }}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            Sí ✨
+            {isAvengersTheme ? normalizeAvengersText("Sí", true) : "Sí ✨"}
           </motion.button>
           <motion.button
             type="button"
@@ -249,7 +256,9 @@ export function RSVPForm({ invitationId, typography, themeToken, isPreview = fal
                     ? "linear-gradient(135deg, rgba(233, 30, 99, 0.95) 0%, rgba(147, 51, 234, 0.95) 100%)"
                     : isPrincessTheme
                       ? "linear-gradient(135deg, rgba(255, 20, 147, 0.95) 0%, rgba(255, 105, 180, 0.95) 52%, rgba(255, 182, 217, 0.92) 100%)"
-                      : "linear-gradient(135deg, rgba(255,112,161,0.95) 0%, rgba(255,149,89,0.92) 52%, rgba(255,213,102,0.88) 100%)"
+                      : isAvengersTheme
+                        ? "linear-gradient(135deg, #333333 0%, #1a1a1a 100%)"
+                        : "linear-gradient(135deg, rgba(255,112,161,0.95) 0%, rgba(255,149,89,0.92) 52%, rgba(255,213,102,0.88) 100%)"
                 : "rgba(255, 255, 255, 0.8)",
               color: willAttend === false ? "#ffffff" : "#6f6bb3",
               boxShadow: willAttend === false
@@ -259,13 +268,15 @@ export function RSVPForm({ invitationId, typography, themeToken, isPreview = fal
                     ? "0 22px 45px rgba(218, 112, 214, 0.3)"
                     : isPrincessTheme
                       ? "0 22px 45px rgba(255, 20, 147, 0.35)"
-                      : "0 22px 45px rgba(244,63,94,0.25)"
+                      : isAvengersTheme
+                        ? "0 10px 20px rgba(0, 0, 0, 0.4)"
+                        : "0 22px 45px rgba(244,63,94,0.25)"
                 : "none",
             }}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            No 😢
+            {isAvengersTheme ? normalizeAvengersText("No", true) : "No 😢"}
           </motion.button>
         </div>
 
@@ -278,14 +289,14 @@ export function RSVPForm({ invitationId, typography, themeToken, isPreview = fal
               exit={{ opacity: 0, height: 0 }}
               transition={{ duration: 0.4 }}
             >
-              <label className="flex flex-col gap-2 text-sm font-medium text-slate-600">
-                ¿Cuántas personas asistirán?
+              <label className={`flex flex-col gap-2 text-sm font-medium ${isAvengersTheme ? "text-[#9b9b9b]" : "text-slate-600"}`}>
+                {isAvengersTheme ? "CUANTAS PERSONAS ASISTIRAN" : "¿Cuántas personas asistirán?"}
                 <select
                   name="guestCount"
                   value={guestCount}
                   onChange={(e) => handleGuestCountChange(Number(e.target.value))}
                   disabled={isPreview}
-                  className="rounded-2xl border border-white/70 bg-white/90 px-4 py-3 text-base text-slate-800 shadow-inner shadow-white/40 outline-none transition focus:border-slate-300 focus:shadow-lg disabled:opacity-70"
+                  className={`rounded-2xl border ${isAvengersTheme ? "border-white/10 bg-white/5 text-white" : "border-white/70 bg-white/90 text-slate-800"} px-4 py-3 text-base shadow-inner shadow-white/40 outline-none transition focus:border-slate-300 focus:shadow-lg disabled:opacity-70`}
                   required
                 >
                   {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => (
@@ -297,8 +308,10 @@ export function RSVPForm({ invitationId, typography, themeToken, isPreview = fal
               </label>
 
               <div className="space-y-3">
-                <p className="text-sm font-medium text-slate-600">
-                  Nombre{guestCount > 1 ? "s" : ""} de {guestCount > 1 ? "los" : "la"} asistente{guestCount > 1 ? "s" : ""}:
+                <p className={`text-sm font-medium ${isAvengersTheme ? "text-[#9b9b9b]" : "text-slate-600"}`}>
+                  {isAvengersTheme
+                    ? `NOMBRE${guestCount > 1 ? "S" : ""} DE ${guestCount > 1 ? "LOS" : "LA"} ASISTENTE${guestCount > 1 ? "S" : ""}`
+                    : `Nombre${guestCount > 1 ? "s" : ""} de ${guestCount > 1 ? "los" : "la"} asistente${guestCount > 1 ? "s" : ""}:`}
                 </p>
                 {guestNames.map((name, index) => (
                   <motion.input
@@ -307,8 +320,8 @@ export function RSVPForm({ invitationId, typography, themeToken, isPreview = fal
                     value={name}
                     onChange={(e) => handleGuestNameChange(index, e.target.value)}
                     disabled={isPreview}
-                    placeholder={`Nombre de la persona ${index + 1}`}
-                    className="w-full rounded-2xl border border-white/70 bg-white/90 px-4 py-3 text-base text-slate-800 shadow-inner shadow-white/40 outline-none transition focus:border-slate-300 focus:shadow-lg disabled:opacity-70"
+                    placeholder={isAvengersTheme ? "ESCRIBE EL NOMBRE" : `Nombre de la persona ${index + 1}`}
+                    className={`w-full rounded-2xl border ${isAvengersTheme ? "border-white/10 bg-white/5 text-white" : "border-white/70 bg-white/90 text-slate-800"} px-4 py-3 text-base shadow-inner shadow-white/40 outline-none transition focus:border-slate-300 focus:shadow-lg disabled:opacity-70`}
                     required
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
@@ -317,8 +330,8 @@ export function RSVPForm({ invitationId, typography, themeToken, isPreview = fal
                 ))}
               </div>
 
-              <label className="flex flex-col gap-2 text-sm font-medium text-slate-600">
-                Correo electrónico
+              <label className={`flex flex-col gap-2 text-sm font-medium ${isAvengersTheme ? "text-[#9b9b9b]" : "text-slate-600"}`}>
+                {isAvengersTheme ? "CORREO ELECTRÓNICO" : "Correo electrónico"}
                 <input
                   name="email"
                   type="email"
@@ -326,7 +339,7 @@ export function RSVPForm({ invitationId, typography, themeToken, isPreview = fal
                   onChange={(e) => setEmail(e.target.value)}
                   disabled={isPreview}
                   placeholder="tu@email.com"
-                  className="rounded-2xl border border-white/70 bg-white/90 px-4 py-3 text-base text-slate-800 shadow-inner shadow-white/40 outline-none transition focus:border-slate-300 focus:shadow-lg disabled:opacity-70"
+                  className={`w-full rounded-2xl border ${isAvengersTheme ? "border-white/10 bg-black/80 text-white" : "border-white/70 bg-white/90 text-slate-800"} px-4 py-3 text-base shadow-inner shadow-white/40 outline-none transition focus:border-slate-300 focus:shadow-lg disabled:opacity-70`}
                   required
                 />
               </label>
@@ -341,25 +354,25 @@ export function RSVPForm({ invitationId, typography, themeToken, isPreview = fal
               exit={{ opacity: 0, height: 0 }}
               transition={{ duration: 0.4 }}
             >
-              <p className="text-sm text-gray-500 text-center">
-                Lamentamos que no puedas acompañarnos. Por favor, déjanos tus datos para saber quién eres.
+              <p className={`text-sm ${isAvengersTheme ? "text-[#9b9b9b]" : "text-gray-500"} text-center`}>
+                {isAvengersTheme ? "Lamentamos que no puedas acompañarnos. Por favor, déjanos tus datos para saber quién eres." : "Lamentamos que no puedas acompañarnos. Por favor, déjanos tus datos para saber quién eres."}
               </p>
 
-              <label className="flex flex-col gap-2 text-sm font-medium text-slate-600">
-                Tu nombre
+              <label className={`flex flex-col gap-2 text-sm font-medium ${isAvengersTheme ? "text-[#9b9b9b]" : "text-slate-600"}`}>
+                {isAvengersTheme ? "TU NOMBRE" : "Tu nombre"}
                 <input
                   type="text"
                   value={guestNames[0]}
                   onChange={(e) => handleGuestNameChange(0, e.target.value)}
                   disabled={isPreview}
-                  placeholder="Escribe tu nombre"
-                  className="rounded-2xl border border-white/70 bg-white/90 px-4 py-3 text-base text-slate-800 shadow-inner shadow-white/40 outline-none transition focus:border-slate-300 focus:shadow-lg disabled:opacity-70"
+                  placeholder={isAvengersTheme ? "Escribe tu nombre" : "Escribe tu nombre"}
+                  className={`rounded-2xl border ${isAvengersTheme ? "border-white/10 bg-white/5 text-white" : "border-white/70 bg-white/90 text-slate-800"} px-4 py-3 text-base shadow-inner shadow-white/40 outline-none transition focus:border-slate-300 focus:shadow-lg disabled:opacity-70`}
                   required
                 />
               </label>
 
-              <label className="flex flex-col gap-2 text-sm font-medium text-slate-600">
-                Correo electrónico
+              <label className={`flex flex-col gap-2 text-sm font-medium ${isAvengersTheme ? "text-[#9b9b9b]" : "text-slate-600"}`}>
+                {isAvengersTheme ? "CORREO ELECTRONICO" : "Correo electrónico"}
                 <input
                   name="email"
                   type="email"
@@ -367,19 +380,19 @@ export function RSVPForm({ invitationId, typography, themeToken, isPreview = fal
                   onChange={(e) => setEmail(e.target.value)}
                   disabled={isPreview}
                   placeholder="tu@email.com"
-                  className="rounded-2xl border border-white/70 bg-white/90 px-4 py-3 text-base text-slate-800 shadow-inner shadow-white/40 outline-none transition focus:border-slate-300 focus:shadow-lg disabled:opacity-70"
+                  className={`rounded-2xl border ${isAvengersTheme ? "border-white/10 bg-white/5 text-white" : "border-white/70 bg-white/90 text-slate-800"} px-4 py-3 text-base shadow-inner shadow-white/40 outline-none transition focus:border-slate-300 focus:shadow-lg disabled:opacity-70`}
                   required
                 />
               </label>
 
-              <label className="flex flex-col gap-2 text-sm font-medium text-slate-600">
-                ¿Algún motivo o mensaje? (Opcional)
+              <label className={`flex flex-col gap-2 text-sm font-medium ${isAvengersTheme ? "text-[#9b9b9b]" : "text-slate-600"}`}>
+                {isAvengersTheme ? "MENSAJE" : "¿Algún motivo o mensaje? (Opcional)"}
                 <textarea
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
                   disabled={isPreview}
-                  placeholder="No podré asistir porque..."
-                  className="min-h-[100px] rounded-2xl border border-white/70 bg-white/90 px-4 py-3 text-base text-slate-800 shadow-inner shadow-white/40 outline-none transition focus:border-slate-300 focus:shadow-lg disabled:opacity-70 resize-none"
+                  placeholder={isAvengersTheme ? "Escribe tu mensaje" : "No podré asistir porque..."}
+                  className={`min-h-[100px] rounded-2xl border ${isAvengersTheme ? "border-white/10 bg-white/5 text-white" : "border-white/70 bg-white/90 text-slate-800"} px-4 py-3 text-base shadow-inner shadow-white/40 outline-none transition focus:border-slate-300 focus:shadow-lg disabled:opacity-70 resize-none`}
                 />
               </label>
             </motion.div>
@@ -398,21 +411,30 @@ export function RSVPForm({ invitationId, typography, themeToken, isPreview = fal
                   ? "linear-gradient(135deg, rgba(233, 30, 99, 0.95) 0%, rgba(147, 51, 234, 0.95) 100%)"
                   : isPrincessTheme
                     ? "linear-gradient(135deg, rgba(255, 20, 147, 0.95) 0%, rgba(255, 105, 180, 0.95) 52%, rgba(255, 182, 217, 0.92) 100%)"
-                    : "linear-gradient(135deg, rgba(255,112,161,0.95) 0%, rgba(255,149,89,0.92) 52%, rgba(255,213,102,0.88) 100%)",
+                    : isAvengersTheme
+                      ? "linear-gradient(135deg, #ff7a00 0%, #ffd54f 100%)"
+                      : "linear-gradient(135deg, rgba(255,112,161,0.95) 0%, rgba(255,149,89,0.92) 52%, rgba(255,213,102,0.88) 100%)",
               boxShadow: isDinoTheme
                 ? "0 22px 48px rgba(74, 115, 80, 0.4)"
                 : isKPopTheme
                   ? "0 22px 45px rgba(218, 112, 214, 0.3)"
                   : isPrincessTheme
                     ? "0 22px 45px rgba(255, 20, 147, 0.35)"
-                    : "0 22px 45px rgba(244,63,94,0.25)",
+                    : isAvengersTheme
+                      ? "0 10px 20px rgba(255, 122, 0, 0.4)"
+                      : "0 22px 45px rgba(244,63,94,0.25)",
+              color: isAvengersTheme ? "#000000" : "#ffffff",
             }}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
           >
-            {isPending ? "Enviando..." : isPreview ? "Confirmación deshabilitada en preview" : "Enviar confirmación"}
+            {isPending
+              ? "Enviando..."
+              : isPreview
+                ? "Confirmación deshabilitada en preview"
+                : "Enviar confirmación"}
           </motion.button>
         )}
       </div>

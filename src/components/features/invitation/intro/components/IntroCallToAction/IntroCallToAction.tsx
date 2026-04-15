@@ -19,7 +19,7 @@ export type IntroCallToActionProps = {
 };
 
 export function IntroCallToAction({ className, label, onComplete, fontFamily, isTransitioning, themeToken, isPreview = false }: IntroCallToActionProps) {
-  const { isDinoTheme, isPrincessTheme, isKPopTheme } = useThemeDetection(themeToken);
+  const { isDinoTheme, isPrincessTheme, isKPopTheme, isAvengersTheme } = useThemeDetection(themeToken);
   const [isAnimating, setIsAnimating] = useState(false);
   const [confettiActive, setConfettiActive] = useState(false);
   const [fadeActive, setFadeActive] = useState(false);
@@ -70,8 +70,12 @@ export function IntroCallToAction({ className, label, onComplete, fontFamily, is
 
   const buttonText = useMemo(() => {
     const cleaned = label.replace(/presiona/gi, "").trim();
-    return cleaned.length > 0 ? cleaned : "¡Abrir invitación!";
-  }, [label]);
+    const text = cleaned.length > 0 ? cleaned : "¡Abrir invitación!";
+    if (isAvengersTheme) {
+      return text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[¡!¿?]/g, "");
+    }
+    return text;
+  }, [label, isAvengersTheme]);
 
   useEffect(() => {
     return () => {
@@ -176,15 +180,19 @@ export function IntroCallToAction({ className, label, onComplete, fontFamily, is
                   ? "linear-gradient(135deg, rgba(90, 138, 93, 0.98) 0%, rgba(74, 115, 80, 0.95) 52%, rgba(107, 155, 110, 0.92) 100%)"
                   : isKPopTheme
                     ? "linear-gradient(135deg, rgba(0, 0, 0, 0.8) 0%, rgba(45, 27, 105, 0.9) 100%)"
-                    : "linear-gradient(135deg, rgba(255,112,161,0.95) 0%, rgba(255,149,89,0.92) 52%, rgba(255,213,102,0.88) 100%)",
+                    : isAvengersTheme
+                      ? "linear-gradient(135deg, #b91c1c 0%, #7f1d1d 100%)"
+                      : "linear-gradient(135deg, rgba(255,112,161,0.95) 0%, rgba(255,149,89,0.92) 52%, rgba(255,213,102,0.88) 100%)",
               boxShadow: isPrincessTheme
                 ? "0 22px 45px rgba(146, 120, 185, 0.35)"
                 : isDinoTheme
                   ? "0 22px 48px rgba(74, 115, 80, 0.4)"
                   : isKPopTheme
                     ? "0 0 30px rgba(243, 99, 180, 0.6), 0 0 60px rgba(147, 51, 234, 0.4), inset 0 0 0 2px rgba(243, 99, 180, 0.8)"
-                    : "0 22px 45px rgba(244,63,94,0.25)",
-              border: isKPopTheme ? "2px solid rgba(243, 99, 180, 0.8)" : undefined,
+                    : isAvengersTheme
+                      ? "0 0 20px rgba(248, 113, 113, 0.4), inset 0 0 15px rgba(251, 192, 45, 0.2)"
+                      : "0 22px 45px rgba(244,63,94,0.25)",
+              border: isKPopTheme ? "2px solid rgba(243, 99, 180, 0.8)" : isAvengersTheme ? "2px solid #fbc02d" : undefined,
             }}
           >
             {!isDinoTheme && !isPrincessTheme && !isKPopTheme && (
@@ -323,6 +331,22 @@ export function IntroCallToAction({ className, label, onComplete, fontFamily, is
                   />
                 ))}
               </div>
+            ) : isAvengersTheme ? (
+              <div className="pointer-events-none absolute inset-0 overflow-hidden">
+                {/* Destellos de energía para Avengers */}
+                <motion.div
+                  className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(251,192,45,0.15),transparent_70%)]"
+                  animate={{
+                    opacity: [0.3, 0.6, 0.3],
+                  }}
+                  transition={{
+                    duration: 2,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }}
+                />
+                <span className="absolute left-[-10%] top-[-50%] h-[200%] w-[20%] rotate-[35deg] bg-white/10 blur-xl" />
+              </div>
             ) : (
               <div className="pointer-events-none absolute inset-0">
                 {["#fff5f7", "#ffe7f1", "#fff0d6"].map((color, idx) => (
@@ -355,7 +379,7 @@ export function IntroCallToAction({ className, label, onComplete, fontFamily, is
             )}
 
             <span
-              className={`relative text-lg font-extrabold uppercase tracking-[0.4em] ${isKPopTheme ? "text-transparent" : "text-white"
+              className={`relative text-lg font-extrabold uppercase tracking-[0.4em] ${isKPopTheme ? "text-transparent" : isAvengersTheme ? "text-[#fbc02d]" : "text-white"
                 }`}
               style={{
                 textShadow: isPrincessTheme
@@ -364,15 +388,18 @@ export function IntroCallToAction({ className, label, onComplete, fontFamily, is
                     ? "0 3px 6px rgba(45, 61, 45, 0.5)"
                     : isKPopTheme
                       ? "none"
-                      : "0 3px 6px rgba(236,72,153,0.45)",
+                      : isAvengersTheme
+                        ? "0 0 10px rgba(251, 192, 45, 0.5), 2px 2px 0px rgba(0,0,0,0.8)"
+                        : "0 3px 6px rgba(236,72,153,0.45)",
                 background: isKPopTheme
                   ? "linear-gradient(45deg, #f363b4 0%, #ffd166 50%, #f363b4 100%)"
                   : undefined,
                 WebkitBackgroundClip: isKPopTheme ? "text" : undefined,
-                WebkitTextStroke: isKPopTheme ? "2px rgba(243, 99, 180, 0.8)" : undefined,
+                WebkitTextStroke: isKPopTheme ? "2px rgba(243, 99, 180, 0.8)" : isAvengersTheme ? "1px rgba(0,0,0,0.5)" : undefined,
                 filter: isKPopTheme
                   ? "drop-shadow(0 0 10px rgba(243, 99, 180, 0.8)) drop-shadow(0 0 20px rgba(147, 51, 234, 0.6))"
                   : undefined,
+                fontFamily: isAvengersTheme ? 'Avengeance, var(--font-avengers), sans-serif' : undefined
               }}
             >
               {buttonText.toUpperCase()}
