@@ -150,21 +150,6 @@ export function LandingAvengersBackground() {
       </motion.div>
 
       <motion.div
-        className="absolute -translate-x-1/2 max-w-lg pointer-events-none"
-        transition={{ duration: 1.2, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-        style={{ opacity: 0.23, top: isMobile ? "42%" : "55%", left: isMobile ? "50%" : "20%" }}
-      >
-        <Image
-          src="/hulk-bg.png"
-          alt="Hulk Background"
-          width={450}
-          height={450}
-          className="w-full h-auto"
-          priority
-        />
-      </motion.div>
-
-      <motion.div
         className="absolute -translate-x-1/2 pointer-events-none"
         transition={{ duration: 1.2, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
         style={{ opacity: 0.4, bottom: isMobile ? "38%" : "4%", left: isMobile ? "-15%" : "20%" }}
@@ -179,23 +164,8 @@ export function LandingAvengersBackground() {
         />
       </motion.div>
 
-      <motion.div
-        className="absolute -translate-x-1/2 max-w-lg pointer-events-none"
-        transition={{ duration: 1.2, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-        style={{ opacity: 0.23, bottom: isMobile ? "38%" : "5%", right: isMobile ? "-15%" : "10%" }}
-      >
-        <Image
-          src="/iron-man-bg.png"
-          alt="Hulk Background"
-          width={300}
-          height={300}
-          className="w-full h-auto"
-          priority
-        />
-      </motion.div>
-
       {/* Ambient Occlusion / Depth Shadow */}
       <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.4)_100%)]" />
-    </div>
+    </div >
   );
 }
