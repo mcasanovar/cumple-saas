@@ -45,6 +45,7 @@ function mapUserInvitationToRenderConfig(
   if (templateId.includes("princess")) themeToken = "princesa";
   else if (templateId.includes("dino")) themeToken = "dinosaurios";
   else if (templateId.includes("k-pop")) themeToken = "k-pop";
+  else if (templateId.includes("avengers")) themeToken = "avengers";
   else if (templateId.includes("safari")) themeToken = "safari";
 
   const theme = themes[themeToken];

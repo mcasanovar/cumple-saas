@@ -25,6 +25,11 @@ export function DecorativeBackground({
   phase,
 }: DecorativeBackgroundProps) {
   const prefersReducedMotion = useReducedMotion();
+  const isAvengersTheme = theme.name === "Avengers Hero";
+
+  if (isAvengersTheme && phase === "landing") {
+    return null;
+  }
 
   return (
     <div

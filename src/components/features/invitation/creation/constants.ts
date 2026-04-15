@@ -33,6 +33,14 @@ export const AVAILABLE_TEMPLATES: TemplateOption[] = [
     description: "Para la próxima gran estrella de la música",
     previewImage: "/k-pop.png",
   },
+  {
+    id: "avengers-hero" as TemplateId,
+    name: "Avengers Hero",
+    theme: "avengers",
+    emoji: "🦸",
+    description: "Una celebración épica digna de los héroes más poderosos",
+    previewImage: "/avengers-preview.png",
+  },
 ];
 
 export const CREATION_STEPS = [

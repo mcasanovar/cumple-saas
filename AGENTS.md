@@ -62,13 +62,21 @@ Registro (Clerk) → Dashboard → Creación (4 pasos) → Pago (MP) → Publica
 - **Mercado Pago 2.12.0**: Pagos (CLP)
 - **Cloudinary 2.9.0**: Imágenes
 - **Leaflet 1.9.4**: Mapas
+- **Resend 6.10.0**: Envío de emails transaccionales
 
 ### Styling y Animaciones
 - **Tailwind CSS v4**: Utility-first
 - **Framer Motion 12.36.0**: Animaciones
+- **React Icons 5.6.0**: Biblioteca de iconos
 
-### Validación
+### State Management
+- **Zustand 5.0.12**: State management global (navegación, loaders)
+
+### Validación y Utilidades
 - **Zod 4.3.6**: Schemas
+- **UUID 13.0.0**: Generación de identificadores únicos
+- **@react-email/components 1.0.11**: Componentes para emails
+- **@react-email/render 2.0.5**: Renderizado de emails React
 
 ---
 
@@ -84,8 +92,14 @@ web/
 │   │   │       ├── layout.tsx            # Sidebar + UserButton
 │   │   │       ├── invitaciones/
 │   │   │       │   ├── page.tsx          # Lista invitaciones
-│   │   │       │   ├── actions.ts        # deleteInvitation, getRSVPs
-│   │   │       │   ├── [id]/             # Detalle
+│   │   │       │   ├── actions.ts        # deleteInvitation, getRSVPs, addRSVPGuest, removeRSVPGuest
+│   │   │       │   ├── hooks/
+│   │   │       │   │   └── useDeleteInvitation.ts  # Hook para eliminación
+│   │   │       │   ├── [id]/
+│   │   │       │   │   ├── invitados/    # Gestión de invitados
+│   │   │       │   │   │   └── page.tsx  # Lista de RSVPs
+│   │   │       │   │   └── view/         # Vista de invitación
+│   │   │       │   │       └── page.tsx
 │   │   │       │   └── nueva/
 │   │   │       │       ├── page.tsx      # Flujo creación
 │   │   │       │       └── actions.ts    # save, upload, payment
@@ -98,6 +112,8 @@ web/
 │   │   ├── (public)/
 │   │   │   └── invitacion/
 │   │   │       ├── [invitationId]/       # Página pública (SSG)
+│   │   │       │   ├── page.tsx          # Landing de invitación
+│   │   │       │   ├── actions.ts        # submitRSVP (con emails)
 │   │   │       │   └── intro/            # Intro animada
 │   │   │       └── preview/              # Preview localStorage
 │   │   │
@@ -107,28 +123,56 @@ web/
 │   │
 │   ├── components/
 │   │   ├── features/
-│   │   │   ├── dashboard/                # InvitationsListView, RSVPListView
+│   │   │   ├── dashboard/
+│   │   │   │   ├── InvitationsListView.tsx  # Lista de invitaciones
+│   │   │   │   ├── RSVPListView.tsx         # Lista de RSVPs con gestión
+│   │   │   │   ├── AddGuestModal.tsx        # Modal agregar acompañante
+│   │   │   │   └── components/
+│   │   │   │       └── DeleteConfirmationModal.tsx
 │   │   │   ├── invitation/
 │   │   │   │   ├── creation/             # InvitationCreation + 4 steps
 │   │   │   │   ├── intro/                # IntroPage + 13 componentes
 │   │   │   │   └── landing/              # Landing + RSVP + Countdown
 │   │   │   └── marketing-landing/
-│   │   └── shared/                       # confetti, map-view, icons
+│   │   └── shared/
+│   │       ├── NavigationLoader/         # Loader de navegación
+│   │       ├── confetti/
+│   │       ├── map-view/
+│   │       ├── icon-renderer/
+│   │       ├── cta-button/
+│   │       └── invitation/               # Componentes compartidos
 │   │
 │   ├── config/themes.ts                  # 7 temas visuales
 │   ├── data/invitations.ts               # getInvitationById
-│   ├── hooks/                            # useIsMobile, useThemeDetection
+│   ├── hooks/
+│   │   ├── useIsMobile.ts                # Detección de dispositivo móvil
+│   │   ├── useThemeDetection.ts          # Detección de tema
+│   │   └── use-navigation-loader.ts      # Hook de navegación con Zustand
+│   │
+│   ├── emails/                           # Templates de email React
+│   │   ├── RSVPToHostEmail.tsx           # Email al host cuando hay RSVP
+│   │   ├── RSVPToGuestEmail.tsx          # Email confirmación al invitado
+│   │   ├── PaymentConfirmationEmail.tsx  # Email confirmación de pago
+│   │   └── WelcomeEmail.tsx              # Email de bienvenida
 │   │
 │   ├── lib/
 │   │   ├── auth-sync.ts                  # syncUserWithDb()
 │   │   ├── cloudinary.ts                 # Cliente
 │   │   ├── mercadopago.ts                # mercadopagoClient
+│   │   ├── resend.ts                     # Cliente Resend para emails
+│   │   ├── leaflet-fix.ts                # Fix para iconos de Leaflet
 │   │   ├── prisma.ts                     # Singleton
 │   │   ├── templates/                    # registry, utils, 4 templates
-│   │   └── types/                        # invitation, payment, rsvp, template
+│   │   ├── types/                        # invitation, payment, rsvp, template
+│   │   └── utils/
+│   │       └── generateInvitationId.ts   # Generación de IDs únicos
 │   │
 │   ├── middleware.ts                     # Clerk + Supabase session
-│   └── utils/supabase/                   # client, server, middleware
+│   └── utils/
+│       ├── date.ts                       # formatDateLong, getDateComponents
+│       ├── rsvp.ts                       # calculateTotalGuests, countConfirmed, etc.
+│       ├── maps.ts                       # Utilidades de mapas
+│       └── supabase/                     # client, server, middleware
 │
 ├── prisma/schema.prisma                  # User, Invitation, RSVP, Purchase
 └── public/                               # Assets
@@ -192,8 +236,11 @@ model RSVP {
   willAttend   Boolean
   guestCount   Int        @default(0)
   guestNames   Json?                          # Array de nombres
+  message      String?    @default("")       # Mensaje del invitado
   createdAt    DateTime   @default(now())
   invitation   Invitation @relation(...)
+
+  @@index([invitationId])
 }
 
 model Purchase {
@@ -219,6 +266,18 @@ type CreationStep = "template" | "event-info" | "images" | "preview";
 
 // lib/types/invitation.ts
 type ThemeToken = "safari" | "princesa" | "dinosaurios" | "ositos" | "cielo" | "bosque" | "k-pop";
+
+// lib/types/rsvp.ts
+type DashboardRSVP = {
+  id: string;
+  name: string;
+  email: string | null;
+  willAttend: boolean;
+  guestCount: number;
+  guestNames: string[];
+  message: string | null;
+  createdAt: string;
+};
 ```
 
 ---
@@ -282,10 +341,13 @@ type ThemeToken = "safari" | "princesa" | "dinosaurios" | "ositos" | "cielo" | "
 |---------|---------|-----------|
 | `dashboard/invitaciones/actions.ts` | `deleteInvitation` | Soft delete de invitación |
 | `dashboard/invitaciones/actions.ts` | `getRSVPsByInvitation` | Obtener RSVPs de una invitación |
+| `dashboard/invitaciones/actions.ts` | `addRSVPGuest` | Agregar acompañante a un RSVP |
+| `dashboard/invitaciones/actions.ts` | `removeRSVPGuest` | Eliminar acompañante de un RSVP |
 | `dashboard/invitaciones/nueva/actions.ts` | `createPaymentPreference` | Crear preferencia de pago en MP |
 | `dashboard/invitaciones/nueva/actions.ts` | `uploadImageAction` | Subir imagen a Cloudinary |
 | `dashboard/invitaciones/nueva/actions.ts` | `publishInvitationAction` | Publicar invitación tras pago |
 | `dashboard/invitaciones/nueva/actions.ts` | `saveInvitationProgress` | Guardar progreso del flujo |
+| `invitacion/[invitationId]/actions.ts` | `submitRSVP` | Procesar RSVP y enviar emails |
 
 ### API Routes Existentes
 
@@ -415,12 +477,21 @@ UserInvitationData (DB) → mergeTemplateWithUserData() → InvitationRenderConf
 
 ### Agente: `RSVPAgent`
 
-- **Objetivo**: Gestionar confirmaciones de asistencia
-- **Responsabilidades**: Recibir confirmaciones, almacenar RSVPs
-- **Inputs**: Datos del formulario RSVP, `invitationId`
-- **Outputs**: Registro RSVP, lista de confirmaciones
-- **Herramientas**: `RSVPForm`, `getRSVPsByInvitation`
-- **Restricciones**: No requerir auth para invitados
+- **Objetivo**: Gestionar confirmaciones de asistencia y notificaciones
+- **Responsabilidades**: Recibir confirmaciones, almacenar RSVPs, enviar emails, gestionar acompañantes
+- **Inputs**: Datos del formulario RSVP, `invitationId`, datos de invitados
+- **Outputs**: Registro RSVP, lista de confirmaciones, emails de notificación
+- **Herramientas**: `RSVPForm`, `getRSVPsByInvitation`, `submitRSVP`, `addRSVPGuest`, `removeRSVPGuest`, `resend`
+- **Restricciones**: No requerir auth para invitados públicos, validar duplicados por email
+
+### Agente: `EmailAgent`
+
+- **Objetivo**: Gestionar envío de emails transaccionales
+- **Responsabilidades**: Enviar notificaciones de RSVP, confirmaciones de pago, bienvenida
+- **Inputs**: Datos del evento, destinatario, tipo de email
+- **Outputs**: Emails HTML renderizados y enviados
+- **Herramientas**: `lib/resend.ts`, templates en `emails/`
+- **Restricciones**: Manejar errores sin bloquear flujo principal, usar dominio verificado
 
 ---
 
@@ -499,4 +570,7 @@ createPaymentPreference() → MercadoPago Checkout
 - Agregar animaciones con Framer Motion
 - Crear nuevos hooks en `hooks/`
 - Agregar tipos en `lib/types/`
+- Crear templates de email en `emails/`
+- Agregar utilidades en `utils/`
+- Usar Zustand para state management global simple
 
