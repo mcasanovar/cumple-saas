@@ -6,7 +6,8 @@ export type TemplateId =
   | "dino-party"
   | "space-explorer"
   | "unicorn-magic"
-  | "k-pop";
+  | "k-pop"
+  | "avengers-hero";
 
 export type TemplateCategory = "animals" | "fantasy" | "adventure" | "space" | "music";
 

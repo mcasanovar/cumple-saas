@@ -3,6 +3,7 @@ import { ThemeConfig, ThemeToken } from "@/lib/types/invitation";
 const kidsFont = '"Baloo 2", "Fredoka", "Comic Neue", sans-serif';
 const princessFont = '"Waltograph", cursive';
 const kpopFont = 'var(--font-kpop), "Kalam", cursive';
+const avengersFont = 'var(--font-avengers), "Avengeance", "Inter", sans-serif';
 
 export const themes: Record<ThemeToken, ThemeConfig> = {
   safari: {
@@ -589,6 +590,82 @@ export const themes: Record<ThemeToken, ThemeConfig> = {
     typography: {
       heading: kpopFont,
       body: kpopFont,
+    },
+  },
+  avengers: {
+    name: "Avengers Hero",
+    primaryGradient: "linear-gradient(135deg, #000000 0%, #8b1b1b 100%)",
+    accentGradient: "linear-gradient(135deg, #ff7a00 0%, #ffd54f 50%, #4ea2ff 100%)",
+    accentColor: "#fbc02d",
+    backgroundPattern: "radial-gradient(circle at center, #8b1b1b 0%, #000000 100%)",
+    floatingDecorations: [],
+    typography: {
+      heading: avengersFont,
+      body: kidsFont,
+    },
+    introScene: {
+      backgroundGradient: "radial-gradient(circle at top, #8b1b1b 0%, #000000 100%)",
+      overlayGradient: "linear-gradient(to bottom, rgba(0,0,0,0.4), rgba(0,0,0,0.6))",
+      textureOpacity: 0.5,
+      frame: {
+        borderGradient: "linear-gradient(135deg, #fbb021 0%, #ffdf8b 100%)",
+        fill: "rgba(0,0,0,0.8)",
+        highlight: "#ff6122",
+        shadow: "rgba(0,0,0,0.7)",
+      },
+      decorations: [],
+      monogram: {
+        background: "linear-gradient(135deg, #fbb021 0%, #ffdf8b 100%)",
+        textColor: "#000000",
+        shadow: "0 0 30px rgba(251, 176, 33, 0.7)",
+      },
+      hint: {
+        headlineColor: "#b3b3b3",
+        secondaryColor: "#9b9b9b",
+        button: {
+          background: "linear-gradient(135deg, #ff7a00 0%, #ffd54f 100%)",
+          textColor: "#000000",
+          shadow: "0 10px 20px rgba(255, 122, 0, 0.4)",
+        },
+      },
+    },
+  },
+  "avengers-hero": {
+    name: "Avengers Hero",
+    primaryGradient: "linear-gradient(135deg, #000000 0%, #8b1b1b 100%)",
+    accentGradient: "linear-gradient(135deg, #ff7a00 0%, #ffd54f 50%, #4ea2ff 100%)",
+    accentColor: "#fbc02d",
+    backgroundPattern: "radial-gradient(circle at center, #8b1b1b 0%, #000000 100%)",
+    floatingDecorations: [],
+    typography: {
+      heading: avengersFont,
+      body: kidsFont,
+    },
+    introScene: {
+      backgroundGradient: "radial-gradient(circle at top, #8b1b1b 0%, #000000 100%)",
+      overlayGradient: "linear-gradient(to bottom, rgba(0,0,0,0.4), rgba(0,0,0,0.6))",
+      textureOpacity: 0.5,
+      frame: {
+        borderGradient: "linear-gradient(135deg, #fbb021 0%, #ffdf8b 100%)",
+        fill: "rgba(0,0,0,0.8)",
+        highlight: "#ff6122",
+        shadow: "rgba(0,0,0,0.7)",
+      },
+      decorations: [],
+      monogram: {
+        background: "linear-gradient(135deg, #fbb021 0%, #ffdf8b 100%)",
+        textColor: "#000000",
+        shadow: "0 0 30px rgba(251, 176, 33, 0.7)",
+      },
+      hint: {
+        headlineColor: "#b3b3b3",
+        secondaryColor: "#9b9b9b",
+        button: {
+          background: "linear-gradient(135deg, #ff7a00 0%, #ffd54f 100%)",
+          textColor: "#000000",
+          shadow: "0 10px 20px rgba(255, 122, 0, 0.4)",
+        },
+      },
     },
   },
 };

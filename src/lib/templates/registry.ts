@@ -4,6 +4,7 @@ import { dinoPartyTemplate } from "./dino-party/template";
 import { kPopTemplate } from "./k-pop/template";
 import { princessPartyTemplate } from "./princess-party/template";
 import { safariAdventureTemplate } from "./safari-adventure/template";
+import { avengersHeroTemplate } from "./avengers-hero/template";
 
 const TEMPLATE_REGISTRY: Record<TemplateId, TemplateDefinition | null> = {
   "safari-adventure": safariAdventureTemplate,
@@ -12,6 +13,7 @@ const TEMPLATE_REGISTRY: Record<TemplateId, TemplateDefinition | null> = {
   "space-explorer": null,
   "unicorn-magic": null,
   "k-pop": kPopTemplate,
+  "avengers-hero": avengersHeroTemplate,
 };
 
 export function getTemplateById(id: TemplateId): TemplateDefinition {

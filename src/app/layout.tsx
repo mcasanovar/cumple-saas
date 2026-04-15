@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Baloo_2, Great_Vibes } from "next/font/google";
 import { Kalam } from "next/font/google";
+import localFont from "next/font/local";
 import { ClerkProvider } from "@clerk/nextjs";
 
 import { NavigationLoader } from "@/components/shared/NavigationLoader/NavigationLoader";
@@ -26,6 +27,33 @@ const kalam = Kalam({
   display: "swap",
 });
 
+const avengers = localFont({
+  src: [
+    {
+      path: "../../public/fonts/avengers/AVENGEANCE HEROIC AVENGER.ttf",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "../../public/fonts/avengers/AVENGEANCE HEROIC AVENGER BD.ttf",
+      weight: "700",
+      style: "normal",
+    },
+    {
+      path: "../../public/fonts/avengers/AVENGEANCE HEROIC AVENGER BI.ttf",
+      weight: "700",
+      style: "italic",
+    },
+    {
+      path: "../../public/fonts/avengers/AVENGEANCE HEROIC AVENGER AT.ttf",
+      weight: "300",
+      style: "normal",
+    },
+  ],
+  variable: "--font-avengers",
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   metadataBase: new URL("https://nvitame.com"),
   title: {
@@ -44,7 +72,7 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="es">
-        <body className={`${baloo.variable} ${greatVibes.variable} ${kalam.variable} antialiased`}>
+        <body className={`${baloo.variable} ${greatVibes.variable} ${kalam.variable} ${avengers.variable} antialiased`}>
           <NavigationLoader />
           {children}
         </body>

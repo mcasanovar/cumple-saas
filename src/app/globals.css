@@ -8,6 +8,38 @@
   font-display: swap;
 }
 
+@font-face {
+  font-family: "Avengeance";
+  src: url("/fonts/avengers/AVENGEANCE HEROIC AVENGER AT.ttf") format("truetype");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Avengeance";
+  src: url("/fonts/avengers/AVENGEANCE HEROIC AVENGER.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Avengeance";
+  src: url("/fonts/avengers/AVENGEANCE HEROIC AVENGER BD.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Avengeance";
+  src: url("/fonts/avengers/AVENGEANCE HEROIC AVENGER BI.ttf") format("truetype");
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+
 :root {
   --background: #f7f5ff;
   --foreground: #1f192f;
@@ -44,6 +76,7 @@ body {
   from {
     transform: translateX(0);
   }
+
   to {
     transform: translateX(-50%);
   }
