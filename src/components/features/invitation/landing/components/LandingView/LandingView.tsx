@@ -51,6 +51,7 @@ export function LandingView({
   themeToken,
   venue,
   isPreview = false,
+  isEventPast = false,
 }: LandingViewProps) {
   const { isDinoTheme, isPrincessTheme, isKPopTheme, isAvengersTheme } = useThemeDetection(themeToken);
 
@@ -455,7 +456,7 @@ export function LandingView({
           viewport={{ once: true, amount: 0.2 }}
           transition={{ ease: easeOutQuint, duration: 1 }}
         >
-          <RSVPForm invitationId={invitationId} typography={typography} themeToken={themeToken} isPreview={isPreview} />
+          <RSVPForm invitationId={invitationId} typography={typography} themeToken={themeToken} isPreview={isPreview} isEventPast={isEventPast} />
         </motion.section>
       </section>
     </div>

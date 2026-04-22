@@ -7,16 +7,17 @@ import { InvitationLanding } from "./InvitationLanding";
 
 type InvitationLandingPageProps = {
   invitation: InvitationRenderConfig;
+  isEventPast: boolean;
 };
 
-export function InvitationLandingPage({ invitation }: InvitationLandingPageProps) {
+export function InvitationLandingPage({ invitation, isEventPast }: InvitationLandingPageProps) {
   const theme = themes[invitation.theme];
 
   return (
     <div className="relative min-h-screen overflow-hidden">
       <DecorativeBackground theme={theme} phase="landing" />
 
-      <InvitationLanding invitation={invitation} theme={theme} />
+      <InvitationLanding invitation={invitation} theme={theme} isEventPast={isEventPast} />
     </div>
   );
 }

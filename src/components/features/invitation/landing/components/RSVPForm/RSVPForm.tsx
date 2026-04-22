@@ -17,6 +17,7 @@ type RSVPFormProps = {
   };
   themeToken?: ThemeToken;
   isPreview?: boolean;
+  isEventPast?: boolean;
 };
 
 function Confetti() {
@@ -57,7 +58,7 @@ function Confetti() {
   );
 }
 
-export function RSVPForm({ invitationId, typography, themeToken, isPreview = false }: RSVPFormProps) {
+export function RSVPForm({ invitationId, typography, themeToken, isPreview = false, isEventPast = false }: RSVPFormProps) {
   const { isDinoTheme, isKPopTheme, isPrincessTheme, isAvengersTheme } = useThemeDetection(themeToken);
   const [willAttend, setWillAttend] = useState<boolean | null>(null);
   const [guestCount, setGuestCount] = useState<number>(1);
@@ -105,6 +106,25 @@ export function RSVPForm({ invitationId, typography, themeToken, isPreview = fal
     newNames[index] = name;
     setGuestNames(newNames);
   };
+
+  if (isEventPast) {
+    return (
+      <div className={`relative overflow-hidden rounded-[32px] border ${isAvengersTheme ? "border-white/10 bg-black/80 shadow-[0_24px_80px_rgba(0,0,0,0.5)]" : "border-white/60 bg-white/90 shadow-[0_24px_80px_rgba(15,11,29,0.12)]"} p-8 text-center backdrop-blur-2xl`}>
+        <h3
+          className="mb-2 text-3xl font-bold"
+          style={{ fontFamily: typography.heading, color: isDinoTheme ? "#2D3D2D" : isKPopTheme ? "#9333ea" : isPrincessTheme ? "#FF1493" : isAvengersTheme ? "#ffffff" : "#262147" }}
+        >
+          El evento ha finalizado
+        </h3>
+        <p
+          className="text-base"
+          style={{ fontFamily: typography.body, color: isDinoTheme ? "#5A8A5D" : isKPopTheme ? "#E91E63" : isPrincessTheme ? "#FF69B4" : isAvengersTheme ? "#9b9b9b" : "#6f6bb3" }}
+        >
+          El período para confirmar la asistencia ha terminado. ¡Gracias por tu interés!
+        </p>
+      </div>
+    );
+  }
 
   if (isSubmitted) {
     return (

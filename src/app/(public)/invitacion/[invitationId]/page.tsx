@@ -59,5 +59,16 @@ export default async function InvitationPage({
 
   const renderConfig: InvitationRenderConfig = mergeTemplateWithUserData(userData);
 
-  return <InvitationLandingPage invitation={renderConfig} />;
+  // Timezone-insensitive date comparison
+  const dateParts = userData.date.split('T')[0].split('-').map(Number);
+  const eventYear = dateParts[0];
+  const eventMonth = dateParts[1] - 1; // Month is 0-indexed
+  const eventDay = dateParts[2];
+
+  const closingDate = new Date(eventYear, eventMonth, eventDay + 1);
+  closingDate.setHours(0, 0, 0, 0);
+
+  const isEventPast = new Date() >= closingDate;
+
+  return <InvitationLandingPage invitation={renderConfig} isEventPast={isEventPast} />;
 }

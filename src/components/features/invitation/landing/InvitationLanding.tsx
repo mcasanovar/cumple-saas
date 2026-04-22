@@ -10,12 +10,14 @@ type InvitationLandingProps = {
   theme: ThemeConfig;
   isActive?: boolean;
   isPreview?: boolean;
+  isEventPast?: boolean;
 };
 
 export function InvitationLanding({
   invitation,
   theme,
-  isPreview = false
+  isPreview = false,
+  isEventPast = false
 }: InvitationLandingProps) {
   const content = useLandingContent(invitation, theme);
 
@@ -24,6 +26,7 @@ export function InvitationLanding({
       {...content}
       invitationId={invitation.invitationId}
       isPreview={isPreview}
+      isEventPast={isEventPast}
     />
   );
 }

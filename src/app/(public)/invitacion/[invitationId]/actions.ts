@@ -61,6 +61,24 @@ export async function submitRSVP(
       };
     }
 
+    // Check if the event date has passed
+    // Timezone-insensitive date comparison
+    const dateStr = invitation.eventDate.toISOString().split('T')[0];
+    const dateParts = dateStr.split('-').map(Number);
+    const eventYear = dateParts[0];
+    const eventMonth = dateParts[1] - 1; // Month is 0-indexed
+    const eventDay = dateParts[2];
+
+    const closingDate = new Date(eventYear, eventMonth, eventDay + 1);
+    closingDate.setHours(0, 0, 0, 0);
+
+    if (new Date() >= closingDate) {
+      return {
+        status: "error",
+        message: "El período para confirmar la asistencia ha finalizado.",
+      };
+    }
+
     // Check for duplicate RSVPs with same email
     if (email) {
       const existingRSVP = await prisma.rSVP.findFirst({
